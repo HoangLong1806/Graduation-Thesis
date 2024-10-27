@@ -13,64 +13,53 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../ultis/ErrorHandler");
 const sendShopToken = require("../ultis/shopToken");
 //create shop
-router.post("/create-shop", upload.single("file"), async (req, res, next) => {
+router.post("/create-shop", catchAsyncErrors(async (req, res, next) => {
   try {
-    // Lấy email và chuyển về chữ thường, loại bỏ khoảng trắng
-    const email = req.body.email.trim().toLowerCase();
-    const { name, password, phoneNumber, zipCode, address } = req.body;
-
-    // Kiểm tra xem email đã tồn tại chưa
+    const { email } = req.body;
     const sellerEmail = await Shop.findOne({ email });
     if (sellerEmail) {
-      return res.status(400).json({
-        success: false,
-        message: "Người dùng đã tồn tại, vui lòng đăng nhập thay vì tạo tài khoản mới."
-      });
+      return next(new ErrorHandler("User already exists", 400));
     }
 
-    // Xử lý địa chỉ nếu nó là mảng
-    let shopAddress = address;
-    if (Array.isArray(shopAddress)) {
-      shopAddress = shopAddress.join(", ");
-    }
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+      folder: "avatars",
+    });
 
-    // Tiếp tục tạo shop
-    const filename = req.file.filename;
-    const fileUrl = path.join("/uploads", filename);
-    const public_id = filename;
 
     const seller = {
-      name,
-      email,
-      password,
+      name: req.body.name,
+      email: email,
+      password: req.body.password,
       avatar: {
-        url: fileUrl,
-        public_id,
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
       },
-      address: shopAddress,
-      phoneNumber,
-      zipCode,
+      address: req.body.address,
+      phoneNumber: req.body.phoneNumber,
+      zipCode: req.body.zipCode,
     };
 
     const activationToken = createActivationToken(seller);
-    const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
 
-    // Gửi email kích hoạt
-    await sendMail({
-      email: seller.email,
-      subject: "Activate your account",
-      message: `Hello ${seller.name}, please click on the link to activate your account: ${activationUrl}`,
-    });
+    const activationUrl = `https://eshop-tutorial-pyri.vercel.app/seller/activation/${activationToken}`;
 
-    res.status(201).json({
-      success: true,
-      message: `Vui lòng kiểm tra email của bạn: ${seller.email} để kích hoạt shop!`,
-    });
-
+    try {
+      await sendMail({
+        email: seller.email,
+        subject: "Activate your Shop",
+        message: `Hello ${seller.name}, please click on the link to activate your shop: ${activationUrl}`,
+      });
+      res.status(201).json({
+        success: true,
+        message: `please check your email:- ${seller.email} to activate your shop!`,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
   } catch (error) {
     return next(new ErrorHandler(error.message, 400));
   }
-});
+}));
 
 // router.post("/create-shop", upload.single("file"), async (req, res, next) => {
 //     try{
