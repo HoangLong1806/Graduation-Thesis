@@ -10,7 +10,7 @@ const DashboardHeader = () => {
   return (
     <div className="w-full h-[80px] bg-white shadow sticky top-0 left-0 z-30 flex items-center justify-between px-4">
       <div>
-        <Link to="/dashboard">
+        <Link to="/">
           <img
             src="https://i.postimg.cc/t4w3PdVk/Long-Nam-6.png"
             alt=""
