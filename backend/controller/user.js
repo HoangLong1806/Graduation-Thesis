@@ -163,38 +163,15 @@ router.get(
 );
 
 // log out user
-// router.get(
-//   "/logout",
-//   isAuthenticated,
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       res.cookie("token", null, {
-//         expires: new Date(Date.now()),
-//         httpOnly: true,
-//       });
-//       res.status(200).json({
-//         success: true,
-//         message: "Logged out",
-//       });
-//     } catch (error) {
-//       return next(new ErrorHandler(error.message, 500));
-//     }
-//   })
-// );
-
 router.get(
   "/logout",
   isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
     try {
-      // Clear the token cookie by setting it to null and expiring immediately
       res.cookie("token", null, {
-        expires: new Date(Date.now()), // Immediate expiration
+        expires: new Date(Date.now()),
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // Secure in production
-        sameSite: "Lax", // Protects against CSRF
       });
-      
       res.status(200).json({
         success: true,
         message: "Logged out",
@@ -204,5 +181,28 @@ router.get(
     }
   })
 );
+
+// router.get(
+//   "/logout",
+//   isAuthenticated,
+//   catchAsyncErrors(async (req, res, next) => {
+//     try {
+//       // Clear the token cookie by setting it to null and expiring immediately
+//       res.cookie("token", null, {
+//         expires: new Date(Date.now()), // Immediate expiration
+//         httpOnly: true,
+//         secure: process.env.NODE_ENV === "production", // Secure in production
+//         sameSite: "Lax", // Protects against CSRF
+//       });
+      
+//       res.status(200).json({
+//         success: true,
+//         message: "Logged out",
+//       });
+//     } catch (error) {
+//       return next(new ErrorHandler(error.message, 500));
+//     }
+//   })
+// );
 
 module.exports = router;
