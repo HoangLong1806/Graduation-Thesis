@@ -11,9 +11,6 @@ const sendMail = require("../ultis/sendMail");
 const sendToken = require("../ultis/jwtToken");
 const { isAuthenticated } = require("../middleware/auth");
 
-
-
-
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -158,6 +155,26 @@ router.get(
       res.status(200).json({
         success: true,
         user,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// log out user
+router.get(
+  "/logout",
+  isAuthenticated,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      res.cookie("token", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+      });
+      res.status(200).json({
+        success: true,
+        message: "Logged out",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
