@@ -22,7 +22,8 @@ app.use(cors({
     const allowedOrigins = [
       "http://localhost:3000",
       "https://graduation-thesis-chi.vercel.app",
-      "https://graduation-thesis-npc822tza-hoanglong1806s-projects.vercel.app"
+      "https://graduation-thesis-npc822tza-hoanglong1806s-projects.vercel.app",
+      "https://graduation-thesis-dkbhxbush-hoanglong1806s-projects.vercel.app"
     ];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -39,8 +40,6 @@ app.use(cors({
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
-
-
 
 // app.use(
 //   cors({
