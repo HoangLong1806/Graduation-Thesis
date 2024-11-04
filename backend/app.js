@@ -9,12 +9,11 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/", express.static("uploads"));
-app.use(
-  cors({
-    origin: ["http://localhost:3000"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: 'https://graduation-thesis-chi.vercel.app', // Allow only your Vercel domain
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Define allowed HTTP methods
+  credentials: true // Enable if you need cookies or authentication
+}));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 // config
 
