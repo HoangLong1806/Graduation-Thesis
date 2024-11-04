@@ -47,7 +47,7 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     };
     const newUser = await User.create(user);
     const activationToken = createActivationToken(user);
-    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+    const activationUrl = `https://graduation-thesis-m2um.onrender.com//activation/${activationToken}`;
     try {
       await sendMail({
         email: user.email,
