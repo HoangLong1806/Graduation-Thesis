@@ -11,7 +11,7 @@ app.use(cookieParser());
 app.use("/", express.static("uploads"));
 app.use(
   cors({
-    origin: ["https://graduation-thesis-m2um.onrender.com/"],
+    origin: ["http://localhost:3000"],
     credentials: true,
   })
 );
