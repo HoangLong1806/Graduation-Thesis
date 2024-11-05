@@ -20,6 +20,7 @@ app.use("/", express.static("uploads"));
 app.use(cors({
   origin: function (origin, callback) {
     const allowedOrigins = [
+      "http://localhost:3001",
       "http://localhost:3000",
       "https://graduation-thesis-chi.vercel.app",
       "https://graduation-thesis-npc822tza-hoanglong1806s-projects.vercel.app",
