@@ -15,6 +15,24 @@ app.use(
     credentials: true,
   })
 );
+app.use(cors({
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      "http://localhost:3001",
+      "http://localhost:3000",
+      "https://graduation-thesis-chi.vercel.app",
+      "https://graduation-thesis-npc822tza-hoanglong1806s-projects.vercel.app",
+      "https://graduation-thesis-dkbhxbush-hoanglong1806s-projects.vercel.app"
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Define allowed HTTP methods
+}));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 // config
 

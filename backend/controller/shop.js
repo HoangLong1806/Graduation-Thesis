@@ -8,7 +8,7 @@ const sendToken = require("../ultis/jwtToken");
 const Shop = require( "../model/shop")
 const {  isSeller, isAuthenticated } = require("../middleware/auth");
 const { promiseHooks } = require("v8");
-const {upload} = require("../multer");
+const { upload } = require("../multer");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../ultis/ErrorHandler");
 const sendShopToken = require("../ultis/shopToken");
@@ -24,7 +24,8 @@ router.post("/create-shop", upload.single("file"), async (req, res, next) => {
     if (sellerEmail) {
       return res.status(400).json({
         success: false,
-        message: "Người dùng đã tồn tại, vui lòng đăng nhập thay vì tạo tài khoản mới."
+        message:
+          "Người dùng đã tồn tại, vui lòng đăng nhập thay vì tạo tài khoản mới.",
       });
     }
 
@@ -53,7 +54,11 @@ router.post("/create-shop", upload.single("file"), async (req, res, next) => {
     };
 
     const activationToken = createActivationToken(seller);
-    const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
+    // const activationUrl = `http://localhost:3001/seller/activation/${activationToken}`;
+    const isProduction = process.env.NODE_ENV === "production";
+    const activationUrl = isProduction
+      ? `https://graduation-thesis-chi.vercel.app/seller/activation/${activationToken}`
+      : `http://localhost:3001/seller/activation/${activationToken}`;
 
     // Gửi email kích hoạt
     await sendMail({
@@ -66,12 +71,10 @@ router.post("/create-shop", upload.single("file"), async (req, res, next) => {
       success: true,
       message: `Vui lòng kiểm tra email của bạn: ${seller.email} để kích hoạt shop!`,
     });
-
   } catch (error) {
     return next(new ErrorHandler(error.message, 400));
   }
 });
-
 
 // router.post("/create-shop", upload.single("file"), async (req, res, next) => {
 //     try{
@@ -117,7 +120,7 @@ router.post("/create-shop", upload.single("file"), async (req, res, next) => {
 //     };
 //     const activationToken = createActivationToken(seller);
 
-//     const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`; 
+//     const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
 
 //      try {
 //       await sendMail({
@@ -132,21 +135,18 @@ router.post("/create-shop", upload.single("file"), async (req, res, next) => {
 //     } catch (error) {
 //       return next(new ErrorHandler(error.message, 500));
 //     }
- 
 
 //     }catch(error){
 //         return next(new ErrorHandler(error.message, 400));
 //     }
 // });
 
-
 // create activation token
 const createActivationToken = (seller) => {
-    return jwt.sign(seller, process.env.ACTIVATION_SECRET, {
-      expiresIn: "5m",
-    });
-  };
-
+  return jwt.sign(seller, process.env.ACTIVATION_SECRET, {
+    expiresIn: "5m",
+  });
+};
 
 // activate user
 router.post(
@@ -165,7 +165,8 @@ router.post(
         return next(new ErrorHandler("Token không hợp lệ", 400));
       }
 
-      const { name, email, password, avatar, zipCode, address, phoneNumber } = newSeller;
+      const { name, email, password, avatar, zipCode, address, phoneNumber } =
+        newSeller;
 
       // Check if the user already exists before activation
       let seller = await Shop.findOne({ email: email });
@@ -182,12 +183,11 @@ router.post(
         password,
         zipCode,
         address,
-        phoneNumber
+        phoneNumber,
       });
 
       // Send token after successful activation
       sendShopToken(user, 201, res);
-
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
@@ -227,19 +227,14 @@ router.post(
   })
 );
 
-
-
 // load shop
 router.get(
   "/getSeller",
   isSeller,
   catchAsyncErrors(async (req, res, next) => {
     try {
-     
-      
-      const seller = await Shop.findById(req.seller._id);  // Sử dụng req.seller
-      
-      
+      const seller = await Shop.findById(req.seller._id); // Sử dụng req.seller
+
       if (!seller) {
         return next(new ErrorHandler("seller doesn't exist", 400));
       }
@@ -254,12 +249,10 @@ router.get(
   })
 );
 
-
-
 // log out shop
 router.get(
   "/logout",
- 
+  
   catchAsyncErrors(async (req, res, next) => {
     try {
       res.cookie("seller_token", null, {
@@ -275,7 +268,5 @@ router.get(
     }
   })
 );
-
-
 
 module.exports = router;
