@@ -50,7 +50,7 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     // const activationUrl = `http://localhost:3001/activation/${activationToken}`;
     const isProduction = process.env.NODE_ENV === "production";
     const activationUrl = isProduction
-      ? `https://graduation-thesis-s7kl.onrender.com/activation/${activationToken}`
+      ? `https://graduation-thesis-chi.vercel.app/activation/${activationToken}`
       : `http://localhost:3001/activation/${activationToken}`;
     try {
       await sendMail({
