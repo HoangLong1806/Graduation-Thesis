@@ -9,12 +9,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/", express.static("uploads"));
-// app.use(
-//   cors({
-//     origin: ["http://localhost:3000"],
-//     credentials: true,
-//   })
-// );
+
 
 
 app.use(cors({
@@ -41,31 +36,6 @@ app.use(cors({
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
 });
-
-// app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       const allowedOrigins = [
-//         "http://localhost:3000",
-//         "https://graduation-thesis-chi.vercel.app",
-//         "https://graduation-thesis-npc822tza-hoanglong1806s-projects.vercel.app"
-//       ];
-//       if (!origin || allowedOrigins.includes(origin)) {
-//         callback(null, true);
-//       } else {
-//         callback(new Error("Not allowed by CORS"));
-//       }
-//     },
-//     credentials: true,
-//   })
-// );
-
-
-// app.use(cors({
-//   origin: 'https://graduation-thesis-chi.vercel.app', // Allow only your Vercel domain
-//   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Define allowed HTTP methods
-//   credentials: true // Enable if you need cookies or authentication
-// }));
 
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 // config
