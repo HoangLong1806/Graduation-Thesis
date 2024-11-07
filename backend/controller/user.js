@@ -47,7 +47,11 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     };
     const newUser = await User.create(user);
     const activationToken = createActivationToken(user);
-    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+    // const activationUrl = `http://localhost:3001/activation/${activationToken}`;
+    const isProduction = process.env.NODE_ENV === "production";
+    const activationUrl = isProduction
+      ? `https://graduation-thesis-s7kl.onrender.com/activation/${activationToken}`
+      : `http://localhost:3001/activation/${activationToken}`;
     try {
       await sendMail({
         email: user.email,
@@ -89,10 +93,10 @@ router.post(
       }
       const { name, email, password, avatar } = newUser;
 
-      let user = await User.findOne({ email });
+      let user = await User.findOne({ email: email });
 
       if (user) {
-        return next(new ErrorHandler("User already exists", 400));
+        return next(new ErrorHandler("Người dùng đã tồn  tại", 400));
       }
       user = await User.create({
         name,

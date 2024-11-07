@@ -13,7 +13,7 @@ const ShopProfileData = ({ isOwner }) => {
           <h5
             className={`font-[600] text-[20px] 
               ${active === 1 ? "text-red-500" : "text-[#333]"} 
-              cursor-pointer cursor-pointer pr-[20px]`}
+              cursor-pointer pr-[20px]`}
           >
             Shop Products
           </h5>
@@ -22,7 +22,7 @@ const ShopProfileData = ({ isOwner }) => {
           <h5
             className={`font-[600] text-[20px] 
               ${active === 2 ? "text-red-500" : "text-[#333]"} 
-              cursor-pointer cursor-pointer pr-[20px]`}
+              cursor-pointer  pr-[20px]`}
           >
             Running Events
           </h5>
@@ -31,7 +31,7 @@ const ShopProfileData = ({ isOwner }) => {
           <h5
             className={`font-[600] text-[20px] 
               ${active === 3 ? "text-red-500" : "text-[#333]"} 
-              cursor-pointer cursor-pointer pr-[20px]`}
+              cursor-pointer pr-[20px]`}
           >
             Shop Reviews
           </h5>

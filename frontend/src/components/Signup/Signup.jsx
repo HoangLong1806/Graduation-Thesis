@@ -199,8 +199,9 @@ const Signup = () => {
 
 export default Signup;
 
-
-{/* đây là code cũ không load được ảnh*/}
+{
+  /* đây là code cũ không load được ảnh*/
+}
 
 // import { React, useState } from "react";
 // import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
@@ -218,7 +219,6 @@ export default Signup;
 //   const [visible, setVisible] = useState(false);
 //   const [avatar, setAvatar] = useState(null);
 //   const navigate = useNavigate();
-
 
 //   const handleFileInputChange = (e) => {
 //     const file = e.target.files[0];
@@ -391,8 +391,9 @@ export default Signup;
 
 // export default Singup;
 
-
-{/* đây là code GPT có thể load được hình ảnh*/}
+{
+  /* đây là code GPT có thể load được hình ảnh*/
+}
 // import { React, useState } from "react";
 // import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 // import styles from "../../styles/styles";
