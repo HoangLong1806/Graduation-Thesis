@@ -47,7 +47,7 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     };
     const newUser = await User.create(user);
     const activationToken = createActivationToken(user);
-    //const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+  
     const isProduction = process.env.NODE_ENV === "production";
     const activationUrl = isProduction
       ? `https://graduation-thesis-chi.vercel.app/activation/${activationToken}`
