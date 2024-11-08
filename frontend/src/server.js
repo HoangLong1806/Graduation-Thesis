@@ -5,5 +5,5 @@ export const server = isProduction
   : "http://localhost:8000/api/v2";
 
 export const backend_url = isProduction
-  ? "https://graduation-thesis-s7kl.onrender.com/"
+  ? "https://graduation-thesis-s7kl.onrender.com"
   : "http://localhost:8000/";
