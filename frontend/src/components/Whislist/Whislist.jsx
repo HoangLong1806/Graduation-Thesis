@@ -73,7 +73,7 @@ const CartSingle = ({ data }) => {
         <img src="https://cdn.shopify.com/s/files/1/1706/9177/products/NEWAppleMacbookProwithM1ProChip14InchLaptop2021ModelMKGQ3LL_A_16GB_1TBSSD_custommacbd.jpg?v=1659592838" alt=""
             className="w-[80px] h-[80px] ml-2"
         />
-      
+        
         
         <div className="pl-[5px]">
             <h1>{data.name}</h1>
