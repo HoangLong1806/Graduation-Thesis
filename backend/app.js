@@ -11,7 +11,7 @@ app.use(cookieParser());
 app.use("/", express.static("uploads"));
 app.use(
   cors({
-    origin: ["http://localhost:3001", "https://graduation-thesis-chi.vercel.app"],
+    origin: ["http://localhost:3000","http://localhost:3001", "https://graduation-thesis-chi.vercel.app"],
     credentials: true,
   })
 );
