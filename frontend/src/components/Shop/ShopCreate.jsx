@@ -36,6 +36,7 @@ const ShopCreate = () => {
       .then((res) => {
         console.log(res);
         toast.success(res.data.message);
+        navigate("/shop-login");
         setName("");
         setEmail("");
         setPassword("");
