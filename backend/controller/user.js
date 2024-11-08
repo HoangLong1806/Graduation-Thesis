@@ -93,10 +93,10 @@ router.post(
       }
       const { name, email, password, avatar } = newUser;
 
-      let user = await User.findOne({ email: email });
+      let user = await User.findOne({ email });
 
       if (user) {
-        return next(new ErrorHandler("Người dùng đã tồn  tại", 400));
+        return next(new ErrorHandler("User already exists", 400));
       }
       user = await User.create({
         name,
@@ -185,54 +185,4 @@ router.get(
     }
   })
 );
-
-// forgot password
-// router.post(
-//   "/forgot-password",
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const { email } = req.body;
-
-//       const user = await User.findOne({ email });
-
-//       if (!user) {
-//         return next(new ErrorHandler("User doesn't exists", 400));
-//       }
-
-//       const resetToken = user.getResetPasswordToken();
-
-//       await user.save();
-
-//       const resetUrl = `http://localhost:3000/password/reset/${resetToken}`;
-
-//       const message = `
-//       Your password reset token is as follows: \n\n
-//       ${resetUrl}
-//       `;
-
-//       try {
-//         await sendMail({
-//           email: user.email,
-//           subject: "Password recovery",
-//           message,
-//         });
-
-//         res.status(200).json({
-//           success: true,
-//           message: `Email sent to: ${user.email}`,
-//         });
-//       } catch (error) {
-//         user.resetPasswordToken = undefined;
-//         user.resetPasswordExpire = undefined;
-
-//         await user.save();
-
-//         return next(new ErrorHandler(error.message, 500));
-//       }
-//     } catch (error) {
-//       return next(new ErrorHandler(error.message, 500));
-//     }
-//   })
-// );
-
 module.exports = router;
