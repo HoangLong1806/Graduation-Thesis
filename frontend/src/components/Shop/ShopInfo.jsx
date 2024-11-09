@@ -3,9 +3,11 @@ import { useSelector } from "react-redux";
 import { backend_url, server } from "../../server";
 import styles from "../../styles/styles";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const ShopInfo = ({ isOwner }) => {
   const { seller } = useSelector((state) => state.seller);
-
+  const navigate = useNavigate();
   const logoutHandler = async () => {
     // axios.get(`${server}/shop/logout`,{
     //     withCredentials: true,
@@ -15,7 +17,7 @@ const ShopInfo = ({ isOwner }) => {
       .get(`${server}/shop/logout`, { withCredentials: true })
       .then((res) => {
         toast.success(res.data.message);
-        navigate("/login");
+        navigate("/");
         window.location.reload(true);
       })
       .catch((error) => {
