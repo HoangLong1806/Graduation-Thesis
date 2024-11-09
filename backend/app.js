@@ -12,7 +12,7 @@ app.use("/", express.static("uploads"));
 
 app.use(
   cors({
-    origin: ["http://localhost:3000","http://localhost:3001", "https://graduation-thesis-chi.vercel.app/"],
+    origin: ["http://localhost:3000","http://localhost:3001", "https://frontend-blond-zeta-67.vercel.app"],
     credentials: true,
   })
 );

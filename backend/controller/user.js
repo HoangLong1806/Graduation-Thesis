@@ -50,13 +50,13 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     // const activationUrl = `http://localhost:3001/activation/${activationToken}`;
     const isProduction = process.env.NODE_ENV === "production";
     const activationUrl = isProduction
-      ? `https://graduation-thesis-chi.vercel.app/activation/${activationToken}`
+      ? `https://frontend-blond-zeta-67.vercel.app/activation/${activationToken}`
       : `http://localhost:3001/activation/${activationToken}`;
     try {
       await sendMail({
         email: user.email,
         subject: "Activate your account",
-        message: `Hello ${user.name}, please click on the link to activate your account: ${activationUrl}`,
+        message: `Hello ${user.name}, please click on the link to activate your user account: ${activationUrl}`,
       });
       res.status(201).json({
         success: true,
@@ -169,16 +169,17 @@ router.get(
 // log out user
 router.get(
   "/logout",
-  isAuthenticated,
   catchAsyncErrors(async (req, res, next) => {
     try {
       res.cookie("token", null, {
         expires: new Date(Date.now()),
         httpOnly: true,
+        sameSite: "none",
+        secure: true,
       });
-      res.status(200).json({
+      res.status(201).json({
         success: true,
-        message: "Logged out",
+        message: "Log out successful!",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
