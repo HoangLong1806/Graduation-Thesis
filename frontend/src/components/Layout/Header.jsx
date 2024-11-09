@@ -272,7 +272,6 @@ const Header = ({ activeHeading }) => {
                       );
                     })}
                   </div>
-                  
                 )}
               </div>
               <Navbar active={activeHeading} />

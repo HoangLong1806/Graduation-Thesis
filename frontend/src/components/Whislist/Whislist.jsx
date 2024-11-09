@@ -58,7 +58,6 @@ const Whislist = ({ setOpenWishlist }) => {
               cartData.map((i, index) => <CartSingle key={index} data={i} />)}
           </div>
         </div>
-        
       </div>
     </div>
   );
@@ -70,19 +69,24 @@ const CartSingle = ({ data }) => {
     <div className="border-b p-4">
       <div className="w-full flex items-center">
         <RxCross1 className="cursor-pointer" />
-        <img src="https://cdn.shopify.com/s/files/1/1706/9177/products/NEWAppleMacbookProwithM1ProChip14InchLaptop2021ModelMKGQ3LL_A_16GB_1TBSSD_custommacbd.jpg?v=1659592838" alt=""
-            className="w-[80px] h-[80px] ml-2"
+        <img
+          src="https://cdn.shopify.com/s/files/1/1706/9177/products/NEWAppleMacbookProwithM1ProChip14InchLaptop2021ModelMKGQ3LL_A_16GB_1TBSSD_custommacbd.jpg?v=1659592838"
+          alt=""
+          className="w-[80px] h-[80px] ml-2"
         />
-        
-        
+
         <div className="pl-[5px]">
-            <h1>{data.name}</h1>
-            <h4 className="font-[600] text-[17px] pt-[3px] text-[#d02222] font-Roboto">
-                US${totalPrice}
-            </h4>
+          <h1>{data.name}</h1>
+          <h4 className="font-[600] text-[17px] pt-[3px] text-[#d02222] font-Roboto">
+            US${totalPrice}
+          </h4>
         </div>
         <div>
-            <BsCartPlus size={20} className="cursor-pointer" title="Add to cart" />
+          <BsCartPlus
+            size={20}
+            className="cursor-pointer"
+            title="Add to cart"
+          />
         </div>
       </div>
     </div>
