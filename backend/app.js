@@ -16,7 +16,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "http://localhost:3001",
-      "https://frontend-blond-zeta-67.vercel.app",
+      "http://frontend-one-kappa-74.vercel.app",
     ],
     credentials: true,
   })
