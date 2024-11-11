@@ -5,7 +5,7 @@ import { categoriesData } from "../../static/data";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 
 import { toast } from "react-toastify";
-import { set } from "mongoose";
+
 import { createevent } from "../../redux/actions/event";
 const CreateEvent = () => {
   const { seller } = useSelector((state) => state.seller);
