@@ -305,7 +305,7 @@ export const navItems = [
         },
         {
           public_id: "test",
-          url: "https://m.media-amazon.com/images/I/31Vle5fVdaL.jpg",
+          url: "https://onewaymobile.vn/images/products/2022/09/08/large/14-1-3_1662617952.webp",
         },
       ],
       shop: {

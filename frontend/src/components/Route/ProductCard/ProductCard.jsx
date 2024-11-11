@@ -15,7 +15,7 @@ const ProductCard = ({ data }) => {
   const [open, setOpen] = useState(false);
   const d = data.name;
   const product_name = d.replace(/\s+/g, "-");
-  
+
   return (
     <>
       <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
@@ -104,17 +104,13 @@ const ProductCard = ({ data }) => {
             title="Quick view"
           />
           <AiOutlineShoppingCart
-          size={25}
-          className="cursor-pointer absolute right-2 top-24"
-          onClick={() => setOpen(!open)}
-          color="#333"
-          title="Add to cart"
-        />
-        {
-          open ? (
-            <ProductDetailsCard setOpen={setOpen} data={data} />
-          ) : null
-        }
+            size={25}
+            className="cursor-pointer absolute right-2 top-24"
+            onClick={() => setOpen(!open)}
+            color="#333"
+            title="Add to cart"
+          />
+          {open ? <ProductDetailsCard setOpen={setOpen} data={data} /> : null}
         </div>
       </div>
     </>
