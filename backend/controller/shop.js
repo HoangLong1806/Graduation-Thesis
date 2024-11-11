@@ -57,7 +57,7 @@ router.post("/create-shop", upload.single("file"), async(req, res, next) => {
         const isProduction = process.env.NODE_ENV === "production";
         const activationUrl = isProduction ?
             `https://graduation-thesis-chi.vercel.app/seller/activation/${activationToken}` :
-            `http://localhost:3001/seller/activation/${activationToken}`;
+            `http://localhost:3000/seller/activation/${activationToken}`;
 
         // Gửi email kích hoạt
         await sendMail({

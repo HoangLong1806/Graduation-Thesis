@@ -37,9 +37,9 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     const public_id = filename;
 
     const user = {
-      name,
-      email,
-      password,
+      name: name,
+      email: email,
+      password: password,
       avatar: {
         url: fileUrl,
         public_id,
@@ -51,7 +51,7 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     const isProduction = process.env.NODE_ENV === "production";
     const activationUrl = isProduction
       ? `https://frontend-blond-zeta-67.vercel.app/activation/${activationToken}`
-      : `http://localhost:3001/activation/${activationToken}`;
+      : `http://localhost:3000/activation/${activationToken}`;
     try {
       await sendMail({
         email: user.email,
