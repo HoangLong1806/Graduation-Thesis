@@ -13,10 +13,10 @@ const CreateEvent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [category, setCategory] = useState("");
   const [images, setImages] = useState([]);
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState(""); 
   const [tags, setTags] = useState("");
   const [originalPrice, setOriginalPrice] = useState();
   const [discountPrice, setDiscountPrice] = useState();
@@ -51,8 +51,8 @@ const CreateEvent = () => {
       toast.error(error);
     }
     if (success) {
-      toast.success("Product created successfully");
-      navigate("/dashboard");
+      toast.success("Event created successfully");
+      navigate("/dashboard-events");
       window.location.reload();
     }
   }, [dispatch, error, success]);

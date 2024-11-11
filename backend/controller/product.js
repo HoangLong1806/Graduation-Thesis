@@ -6,7 +6,7 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Shop = require("../model/shop");
 const ErrorHandler = require("../ultis/ErrorHandler");
 const { isSeller } = require("../middleware/auth");
-
+const fs = require("fs");
 //create Product
 router.post("/create-product", upload.array("images"), catchAsyncErrors(async (req, res, next) => {
     try {
@@ -51,6 +51,18 @@ router.get("/get-all-products-shop/:id", catchAsyncErrors(async (req, res, next)
 router.delete("/delete-shop-product/:id", isSeller, catchAsyncErrors(async (req, res, next) => {
     try {
         const productId = req.params.id;
+
+        const productData = await Product.findById(productId);
+
+        productData.images.forEach((imageUrl) => {
+            const filename = imageUrl;
+            const filePath = `uploads/${filename}`;
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        });
 
         const product = await Product.findByIdAndDelete(productId);
 
