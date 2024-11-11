@@ -50,7 +50,7 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     // const activationUrl = `http://localhost:3001/activation/${activationToken}`;
     const isProduction = process.env.NODE_ENV === "production";
     const activationUrl = isProduction
-      ? `https://frontend-blond-zeta-67.vercel.app/activation/${activationToken}`
+      ? `https://frontend-one-kappa-74.vercel.app/activation/${activationToken}`
       : `http://localhost:3000/activation/${activationToken}`;
     try {
       await sendMail({
