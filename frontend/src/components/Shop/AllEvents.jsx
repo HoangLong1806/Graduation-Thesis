@@ -7,23 +7,20 @@ import { Link } from "react-router-dom";
 import { getAllProductsShop } from "../../redux/actions/product";
 import { deleteProduct } from "../../redux/actions/product";
 import Loader from "../Layout/Loader";
+import { deleteEvent, getAllEventsShop } from '../../redux/actions/event';
 
-
-
-const AllProducts = () => {
-
- 
-  const { products, isLoading } = useSelector((state) => state.products);
+const AllEvents = () => {
+  const { events, isLoading } = useSelector((state) => state.events);
   const { seller } = useSelector((state) => state.seller);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllProductsShop(seller._id));
+    dispatch(getAllEventsShop(seller._id));
   }, [dispatch]);
 
   const handleDelete = (id) => {
-    dispatch(deleteProduct(id));
+    dispatch(deleteEvent(id));
     window.location.reload();
   };
 
@@ -98,8 +95,8 @@ const AllProducts = () => {
 
   const row = [];
 
-  products &&
-    products.forEach((item) => {
+  events &&
+  events.forEach((item) => {
       row.push({
         id: item._id,
         name: item.name,
@@ -115,7 +112,6 @@ const AllProducts = () => {
         <Loader />
       ) : (
         <div className="w-full mx-8 pt-1 mt-10 bg-white">
-          
           <DataGrid
             rows={row}
             columns={columns}
@@ -123,11 +119,10 @@ const AllProducts = () => {
             disableSelectionOnClick
             autoHeight
           />
-         
         </div>
       )}
     </>
   );
 };
 
-export default AllProducts;
+export default AllEvents;

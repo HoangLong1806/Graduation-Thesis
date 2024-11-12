@@ -5,6 +5,7 @@ import { AiOutlineGift } from 'react-icons/ai'
    import { MdOutlineLocalOffer } from 'react-icons/md'
    import { FiPackage, FiShoppingBag } from 'react-icons/fi'
    import { BiMessageSquareDetail } from 'react-icons/bi'
+import { backend_url } from '../../../server'
 const DashboardHeader = () => {
     const { seller } = useSelector((state) => state.seller);
   return (
@@ -52,7 +53,7 @@ const DashboardHeader = () => {
           </Link>
           <Link to={`/shop/${seller._id}`}>
             <img
-              src={`${seller.avatar?.url}`}
+              src={`${backend_url}${seller.avatar.public_id}`}
               alt=""
               className="w-[50px] h-[50px] rounded-full object-cover"
             />
