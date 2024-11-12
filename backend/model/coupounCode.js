@@ -1,33 +1,64 @@
 const mongoose = require("mongoose");
-
 const coupounCodeSchema = new mongoose.Schema({
-    name: {
+    name:{
         type: String,
-        required: [true, "Please enter your coupoun code name!"],
+        required:[true,"Please enter your coupoun code name!"],
         unique: true,
     },
-    value: {
+    value:{
         type: Number,
-        required: [true, "Please enter your coupoun code value!"],
-    },
-    minAmount: {
-        type: Number,
-    },
-    maxAmount: {
-        type: Number,
-    },
-    shop:{
-        type: Object,
         required: true,
-    }, 
-    selectedProduct: {
-        type: String,
     },
-
-    createdAt: {
+    minAmount:{
+        type: Number,
+    },
+    maxAmount:{
+        type: Number,
+    },
+    shopId:{
+     type: String,
+     required: true,
+    },
+    selectedProduct:{
+     type: String,
+    },
+    createdAt:{
         type: Date,
         default: Date.now(),
-    },
+    }
 });
-
 module.exports = mongoose.model("CoupounCode", coupounCodeSchema);
+
+// const mongoose = require("mongoose");
+
+// const coupounCodeSchema = new mongoose.Schema({
+//     name: {
+//         type: String,
+//         required: [true, "Please enter your coupoun code name!"],
+//         unique: true,
+//     },
+//     value: {
+//         type: Number,
+//         required: [true, "Please enter your coupoun code value!"],
+//     },
+//     minAmount: {
+//         type: Number,
+//     },
+//     maxAmount: {
+//         type: Number,
+//     },
+//     shop:{
+//         type: Object,
+//         required: true,
+//     }, 
+//     selectedProduct: {
+//         type: String,
+//     },
+
+//     createdAt: {
+//         type: Date,
+//         default: Date.now(),
+//     },
+// });
+
+// module.exports = mongoose.model("CoupounCode", coupounCodeSchema);

@@ -1,27 +1,37 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Layout/Header";
-import styles from "../styles/styles";
+import { useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
-import { productData } from "../static/data";
+import Footer from "../components/Layout/Footer";
+import Header from "../components/Layout/Header";
+import Loader from "../components/Layout/Loader";
 import ProductCard from "../components/Route/ProductCard/ProductCard";
+import styles from "../styles/styles";
 
 const ProductsPage = () => {
-  const [data, setData] = useState([]);
   const [searchParams] = useSearchParams();
   const categoryData = searchParams.get("category");
+  const {allProducts,isLoading} = useSelector((state) => state.products);
+  const [data, setData] = useState([]);
+
   useEffect(() => {
-    if (categoryData == null) {
-      const d =
-        productData && productData.sort((a, b) => a.total_sell - b.total_sell);
+    if (categoryData === null) {
+      const d = allProducts;
       setData(d);
     } else {
       const d =
-        productData && productData.filter((i) => i.category === categoryData);
+      allProducts && allProducts.filter((i) => i.category === categoryData);
       setData(d);
     }
-  }, []);
+    //    window.scrollTo(0,0);
+  }, [allProducts]);
+
   return (
-    <div>
+  <>
+  {
+    isLoading ? (
+      <Loader />
+    ) : (
+      <div>
       <Header activeHeading={3} />
       <br />
       <br />
@@ -35,7 +45,11 @@ const ProductsPage = () => {
           </h1>
         ) : null}
       </div>
+      <Footer />
     </div>
+    )
+  }
+  </>
   );
 };
 

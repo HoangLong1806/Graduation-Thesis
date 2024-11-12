@@ -17,8 +17,13 @@ import { backend_url } from "../../server";
 import Cart from "../Cart/Cart.jsx";
 import Whislist from "../Whislist/Whislist";
 import { RxCross1 } from "react-icons/rx";
+
+
+
 const Header = ({ activeHeading }) => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
+  const {allProducts} = useSelector((state) => state.products);
+  const { cart } = useSelector((state) => state.cart);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [action, setAction] = useState(false);
@@ -29,12 +34,10 @@ const Header = ({ activeHeading }) => {
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
-    const filteredProdects =
-      productData &&
-      productData.filter((product) =>
+    const filteredProducts = allProducts && allProducts.filter((product) =>
         product.name.toLowerCase().includes(term.toLowerCase())
       );
-    setSearchData(filteredProdects);
+    setSearchData(filteredProducts);
   };
   window.addEventListener("scroll", () => {
     if (window.scrollY > 70) {
@@ -80,7 +83,7 @@ const Header = ({ activeHeading }) => {
                       <Link to={`/product/${Product_name}`}>
                         <div className="w-full flex items-start-py-3">
                           <img
-                            src={i.image_Url[0].url}
+                            src={`${backend_url}${i.images[0]}`}
                             alt=""
                             className="w-[40px] h-[40px] mr-[10px]"
                           />
@@ -158,7 +161,7 @@ const Header = ({ activeHeading }) => {
                   color="rgb(255 255 255 / 83%)"
                 />
                 <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px] leading-tight text-center">
-                  1
+                  {cart && cart.length}
                 </span>
               </div>
             </div>
@@ -216,7 +219,7 @@ const Header = ({ activeHeading }) => {
             <div className="relative mr-[20px]">
               <AiOutlineShoppingCart size={30} />
               <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
-                1
+                {cart && cart.length}
               </span>
             </div>
           </div>

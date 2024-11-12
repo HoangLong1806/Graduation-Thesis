@@ -1,4 +1,5 @@
 import { Button } from '@mui/material';
+import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -8,7 +9,6 @@ import styles from "../../styles/styles";
 import Loader from "../Layout/Loader";
 import { server } from "../../server";
 import { toast } from "react-toastify";
-import { DataGrid } from "@mui/x-data-grid";
 
 const AllCoupons = () => {
   const [open, setOpen] = useState(false);
