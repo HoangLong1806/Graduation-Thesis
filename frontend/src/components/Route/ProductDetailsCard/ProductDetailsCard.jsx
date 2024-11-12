@@ -16,6 +16,10 @@ import {
   removeFromWishlist,
 } from "../../../redux/actions/wishlist";
 
+import { backend_url } from "../../../server";
+
+
+
 const ProductDetailsCard = ({ setOpen, data }) => {
   const { cart } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -82,11 +86,11 @@ const ProductDetailsCard = ({ setOpen, data }) => {
 
             <div className="block w-full 800px:flex">
               <div className="w-full 800px:w-[50%]">
-                <img src={`${data.images && data.images[0]?.url}`} alt="" />
+              <img src={`${backend_url}${data.images && data.images[0]}`} alt="" />
                 <div className="flex">
                   <Link to={`/shop/preview/${data.shop._id}`} className="flex">
                     <img
-                      src={`${data.images && data.images[0]?.url}`}
+                      src={`${backend_url}${data?.shop?.avatar.public_id}`}
                       alt=""
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />

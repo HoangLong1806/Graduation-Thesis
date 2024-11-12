@@ -30,16 +30,22 @@ import {
   ShopCreateEvent,
   ShopAllEvents,
   ShopAllCoupouns,
+  ShopPreviewPage,
 } from "./routes/ShopRoutes.js";
+
 import { useSelector } from "react-redux";
 import { ShopHomePage } from "./ShopRoutes.js";
-import SellerProtectedRoute from "./routes/SellerProtectedRoute.js";
+import SellerProtectedRoute from "./routes/SellerProtectedRoute";
 import ProtectedRoute from "./ProtectedRoute";
+import { getAllProducts } from "./redux/actions/product";
+import { getAllEvents } from "./redux/actions/event";
 const App = () => {
   const { loading, isAuthenticated } = useSelector((state) => state.user);
   useEffect(() => {
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());
+    Store.dispatch(getAllProducts());
+    Store.dispatch(getAllEvents());
   }, []);
   return (
     <div>
@@ -48,6 +54,42 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/sign-up" element={<SignupPage />} />
+          <Route
+            path="/activation/:activation_token"
+            element={<ActivationPage />}
+          />
+          <Route
+            path="/seller/activation/:activation_token"
+            element={<SellerActivationPage />}
+          />
+
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/product/:name" element={<ProductDetailsPage />} />
+          <Route path="/best-selling" element={<BestSellingPage />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/faq" element={<FAQPage />} />
+          <Route path="/payment" element={<PaymentPage />} />
+          <Route path="/order-success" element={<OrderSuccessPage />} />
+
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <CheckoutPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated}>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
 
           {/* Shop Router */}
           <Route path="/shop-create" element={<ShopCreatePage />} />
@@ -111,43 +153,9 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
-
-          <Route
-            path="/activation/:activation_token"
-            element={<ActivationPage />}
-          />
-          <Route
-            path="/seller/activation/:activation_token"
-            element={<SellerActivationPage />}
-          />
-
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/product/:name" element={<ProductDetailsPage />} />
-          <Route path="/best-selling" element={<BestSellingPage />} />
-          <Route path="/events" element={<EventsPage />} />
-          <Route path="/faq" element={<FAQPage />} />
-          <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/order-success" element={<OrderSuccessPage />} />
-
-          <Route
-            path="/checkout"
-            element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <CheckoutPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <ProfilePage />
-              </ProtectedRoute>
-            }
-          />
         </Routes>
         <ToastContainer
-          position="top-center"
+          position="bottom-center"
           autoClose={5000}
           hideProgressBar={false}
           newestOnTop={false}
@@ -156,8 +164,7 @@ const App = () => {
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          theme="colored"
-          // transition: Bounce,
+          theme="dark"
         />
       </BrowserRouter>
     </div>

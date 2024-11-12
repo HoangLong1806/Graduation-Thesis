@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const coupounCodeSchema = new mongoose.Schema({
     name:{
         type: String,
@@ -27,6 +28,7 @@ const coupounCodeSchema = new mongoose.Schema({
         default: Date.now(),
     }
 });
+
 module.exports = mongoose.model("CoupounCode", coupounCodeSchema);
 
 // const mongoose = require("mongoose");

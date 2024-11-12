@@ -1,13 +1,3 @@
-// const express = require("express");
-// const catchAsyncErrors = require("../middleware/catchAsyncErrors");
-// const { upload } = require("../multer");
-// const Shop = require("../model/shop");
-// const Event = require("../model/event");
-// const ErrorHandler = require("../utils/ErrorHandler");
-// const { isSeller } = require("../middleware/auth");
-// const router = express.Router();
-// const fs = require("fs");
-
 const express = require("express");
 const router = express.Router();
 const Event = require("../model/event");
@@ -17,6 +7,7 @@ const Shop = require("../model/shop");
 const ErrorHandler = require("../ultis/ErrorHandler");
 const { isSeller } = require("../middleware/auth");
 const fs = require("fs");
+
 // create event
 router.post(
   "/create-event",

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const eventSchema = new mongoose.Schema({
     name:{
         type: String,
@@ -60,6 +61,7 @@ const eventSchema = new mongoose.Schema({
         default: Date.now(),
     }
 });
+
 module.exports = mongoose.model("Event", eventSchema);
 
 // const mongoose = require("mongoose");

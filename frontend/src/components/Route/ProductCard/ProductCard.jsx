@@ -18,7 +18,8 @@ import {
 import { useEffect } from "react";
 import { addTocart } from "../../../redux/actions/cart";
 import { toast } from "react-toastify";
-import Ratings from "../../Products/Ratings.jsx";
+import Ratings from "../../Products/Ratings";
+import { backend_url } from "../../../server";
 
 const ProductCard = ({ data,isEvent }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -30,6 +31,7 @@ const ProductCard = ({ data,isEvent }) => {
   useEffect(() => {
     if (wishlist && wishlist.find((i) => i._id === data._id)) {
       setClick(true);
+      console.log(wishlist);
     } else {
       setClick(false);
     }
@@ -60,16 +62,22 @@ const ProductCard = ({ data,isEvent }) => {
     }
   };
 
+  console.log(data?.images);  // Kiểm tra dữ liệu hình ảnh
+
+  const imageUrl = `${backend_url}uploads/${data?.images[0]}`;
+  console.log(imageUrl); 
   return (
     <>
       <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
         <div className="flex justify-end"></div>
         <Link to={`${isEvent === true ? `/product/${data._id}?isEvent=true` : `/product/${data._id}`}`}>
           <img
-            src={`${data.images && data.images[0]?.url}`}
+            src={imageUrl}
             alt=""
             className="w-full h-[170px] object-contain"
+            
           />
+          
         </Link>
         <Link to={`/shop/preview/${data?.shop._id}`}>
           <h5 className={`${styles.shop_name}`}>{data.shop.name}</h5>
