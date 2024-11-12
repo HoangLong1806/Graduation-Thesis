@@ -64,7 +64,7 @@ const ProductCard = ({ data,isEvent }) => {
 
   console.log(data?.images);  // Kiểm tra dữ liệu hình ảnh
 
-  const imageUrl = `${backend_url}uploads/${data?.images[0]}`;
+  const imageUrl = `${backend_url}${data.images && data.images[0]}`;
   console.log(imageUrl); 
   return (
     <>
