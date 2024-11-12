@@ -38,12 +38,14 @@ const ShopInfo = ({ isOwner }) => {
         <div>
           <div className="w-full py-5">
             <div className="w-full flex item-center justify-center">
-              {data?.avatar?.public_id(
-                <img
-                  src={`${backend_url}${data.avatar.public_id}`}
-                  alt=""
-                  className="w-[150px] h-[150px] object-cover rounded-full"
-                />
+              {data?.avatar?.public_id && (
+                <div className="w-full flex items-center justify-center">
+                  <img
+                    src={`${backend_url}${data.avatar.public_id}`}
+                    alt=""
+                    className="w-[150px] h-[150px] object-cover rounded-full"
+                  />
+                </div>
               )}
             </div>
             <h3 className="text-center py-2 text-[20px]">{data.name}</h3>
