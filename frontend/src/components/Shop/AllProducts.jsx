@@ -1,5 +1,5 @@
-import { Button } from '@mui/material'; // Dùng package mới
-import { DataGrid } from '@mui/x-data-grid'; // Dùng package mới
+import { Button } from '@mui/material';
+import { DataGrid } from "@mui/x-data-grid";
 import React, { useEffect } from "react";
 import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,12 +8,10 @@ import { getAllProductsShop } from "../../redux/actions/product";
 import { deleteProduct } from "../../redux/actions/product";
 import Loader from "../Layout/Loader";
 
-
-
 const AllProducts = () => {
-
- 
   const { products, isLoading } = useSelector((state) => state.products);
+ 
+  
   const { seller } = useSelector((state) => state.seller);
 
   const dispatch = useDispatch();
@@ -64,11 +62,9 @@ const AllProducts = () => {
       type: "number",
       sortable: false,
       renderCell: (params) => {
-        const d = params.row.name;
-        const product_name = d.replace(/\s+/g, "-");
         return (
           <>
-            <Link to={`/product/${product_name}`}>
+            <Link to={`/product/${params.id}`}>
               <Button>
                 <AiOutlineEye size={20} />
               </Button>
@@ -115,7 +111,6 @@ const AllProducts = () => {
         <Loader />
       ) : (
         <div className="w-full mx-8 pt-1 mt-10 bg-white">
-          
           <DataGrid
             rows={row}
             columns={columns}
@@ -123,7 +118,6 @@ const AllProducts = () => {
             disableSelectionOnClick
             autoHeight
           />
-         
         </div>
       )}
     </>
