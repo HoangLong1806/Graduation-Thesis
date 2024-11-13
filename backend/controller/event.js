@@ -63,6 +63,7 @@ router.get(
   })
 );
 // delete event of a shop
+// delete event of a shop
 router.delete(
   "/delete-shop-event/:id",
   isSeller,
@@ -70,28 +71,40 @@ router.delete(
     try {
       const productId = req.params.id;
       const eventData = await Event.findById(productId);
-      eventData.images.forEach((imageUrl) => {
-        const filename = imageUrl;
-        const filePath = `uploads/${filename}`;
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.log(err);
-          }
-        });
-      });
+
+      // Kiểm tra nếu không tìm thấy sự kiện
+      if (!eventData) {
+        return next(new ErrorHandler("Event not found with this id!", 404));
+      }
+
+      // Sử dụng fs.promises.unlink để xóa file một cách đồng bộ
+      for (const imageUrl of eventData.images) {
+        const filePath = `uploads/${imageUrl}`;
+        try {
+          await fs.promises.unlink(filePath);
+        } catch (err) {
+          console.log(`Failed to delete file ${filePath}:`, err);
+        }
+      }
+
+      // Xóa sự kiện sau khi đã xóa các file thành công
       const event = await Event.findByIdAndDelete(productId);
+
       if (!event) {
         return next(new ErrorHandler("Event not found with this id!", 500));
       }
-      res.status(201).json({
+
+      // Phản hồi thành công
+      res.status(200).json({
         success: true,
         message: "Event Deleted successfully!",
       });
     } catch (error) {
-      return next(new ErrorHandler(error, 400));
+      return next(new ErrorHandler(error.message || "Something went wrong", 400));
     }
   })
 );
+
 module.exports = router;
 
 
