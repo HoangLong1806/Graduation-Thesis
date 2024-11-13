@@ -1,13 +1,13 @@
-import { Button } from '@mui/material'; // Dùng package mới
-import { DataGrid } from '@mui/x-data-grid'; // Dùng package mới
+import { Button } from '@mui/material';
+import { DataGrid } from "@mui/x-data-grid";
 import React, { useEffect } from "react";
 import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { deleteEvent, getAllEventsShop } from "../../redux/actions/event";
 import { getAllProductsShop } from "../../redux/actions/product";
 import { deleteProduct } from "../../redux/actions/product";
 import Loader from "../Layout/Loader";
-import { deleteEvent, getAllEventsShop } from '../../redux/actions/event';
 
 const AllEvents = () => {
   const { events, isLoading } = useSelector((state) => state.events);
@@ -22,7 +22,7 @@ const AllEvents = () => {
   const handleDelete = (id) => {
     dispatch(deleteEvent(id));
     window.location.reload();
-  };
+  }
 
   const columns = [
     { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
@@ -84,7 +84,9 @@ const AllEvents = () => {
       renderCell: (params) => {
         return (
           <>
-            <Button onClick={() => handleDelete(params.id)}>
+            <Button
+            onClick={() => handleDelete(params.id)}
+            >
               <AiOutlineDelete size={20} />
             </Button>
           </>
@@ -102,7 +104,7 @@ const AllEvents = () => {
         name: item.name,
         price: "US$ " + item.discountPrice,
         Stock: item.stock,
-        sold: item?.sold_out,
+        sold: item.sold_out,
       });
     });
 

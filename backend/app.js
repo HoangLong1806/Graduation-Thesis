@@ -10,6 +10,7 @@ const path = require("path");
 app.use(express.json());
 app.use(cookieParser());
 app.use("/", express.static("uploads"));
+app.use("/uploads", express.static("uploads"));
 
 app.use(
   cors({
@@ -36,10 +37,14 @@ const user = require("./controller/user");
 const shop = require("./controller/shop");
 const product = require("./controller/product");
 const event = require("./controller/event");
+const coupon = require("./controller/coupounCode");
+
 app.use("/api/v2/user", user);
 app.use("/api/v2/shop", shop);
 app.use("/api/v2/product", product);
 app.use("/api/v2/event", event);
+app.use("/api/v2/coupon", coupon);
+
 // it's for error handling
 app.use(ErrorHandler);
 
