@@ -10,4 +10,8 @@ const storage = multer.diskStorage({
         cb(null, filename + "-" + uniqueSuffix + ".png");
     },
 });
+const upload = multer({
+    storage,
+    limits: { fileSize: 50 * 1024 * 1024 }, // Giới hạn 50MB
+  });
 exports.upload = multer({ storage: storage });

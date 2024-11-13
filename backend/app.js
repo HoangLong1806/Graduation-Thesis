@@ -7,6 +7,9 @@ const cors = require("cors");
 const path = require("path");
 // app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Tăng giới hạn kích thước của `body`
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use("/", express.static("uploads"));
@@ -22,6 +25,8 @@ app.use(
     credentials: true,
   })
 );
+app.use(express.json({ limit: '50mb' }));  // Tăng giới hạn lên 50MB cho JSON
+app.use(express.urlencoded({ limit: '50mb', extended: true }));  // Tăng giới hạn lên 50MB cho form data
 
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 // config

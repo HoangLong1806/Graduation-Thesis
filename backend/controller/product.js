@@ -43,7 +43,7 @@ router.post(
         });
       }
     } catch (error) {
-      return next(new ErrorHandler(error, 400));
+      return next(new ErrorHandler(error.message, 400));
     }
   })
 );
