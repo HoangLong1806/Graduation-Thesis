@@ -5,10 +5,9 @@ import EventCard from "./EventCard";
 
 const Events = () => {
   const {allEvents,isLoading} = useSelector((state) => state.events);  
-
   return (
     <div>
-     {
+      {
       !isLoading && (
         <div className={`${styles.section}`}>
       <div className={`${styles.heading}`}>
@@ -22,8 +21,10 @@ const Events = () => {
     </div>
       )
      }
-  </div>
+    </div>
   )
 }
 
 export default Events
+
+

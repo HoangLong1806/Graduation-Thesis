@@ -69,22 +69,22 @@ export const deleteEvent = (id) => async (dispatch) => {
   }
 };
 
-// get all events
 export const getAllEvents = () => async (dispatch) => {
   try {
     dispatch({
-      type: "getAlleventsRequest",
+      type: "getAlleventsShopRequest",
     });
 
     const { data } = await axios.get(`${server}/event/get-all-events`);
+
     dispatch({
-      type: "getAlleventsSuccess",
+      type: "getAlleventsShopSuccess",
       payload: data.events,
     });
   } catch (error) {
     dispatch({
-      type: "getAlleventsFailed",
-      payload: error.response.data.message,
+      type: "getAlleventsShopFailed",
+      payload: error.response?.data?.message || "An error occurred",
     });
   }
 };
