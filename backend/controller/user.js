@@ -186,4 +186,103 @@ router.get(
     }
   })
 );
-module.exports = router;
+
+// update user info
+router.put(
+  "/update-user-info",
+  isAuthenticated,
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { email, password, phoneNumber, name } = req.body;
+
+      const user = await User.findOne({ email }).select("+password");
+
+      if (!user) {
+        return next(new ErrorHandler("User not found", 400));
+      }
+
+      const isPasswordValid = await user.comparePassword(password);
+
+      if (!isPasswordValid) {
+        return next(
+          new ErrorHandler("Please provide the correct information", 400)
+        );
+      }
+
+      user.name = name;
+      user.email = email;
+      user.phoneNumber = phoneNumber;
+
+      await user.save();
+
+      res.status(201).json({
+        success: true,
+        user,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// // update avatar chuẩn 
+// router.put(
+//   "/update-avatar",
+//   isAuthenticated,
+//   upload.single("image"),
+//   catchAsyncErrors(async (req, res, next) => {
+//     try {
+//       const existsUser = await User.findById(req.user.id);
+//       const existsAvatarPath = `uploads/${existsUser.avatar}`;
+//       fs.unlinkSync(existsAvatarPath);
+//       const fileUrl = req.file.path;
+//       const user = await User.findByIdAndUpdate(req.user.id, {
+//         avatar: fileUrl,
+//       });
+//       res.status(201).json({
+//         success: true,
+//         user,
+//       });
+//     } catch (error) {
+//       return next(new ErrorHandler(error.message, 500));
+//     }
+//   })
+// );
+// update avatar chữa cháy tạm thời
+router.put(
+  "/update-avatar",
+  isAuthenticated,
+  upload.single("image"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const existsUser = await User.findById(req.user.id);
+
+      // Delete the old avatar if it exists
+      if (existsUser.avatar?.url) {
+        const existsAvatarPath = `uploads/${existsUser.avatar.public_id}`;
+        if (fs.existsSync(existsAvatarPath)) {
+          fs.unlinkSync(existsAvatarPath);
+        }
+      }
+
+      // Get the new file details
+      const file = req.file;
+      const public_id = file.filename; // Use the uploaded file's name
+      const url = `uploads/${public_id}`; // Build the relative URL for the file
+
+     
+      existsUser.avatar = { public_id, url };
+      await existsUser.save();
+
+      res.status(201).json({
+        success: true,
+        user: existsUser,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+
+module.exports = router; 

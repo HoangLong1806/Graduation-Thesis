@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { backend_url } from "../../server";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { backend_url, server } from "../../server";
+import { useDispatch, useSelector } from "react-redux";
 import {
   AiOutlineArrowRight,
   AiOutlineCamera,
@@ -13,23 +13,61 @@ import {
   MdOutlinePassword,
   MdOutlineTrackChanges,
 } from "react-icons/md";
+import { toast } from "react-toastify";
 import styles from "../../styles/styles";
 import { DataGrid } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import { loadUser, updateUserInformation } from "../../redux/actions/user";
+import axios from "axios";
 
 const ProfileContent = ({ active }) => {
-  const { user } = useSelector((state) => state.user);
+  const { user, error, successMessage } = useSelector((state) => state.user);
   const [name, setName] = useState(user && user.name);
   const [email, setEmail] = useState(user && user.email);
-  const [phoneNumber, setPhoneNumber] = useState();
-  const [password, setPassword] = useState();
+  const [phoneNumber, setPhoneNumber] = useState(user && user.phoneNumber);
+  const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState(null);
+  const dispatch = useDispatch();
 
-  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch({ type: "clearErrors" });
+    }
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch({ type: "clearMessages" });
+    }
+  }, [error, successMessage]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submitted");
+    dispatch(updateUserInformation(name, email, phoneNumber, password));
   };
+
+  const handleImage = async (e) => {
+    const file = e.target.files[0];
+    setAvatar(file);
+
+    const formData = new FormData();
+    formData.append("image", e.target.files[0]);
+
+    await axios
+      .put(`${server}/user/update-avatar`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        window.location.reload();
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
+  };
+
   return (
     <div className="w-full">
       {/* profile page */}
@@ -37,11 +75,22 @@ const ProfileContent = ({ active }) => {
         <>
           <div className="flex justify-center w-full">
             <div className="relative">
-              
-                <img src={`${backend_url}${user?.avatar?.public_id}`} className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]" alt="" />
-                
+              <img
+                src={`${backend_url}${user?.avatar?.url}`} // Use `url` instead of `public_id`
+                className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
+                alt="User Avatar"
+              />
+
               <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
-                <AiOutlineCamera />
+                <input
+                  type="file"
+                  id="image"
+                  className="hidden"
+                  onChange={handleImage}
+                />
+                <label htmlFor="image">
+                  <AiOutlineCamera />
+                </label>
               </div>
             </div>
           </div>
@@ -70,6 +119,7 @@ const ProfileContent = ({ active }) => {
                     placeholder="Please Email Address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    readOnly
                   />
                 </div>
               </div>
@@ -86,38 +136,15 @@ const ProfileContent = ({ active }) => {
                   />
                 </div>
 
-                <div className=" w-[100%] 800px:w-[48%]">
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Password
-                  </label>
-                  <div className="mt-1 relative">
-                    <input
-                      type={visible ? "text" : "password"}
-                      name="password"
-                      placeholder="Please Password"
-                      autoComplete="current-password"
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    />
-                    {visible ? (
-                      <AiOutlineEye
-                        className="absolute right-2 top-2 cursor-pointer"
-                        size={25}
-                        onClick={() => setVisible(false)}
-                      />
-                    ) : (
-                      <AiOutlineEyeInvisible
-                        className="absolute right-2 top-2 cursor-pointer"
-                        size={25}
-                        onClick={() => setVisible(true)}
-                      />
-                    )}
-                  </div>
+                <div className=" w-[100%] 800px:w-[50%]">
+                  <label className="block pb-2">Enter your password</label>
+                  <input
+                    type="password"
+                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
                 </div>
               </div>
               <input
@@ -160,7 +187,6 @@ const ProfileContent = ({ active }) => {
           <Address />
         </div>
       )}
-      
     </div>
   );
 };

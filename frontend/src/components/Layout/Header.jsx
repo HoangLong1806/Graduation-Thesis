@@ -176,7 +176,7 @@ const Header = ({ activeHeading }) => {
                 {isAuthenticated ? (
                   <Link to="/profile">
                     <img
-                      src={`${backend_url}${user?.avatar?.public_id}`}
+                      src={`${backend_url}${user.avatar?.public_id}`}
                       className="w-[35px] h-[35px] rounded-full"
                       alt=""
                     />
@@ -218,7 +218,7 @@ const Header = ({ activeHeading }) => {
           <div>
             <Link to="/">
               <img
-                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
+                src="https://i.postimg.cc/t4w3PdVk/Long-Nam-6.png"
                 alt=""
                 className="mt-3 cursor-pointer"
               />
@@ -315,7 +315,7 @@ const Header = ({ activeHeading }) => {
                   <div>
                     <Link to="/profile">
                       <img
-                        src={`${backend_url}${user.avatar?.url}`}
+                        src={`${backend_url}${user.avatar?.public_id}`}
                         alt=""
                         className="w-[60px] h-[60px] rounded-full border-[3px] border-[#0eae88]"
                       />
