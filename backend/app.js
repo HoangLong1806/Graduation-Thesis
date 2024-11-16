@@ -19,7 +19,6 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "http://localhost:3001",
       "https://frontend-one-kappa-74.vercel.app",
     ],
     credentials: true,

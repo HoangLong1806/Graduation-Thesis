@@ -80,14 +80,18 @@ const App = () => {
             }
           />
 
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <ProfilePage />
-              </ProtectedRoute>
-            }
-          />
+<Route
+          path="/profile"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+      
+          
+
+
 
           <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
 
