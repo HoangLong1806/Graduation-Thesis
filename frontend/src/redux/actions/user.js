@@ -4,16 +4,10 @@ import { server } from "../../server";
 // load seller
 export const loadUser = () => async (dispatch) => {
   try {
-    dispatch({
-      type: "LoadUserRequest",
-    });
     const { data } = await axios.get(`${server}/user/getuser`, {
       withCredentials: true,
     });
-    dispatch({
-      type: "LoadUserSuccess",
-      payload: data.user,
-    });
+    dispatch({ type: "LoadUserSuccess", payload: data.user });
   } catch (error) {
     dispatch({
       type: "LoadUserFail",
@@ -153,6 +147,8 @@ export const deleteUserAddress = (id) => async (dispatch) => {
     });
   }
 };
+
+
 
 // get all users --- admin
 export const getAllUsers = () => async (dispatch) => {
