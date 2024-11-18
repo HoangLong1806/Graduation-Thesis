@@ -4,6 +4,8 @@ import styles from "../../styles/styles";
 import CountDown from "./CountDown";
 
 const EventCard = ({ active, data }) => {
+  
+  
   return (
     <div className={`w-full block bg-white rounded-lg ${active ? "unset" : "mb-12"} lg:flex p-2`}>
       <div className="w-full lg:w-[50%] m-auto">
@@ -32,7 +34,7 @@ const EventCard = ({ active, data }) => {
             </h5>
           </div>
           <span className="pr-3 font-[400] text-[17px] text-[#44a55e]">
-            {data?.sold ? `${data.sold} sold` : "No Sales Data"}
+            {data?.sold_out ? `${data.sold_out} sold` : "No Sales Data"}
           </span>
         </div>
         {data && <CountDown data={data} />}

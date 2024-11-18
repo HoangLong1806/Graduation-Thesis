@@ -1,17 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { categoriesData } from "../../static/data";
 import { toast } from "react-toastify";
 import { createevent } from "../../redux/actions/event";
-import imageCompression from "browser-image-compression";
 const CreateEvent = () => {
   const { seller } = useSelector((state) => state.seller);
   const { success, error } = useSelector((state) => state.events);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const [images, setImages] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -20,33 +18,21 @@ const CreateEvent = () => {
   const [originalPrice, setOriginalPrice] = useState();
   const [discountPrice, setDiscountPrice] = useState();
   const [stock, setStock] = useState();
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const endDateRef = useRef(null);
-  const handleStartDateChange = (e) => {
+ const [startDate,setStartDate] = useState(null);
+ const [endDate,setEndDate] = useState(null);
+ const handleStartDateChange = (e) => {
     const startDate = new Date(e.target.value);
     const minEndDate = new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000);
     setStartDate(startDate);
     setEndDate(null);
-
-    // Sử dụng useRef để đặt giá trị min cho input
-    if (endDateRef.current) {
-      endDateRef.current.min = minEndDate.toISOString().slice(0, 10);
-    }
-  };
-  const handleEndDateChange = (e) => {
+    document.getElementById("end-date").min = minEndDate.toISOString().slice(0,10);
+ }
+ const handleEndDateChange = (e) => {
     const endDate = new Date(e.target.value);
-    setEndDate(endDate);
-  };
-
-  const today = new Date().toISOString().slice(0, 10);
-
-  const minEndDate = startDate
-    ? new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000)
-        .toISOString()
-        .slice(0, 10)
-    : "";
-
+     setEndDate(endDate);
+ };
+ const today = new Date().toISOString().slice(0,10);
+ const minEndDate = startDate ? new Date(startDate.getTime() + 3 * 24 * 60 * 60 * 1000).toISOString().slice(0,10) : "";
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -57,85 +43,17 @@ const CreateEvent = () => {
       window.location.reload();
     }
   }, [dispatch, error, success]);
-
-
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    
-    if (!files || files.length === 0) {
-      console.error("No files selected");
-      return;
-    }
-  
-    setImages([]);
-  
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setImages((old) => [...old, reader.result]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-  
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  
-  //   const newForm = new FormData();
-  
-  //   images.forEach((image) => {
-  //     newForm.append("images", image);
-  //   });
-  
-  //   const data = {
-  //     name,
-  //     description,
-  //     category,
-  //     tags,
-  //     originalPrice,
-  //     discountPrice,
-  //     stock,
-  //     images,
-  //     shopId: seller._id,
-  //     start_Date: startDate?.toISOString(),
-  //     Finish_Date: endDate?.toISOString(),
-  //   };
-  
-  //   try {
-  //     const response = await dispatch(createevent(data));
-      
-  //     // Kiểm tra xem response có tồn tại và có thuộc tính data không
-  //     if (response && response.data && response.data.success) {
-  //       toast.success("Event created successfully!");
-  //       navigate("/dashboard-events");
-  //     } else {
-  //       toast.error("Failed to create event");
-  //     }
-  //   } catch (error) {
-  //     toast.error("An error occurred while creating the event");
-  //     console.error(error);
-  //   }
-  // };
-  const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Kiểm tra xem có hình ảnh nào được chọn không
-    if (!images || images.length === 0) {
-      toast.error("Please upload at least one image");
-      return;
-    }
-  
-    // Tạo một FormData mới
+    let files = Array.from(e.target.files);
+    setImages((prevImages) => [...prevImages, ...files]);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const newForm = new FormData();
-  
-    // Đính kèm hình ảnh vào FormData
     images.forEach((image) => {
       newForm.append("images", image);
     });
-  
-    // Đính kèm các trường khác vào FormData
     newForm.append("name", name);
     newForm.append("description", description);
     newForm.append("category", category);
@@ -144,26 +62,10 @@ const CreateEvent = () => {
     newForm.append("discountPrice", discountPrice);
     newForm.append("stock", stock);
     newForm.append("shopId", seller._id);
-    newForm.append("start_Date", startDate?.toISOString());
-    newForm.append("Finish_Date", endDate?.toISOString());
-  
-    try {
-      // Gửi FormData tới backend
-      const response = await dispatch(createevent(newForm));
-  
-      // Kiểm tra phản hồi từ API
-      if (response && response.data && response.data.success) {
-        toast.success("Event created successfully!");
-        navigate("/dashboard-events");
-      } else {
-        toast.error(response?.data?.message || "Failed to create event");
-      }
-    } catch (error) {
-      toast.error("An error occurred while creating the event");
-      console.error(error);
-    }
+    newForm.append("start_Date", startDate.toISOString());
+    newForm.append("Finish_Date", endDate.toISOString());
+    dispatch(createevent(newForm));
   };
-  
   return (
     <div className="w-[90%] 800px:w-[50%] bg-white  shadow h-[80vh] rounded-[4px] p-3 overflow-y-scroll">
       <h5 className="text-[30px] font-Poppins text-center">Create Event</h5>
@@ -280,7 +182,7 @@ const CreateEvent = () => {
             type="date"
             name="price"
             id="start-date"
-            value={startDate ? startDate.toISOString().slice(0, 10) : ""}
+            value={startDate ? startDate.toISOString().slice(0,10) : ""}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={handleStartDateChange}
             min={today}
@@ -296,7 +198,7 @@ const CreateEvent = () => {
             type="date"
             name="price"
             id="start-date"
-            value={endDate ? endDate.toISOString().slice(0, 10) : ""}
+            value={endDate ? endDate.toISOString().slice(0,10) : ""}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={handleEndDateChange}
             min={minEndDate}
@@ -323,7 +225,7 @@ const CreateEvent = () => {
             {images &&
               images.map((i) => (
                 <img
-                  src={i}
+                  src={URL.createObjectURL(i)}
                   key={i}
                   alt=""
                   className="h-[120px] w-[120px] object-cover m-2"
@@ -343,5 +245,4 @@ const CreateEvent = () => {
     </div>
   );
 };
-
 export default CreateEvent;

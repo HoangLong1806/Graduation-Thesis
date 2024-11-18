@@ -8,7 +8,6 @@ const ErrorHandler = require("../ultis/ErrorHandler");
 const { isSeller } = require("../middleware/auth");
 const fs = require("fs");
 
-// create event
 router.post(
   "/create-event",
   upload.array("images"),
