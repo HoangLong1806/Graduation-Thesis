@@ -8,7 +8,7 @@ const EventCard = ({ active, data }) => {
   
   return (
     <div className={`w-full block bg-white rounded-lg ${active ? "unset" : "mb-12"} lg:flex p-2`}>
-      <div className="w-full lg:w-[50%] m-auto">
+      <div className="w-full lg:w-[30%] m-auto">
         {data?.images?.[0] ? (
           <img
             src={`${backend_url}${data.images[0]}`}
