@@ -208,7 +208,7 @@ router.put(
           new ErrorHandler("Please provide the correct information", 400)
         );
       }
-
+      
       user.name = name;
       user.email = email;
       user.phoneNumber = phoneNumber;

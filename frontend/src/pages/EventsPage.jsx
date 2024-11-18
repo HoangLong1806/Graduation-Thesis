@@ -14,6 +14,7 @@ const EventsPage = () => {
         <div>
           <Header activeHeading={4} />
           <EventCard active={true} data={allEvents && allEvents[0]} />
+          <EventCard active={false} data={allEvents && allEvents[1]} />
         </div>
       )}
     </>

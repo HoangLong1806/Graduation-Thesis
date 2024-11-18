@@ -27,31 +27,37 @@ const Checkout = () => {
   }, []);
 
   const paymentSubmit = () => {
-   if(address1 === "" || address2 === "" || zipCode === null || country === "" || city === ""){
-      toast.error("Please choose your delivery address!")
-   } else{
-    const shippingAddress = {
-      address1,
-      address2,
-      zipCode,
-      country,
-      city,
-    };
+    if (
+      address1 === "" ||
+      address2 === "" ||
+      zipCode === null ||
+      country === "" ||
+      city === ""
+    ) {
+      toast.error("Please choose your delivery address!");
+    } else {
+      const shippingAddress = {
+        address1,
+        address2,
+        zipCode,
+        country,
+        city,
+      };
 
-    const orderData = {
-      cart,
-      totalPrice,
-      subTotalPrice,
-      shipping,
-      discountPrice,
-      shippingAddress,
-      user,
+      const orderData = {
+        cart,
+        totalPrice,
+        subTotalPrice,
+        shipping,
+        discountPrice,
+        shippingAddress,
+        user,
+      };
+
+      // update local storage with the updated orders array
+      localStorage.setItem("latestOrder", JSON.stringify(orderData));
+      navigate("/payment");
     }
-
-    // update local storage with the updated orders array
-    localStorage.setItem("latestOrder", JSON.stringify(orderData));
-    navigate("/payment");
-   }
   };
 
   const subTotalPrice = cart.reduce(
@@ -60,7 +66,7 @@ const Checkout = () => {
   );
 
   // this is shipping cost variable
-  const shipping = subTotalPrice * 0.1;
+  const shipping = subTotalPrice * 0.005;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,6 +87,7 @@ const Checkout = () => {
             (acc, item) => acc + item.qty * item.discountPrice,
             0
           );
+          toast.success("Coupon code applied successfully!");
           const discountPrice = (eligiblePrice * couponCodeValue) / 100;
           setDiscountPrice(discountPrice);
           setCouponCodeData(res.data.couponCode);
