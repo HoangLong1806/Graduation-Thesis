@@ -266,7 +266,7 @@ const ProductDetailsInfo = ({ data, products }) => {
             <Link to={`/shop/preview/${data.shop._id}`}>
               <div className="flex items-center">
                 <img
-                  src={`${backend_url}${data?.shop?.avatar}`}
+                  src={`${backend_url}${data?.shop?.avatar.public_id}`}
                   className="w-[50px] h-[50px] rounded-full"
                   alt=""
                 />

@@ -6,12 +6,22 @@ import ProductCard from "../Route/ProductCard/ProductCard";
 
 const SuggestedProducts = ({ data }) => {
   const { allProducts } = useSelector((state) => state.products);
-  const [productData, setProductData] = useState();
+  const [filteredProducts, setFilteredProducts] = useState();
+
   useEffect(() => {
-    const d =
+    const filtered =
       allProducts && allProducts.filter((i) => i.category === data.category);
-    setProductData(d);
-  }, []);
+    setFilteredProducts(filtered);
+  }, [allProducts, data]);
+
+  // Function to handle click event
+  const handleProductClick = (product) => {
+    // Do something with the product if needed, e.g., navigate to its details
+    console.log("Product clicked:", product);
+
+    // Reload the page
+    window.location.reload();
+  };
 
   return (
     <div>
@@ -23,9 +33,14 @@ const SuggestedProducts = ({ data }) => {
             Related Product
           </h2>
           <div className="grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[25px] lg:grid-cols-4 lg:gap-[25px] xl:grid-cols-5 xl:gap-[30px] mb-12">
-            {productData &&
-              productData.map((i, index) => (
-                <ProductCard data={i} key={index} />
+            {filteredProducts &&
+              filteredProducts.map((product, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleProductClick(product)}
+                >
+                  <ProductCard data={product} />
+                </div>
               ))}
           </div>
         </div>
