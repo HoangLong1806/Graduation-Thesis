@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const catchAsyncErrors = require("../middleware/catchAsyncErrors")
-const stripe = require("stripe")('sk_test_51QMRhABrcHqLqFmYJNWmBrOyJ2EWyEmSDr9ihRiI4B8LZm17eBNNlvahdkUNRAlnhzcT96vWDaI1ytWE81ykhhBf00n6DqqHom');
+const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const stripe = require("stripe")(
+  "sk_test_51QMRhABrcHqLqFmYJNWmBrOyJ2EWyEmSDr9ihRiI4B8LZm17eBNNlvahdkUNRAlnhzcT96vWDaI1ytWE81ykhhBf00n6DqqHom"
+);
 // const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 router.post(
-  "/payment/process",
+  "/process",
   catchAsyncErrors(async (req, res, next) => {
     const myPayment = await stripe.paymentIntents.create({
       amount: req.body.amount,
@@ -24,9 +26,13 @@ router.post(
 router.get(
   "/stripeapikey",
   catchAsyncErrors(async (req, res, next) => {
-    res.status(200).json({ stripeApikey: 'pk_test_51QMRhABrcHqLqFmYrH0UArhSE4zRoxVjPyZOMPpnwqUGhEH6BdqwpWSZLCGwtaUmfgXeHta0oWB5Kb6Z3igpJ0ml00dlvvqE2b' });
+    res
+      .status(200)
+      .json({
+        stripeApikey:
+          "pk_test_51QMRhABrcHqLqFmYrH0UArhSE4zRoxVjPyZOMPpnwqUGhEH6BdqwpWSZLCGwtaUmfgXeHta0oWB5Kb6Z3igpJ0ml00dlvvqE2b",
+      });
   })
 );
-
 
 module.exports = router;

@@ -42,12 +42,12 @@ import { getAllEvents } from "./redux/actions/event";
 
 import axios from "axios";
 import { server } from "./server.js";
-
-import ProtectedAdminRoute from "./routes/ProtectedAdminRoute";
-
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import ProtectedAdminRoute from "./routes/ProtectedAdminRoute.js";
 const App = () => {
   const [stripeApikey, setStripeApiKey] = useState("");
-
+  
   async function getStripeApikey() {
     const { data } = await axios.get(`${server}/payment/stripeapikey`);
     setStripeApiKey(data.stripeApikey);
@@ -58,11 +58,25 @@ const App = () => {
     Store.dispatch(loadSeller());
     Store.dispatch(getAllProducts());
     Store.dispatch(getAllEvents());
-    // getStripeApikey();
+    getStripeApikey();
   }, []);
   return (
     <div>
       <BrowserRouter>
+      {stripeApikey && (
+        <Elements stripe={loadStripe(stripeApikey)}>
+          <Routes>
+            <Route
+              path="/payment"
+              element={
+                <ProtectedRoute>
+                  <PaymentPage />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Elements>
+      )}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -81,8 +95,7 @@ const App = () => {
           <Route path="/best-selling" element={<BestSellingPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/faq" element={<FAQPage />} />
-          <Route path="/payment" element={<PaymentPage />} />
-          <Route path="/order-success" element={<OrderSuccessPage />} />
+          <Route path="/order/success" element={<OrderSuccessPage />} />
 
           <Route
             path="/checkout"
@@ -170,7 +183,6 @@ const App = () => {
             path="/admin/dashboard"
             element={
               <ProtectedAdminRoute>
-
                 <AdminDashboardPage />
               </ProtectedAdminRoute>
 

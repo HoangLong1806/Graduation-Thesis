@@ -1,33 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { backend_url, server } from "../../server";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
 import {
   AiOutlineArrowRight,
   AiOutlineCamera,
   AiOutlineDelete,
-  AiOutlineEye,
-  AiOutlineEyeInvisible,
 } from "react-icons/ai";
-import {
-  MdOutlineAdminPanelSettings,
-  MdOutlinePassword,
-  MdOutlineTrackChanges,
-} from "react-icons/md";
-import { Country, State } from "country-state-city";
-import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { server } from "../../server";
 import styles from "../../styles/styles";
+import { Button } from '@mui/material';
 import { DataGrid } from "@mui/x-data-grid";
-import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
+import { MdTrackChanges } from "react-icons/md";
 import { RxCross1 } from "react-icons/rx";
 import {
   deleteUserAddress,
   loadUser,
-  updateUserInformation,
-  updateUserPassword,
   updatUserAddress,
+  updateUserInformation,
 } from "../../redux/actions/user";
+import { Country, State } from "country-state-city";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 import axios from "axios";
+import { getAllOrdersOfUser } from "../../redux/actions/order";
 
 const ProfileContent = ({ active }) => {
   const { user, error, successMessage } = useSelector((state) => state.user);
@@ -52,52 +47,47 @@ const ProfileContent = ({ active }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateUserInformation(name, email, phoneNumber, password));
-    toast.success("Thông tin của bạn đã được cập nhật!");
-  };
-
-  const handlePhoneChange = (e) => {
-    const value = e.target.value;
-
-    if (/^\d*$/.test(value) && value.length <= 10) {
-      setPhoneNumber(value);
-    }
   };
 
   const handleImage = async (e) => {
-    const file = e.target.files[0];
-    setAvatar(file);
+    const reader = new FileReader();
 
-    const formData = new FormData();
-    formData.append("image", e.target.files[0]);
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatar(reader.result);
+        axios
+          .put(
+            `${server}/user/update-avatar`,
+            { avatar: reader.result },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            dispatch(loadUser());
+            toast.success("avatar updated successfully!");
+          })
+          .catch((error) => {
+            toast.error(error);
+          });
+      }
+    };
 
-    await axios
-      .put(`${server}/user/update-avatar`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      })
-      .then((response) => {
-        window.location.reload();
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   return (
     <div className="w-full">
-      {/* profile page */}
+      {/* profile */}
       {active === 1 && (
         <>
           <div className="flex justify-center w-full">
             <div className="relative">
               <img
-                src={`${backend_url}${user?.avatar?.url}`} // Use `url` instead of `public_id`
+                src={`${user?.avatar?.url}`}
                 className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
-                alt="User Avatar"
+                alt=""
               />
-
               <div className="w-[30px] h-[30px] bg-[#E3E9EE] rounded-full flex items-center justify-center cursor-pointer absolute bottom-[5px] right-[5px]">
                 <input
                   type="file"
@@ -122,7 +112,6 @@ const ProfileContent = ({ active }) => {
                     type="text"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
                     required
-                    placeholder="Please Full Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -133,24 +122,21 @@ const ProfileContent = ({ active }) => {
                     type="text"
                     className={`${styles.input} !w-[95%] mb-1 800px:mb-0`}
                     required
-                    placeholder="Please Email Address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    readOnly
                   />
                 </div>
               </div>
+
               <div className="w-full 800px:flex block pb-3">
                 <div className=" w-[100%] 800px:w-[50%]">
                   <label className="block pb-2">Phone Number</label>
                   <input
-                    type="text"
-                    inputMode="numeric"
+                    type="number"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
                     required
-                    placeholder="Please Phone Number"
                     value={phoneNumber}
-                    onChange={(e) => handlePhoneChange(e)}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
 
@@ -175,31 +161,36 @@ const ProfileContent = ({ active }) => {
           </div>
         </>
       )}
+
       {/* order */}
       {active === 2 && (
         <div>
           <AllOrders />
         </div>
       )}
-      {/* refund */}
+
+      {/* Refund */}
       {active === 3 && (
         <div>
           <AllRefundOrders />
         </div>
       )}
-      {/* TrackOrder */}
+
+      {/* Track order */}
       {active === 5 && (
         <div>
           <TrackOrder />
         </div>
       )}
-      {/* ChangePassword */}
+
+      {/* Change Password */}
       {active === 6 && (
         <div>
           <ChangePassword />
         </div>
       )}
-      {/* Address */}
+
+      {/*  user Address */}
       {active === 7 && (
         <div>
           <Address />
@@ -210,28 +201,29 @@ const ProfileContent = ({ active }) => {
 };
 
 const AllOrders = () => {
-  const orders = [
-    {
-      _id: "1463hvbfbhrt28820221",
-      orderItems: [
-        {
-          name: "iphone 13asdkasdasdasdasdas",
-        },
-      ],
-      totalPrice: 1000,
-      orderStatus: "Delivered",
-    },
-  ];
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+  console.log(orders);
+  
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (user && user._id) {
+      dispatch(getAllOrdersOfUser(user._id));
+    }
+  }, [dispatch, user]);
+
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-
     {
       field: "status",
       headerName: "Status",
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
-        return params.row.status === "Delivered" ? "greenColor" : "redColor";
+        return params.getValue(params.id, "status") === "Delivered"
+          ? "greenColor"
+          : "redColor";
       },
     },
     {
@@ -242,71 +234,53 @@ const AllOrders = () => {
       flex: 0.7,
     },
     {
-      field: "total",
-      headerName: "Total",
+      field: "amount",
+      headerName: "Amount",
       type: "number",
       minWidth: 130,
       flex: 0.8,
     },
-
     {
-      field: " ",
-      flex: 1,
+      field: "createdAt",
+      headerName: "Order Date",
+      type: "date",
       minWidth: 150,
-      headerName: "",
-      type: "number",
-      sortable: false,
-      renderCell: (params) => {
-        return (
-          <>
-            <Link to={`/order/${params.id}`}>
-              <Button>
-                <AiOutlineArrowRight size={20} />
-              </Button>
-            </Link>
-          </>
-        );
-      },
+      flex: 0.8,
     },
   ];
-  const row = [];
+
+  const rows = [];
 
   orders &&
     orders.forEach((item) => {
-      row.push({
+      rows.push({
         id: item._id,
         itemsQty: item.orderItems.length,
-        total: "US$ " + item.totalPrice,
+        amount: item.totalPrice,
         status: item.orderStatus,
+        createdAt: item.createdAt,
       });
     });
 
   return (
-    <div className="pl-8 pt-1">
-      <DataGrid
-        rows={row}
-        columns={columns}
-        pageSize={10}
-        disableSelectionOnClick
-        autoHeight
-      />
+    <div className="w-full">
+      <DataGrid rows={rows} columns={columns} pageSize={10} disableSelectionOnClick autoHeight />
     </div>
   );
 };
 
 const AllRefundOrders = () => {
-  const orders = [
-    {
-      _id: "1463hvbfbhrt28820221",
-      orderItems: [
-        {
-          name: "iphone 13asdkasdasdasdasdas",
-        },
-      ],
-      totalPrice: 1000,
-      orderStatus: "Delivered",
-    },
-  ];
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, []);
+
+  const eligibleOrders =
+    orders && orders.filter((item) => item.status === "Processing refund");
+
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
@@ -316,7 +290,9 @@ const AllRefundOrders = () => {
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
-        return params.row.status === "Delivered" ? "greenColor" : "redColor";
+        return params.getValue(params.id, "status") === "Delivered"
+          ? "greenColor"
+          : "redColor";
       },
     },
     {
@@ -326,6 +302,7 @@ const AllRefundOrders = () => {
       minWidth: 130,
       flex: 0.7,
     },
+
     {
       field: "total",
       headerName: "Total",
@@ -344,7 +321,7 @@ const AllRefundOrders = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/order/${params.id}`}>
+            <Link to={`/user/order/${params.id}`}>
               <Button>
                 <AiOutlineArrowRight size={20} />
               </Button>
@@ -354,15 +331,16 @@ const AllRefundOrders = () => {
       },
     },
   ];
+
   const row = [];
 
-  orders &&
-    orders.forEach((item) => {
+  eligibleOrders &&
+    eligibleOrders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.orderItems.length,
+        itemsQty: item.cart.length,
         total: "US$ " + item.totalPrice,
-        status: item.orderStatus,
+        status: item.status,
       });
     });
 
@@ -372,26 +350,22 @@ const AllRefundOrders = () => {
         rows={row}
         columns={columns}
         pageSize={10}
-        disableSelectionOnClick
         autoHeight
+        disableSelectionOnClick
       />
     </div>
   );
 };
 
 const TrackOrder = () => {
-  const orders = [
-    {
-      _id: "1463hvbfbhrt28820221",
-      orderItems: [
-        {
-          name: "iphone 13asdkasdasdasdasdas",
-        },
-      ],
-      totalPrice: 1000,
-      orderStatus: "Delivered",
-    },
-  ];
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, []);
+
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
@@ -401,7 +375,9 @@ const TrackOrder = () => {
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
-        return params.row.status === "Delivered" ? "greenColor" : "redColor";
+        return params.getValue(params.id, "status") === "Delivered"
+          ? "greenColor"
+          : "redColor";
       },
     },
     {
@@ -411,6 +387,7 @@ const TrackOrder = () => {
       minWidth: 130,
       flex: 0.7,
     },
+
     {
       field: "total",
       headerName: "Total",
@@ -429,9 +406,9 @@ const TrackOrder = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/order/${params.id}`}>
+            <Link to={`/user/track/order/${params.id}`}>
               <Button>
-                <MdOutlineTrackChanges size={20} />
+                <MdTrackChanges size={20} />
               </Button>
             </Link>
           </>
@@ -439,16 +416,19 @@ const TrackOrder = () => {
       },
     },
   ];
+
   const row = [];
+
   orders &&
     orders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.orderItems.length,
+        itemsQty: item.cart.length,
         total: "US$ " + item.totalPrice,
-        status: item.orderStatus,
+        status: item.status,
       });
     });
+
   return (
     <div className="pl-8 pt-1">
       <DataGrid
@@ -469,7 +449,7 @@ const ChangePassword = () => {
 
   const passwordChangeHandler = async (e) => {
     e.preventDefault();
-    toast.success("Password Updated Successfully!");
+
     await axios
       .put(
         `${server}/user/update-user-password`,
@@ -477,10 +457,10 @@ const ChangePassword = () => {
         { withCredentials: true }
       )
       .then((res) => {
+        toast.success(res.data.success);
         setOldPassword("");
         setNewPassword("");
         setConfirmPassword("");
-        toast.success(res.data.success);
       })
       .catch((error) => {
         toast.error(error.response.data.message);
@@ -781,5 +761,4 @@ const Address = () => {
     </div>
   );
 };
-
 export default ProfileContent;

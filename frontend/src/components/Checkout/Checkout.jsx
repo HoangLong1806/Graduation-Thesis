@@ -279,7 +279,7 @@ const ShippingInfo = ({
         <div></div>
       </form>
       <h5
-        className="text-[18px] cursor-pointer inline-block"
+        className="text-[18px] cursor-pointer inline-block text-[#f63b60] mt-3"
         onClick={() => setUserInfo(!userInfo)}
       >
         Choose From saved address
