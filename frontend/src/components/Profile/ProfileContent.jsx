@@ -211,7 +211,76 @@ const ProfileContent = ({ active }) => {
 };
 
 const AllOrders = () => {
-    const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+  console.log(orders);
+  
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (user && user._id) {
+      dispatch(getAllOrdersOfUser(user._id));
+    }
+  }, [dispatch, user]);
+
+  const columns = [
+    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    {
+      field: "status",
+      headerName: "Status",
+      minWidth: 130,
+      flex: 0.7,
+      cellClassName: (params) => {
+        return params.getValue(params.id, "status") === "Delivered"
+          ? "greenColor"
+          : "redColor";
+      },
+    },
+    {
+      field: "itemsQty",
+      headerName: "Items Qty",
+      type: "number",
+      minWidth: 130,
+      flex: 0.7,
+    },
+    {
+      field: "amount",
+      headerName: "Amount",
+      type: "number",
+      minWidth: 130,
+      flex: 0.8,
+    },
+    {
+      field: "createdAt",
+      headerName: "Order Date",
+      type: "date",
+      minWidth: 150,
+      flex: 0.8,
+    },
+  ];
+
+  const rows = [];
+
+  orders &&
+    orders.forEach((item) => {
+      rows.push({
+        id: item._id,
+        itemsQty: item.orderItems.length,
+        amount: item.totalPrice,
+        status: item.orderStatus,
+        createdAt: item.createdAt,
+      });
+    });
+
+  return (
+    <div className="w-full">
+      <DataGrid rows={rows} columns={columns} pageSize={10} disableSelectionOnClick autoHeight />
+    </div>
+  );
+};
+
+const AllRefundOrders = () => {
+  const { user } = useSelector((state) => state.user);
   const { orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -291,19 +360,15 @@ const AllOrders = () => {
   );
 };
 
-const AllRefundOrders = () => {
-  const orders = [
-    {
-      _id: "1463hvbfbhrt28820221",
-      orderItems: [
-        {
-          name: "iphone 13asdkasdasdasdasdas",
-        },
-      ],
-      totalPrice: 1000,
-      orderStatus: "Delivered",
-    },
-  ];
+const TrackOrder = () => {
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, []);
+
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
@@ -343,7 +408,7 @@ const AllRefundOrders = () => {
           <>
             <Link to={`/order/${params.id}`}>
               <Button>
-                <AiOutlineArrowRight size={20} />
+                <MdTrackChanges size={20} />
               </Button>
             </Link>
           </>
@@ -352,7 +417,6 @@ const AllRefundOrders = () => {
     },
   ];
   const row = [];
-
   orders &&
     orders.forEach((item) => {
       row.push({
@@ -362,7 +426,6 @@ const AllRefundOrders = () => {
         status: item.orderStatus,
       });
     });
-
   return (
     <div className="pl-8 pt-1">
       <DataGrid
