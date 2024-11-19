@@ -55,6 +55,14 @@ const ProfileContent = ({ active }) => {
     toast.success("Thông tin của bạn đã được cập nhật!");
   };
 
+  const handlePhoneChange = (e) => {
+    const value = e.target.value;
+
+    if (/^\d*$/.test(value) && value.length <= 10) {
+      setPhoneNumber(value);
+    }
+  };
+
   const handleImage = async (e) => {
     const file = e.target.files[0];
     setAvatar(file);
@@ -136,12 +144,13 @@ const ProfileContent = ({ active }) => {
                 <div className=" w-[100%] 800px:w-[50%]">
                   <label className="block pb-2">Phone Number</label>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
                     required
                     placeholder="Please Phone Number"
                     value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    onChange={(e) => handlePhoneChange(e)}
                   />
                 </div>
 
