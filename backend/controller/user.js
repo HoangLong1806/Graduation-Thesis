@@ -9,7 +9,7 @@ const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const sendMail = require("../ultis/sendMail");
 const sendToken = require("../ultis/jwtToken");
-const { isAuthenticated } = require("../middleware/auth");
+const { isAuthenticated, isAdmin } = require("../middleware/auth");
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   try {
@@ -208,7 +208,7 @@ router.put(
           new ErrorHandler("Please provide the correct information", 400)
         );
       }
-      
+
       user.name = name;
       user.email = email;
       user.phoneNumber = phoneNumber;
@@ -270,7 +270,7 @@ router.put(
       const public_id = file.filename; // Use the uploaded file's name
       const url = `uploads/${public_id}`; // Build the relative URL for the file
 
-     
+
       existsUser.avatar = { public_id, url };
       await existsUser.save();
 
@@ -387,4 +387,46 @@ router.put(
 );
 
 
+
+// all users --- for admin
+router.get(
+  "/admin-all-users",
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const users = await User.find().sort({
+
+        createdAt: -1,
+      });
+      res.status(201).json({
+        success: true,
+        users,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+
+//delete user
+
+router.delete("/delete-user/:id", isAuthenticated, isAdmin("Admin"), catchAsyncErrors(async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return next(new ErrorHandler("User is not available with this id", 404));
+    }
+    await User.findByIdAndDelete(req.params.id);
+    res.status(201).json({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    return next(new ErrorHandler(error.message, 500));
+
+  }
+
+}));
 module.exports = router;

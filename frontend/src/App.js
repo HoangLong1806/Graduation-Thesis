@@ -32,7 +32,7 @@ import {
   ShopAllCoupouns,
   ShopPreviewPage,
 } from "./routes/ShopRoutes.js";
-import { AdminDashboardPage } from "./routes/AdminRoutes";
+import { AdminDashboardPage , AdminDashboardUsers} from "./routes/AdminRoutes";
 import { useSelector } from "react-redux";
 import { ShopHomePage } from "./ShopRoutes.js";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
@@ -184,6 +184,15 @@ const App = () => {
             element={
               <ProtectedAdminRoute>
                 <AdminDashboardPage />
+              </ProtectedAdminRoute>
+
+            }
+          />
+           <Route
+            path="/admin-users"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardUsers />
               </ProtectedAdminRoute>
 
             }
