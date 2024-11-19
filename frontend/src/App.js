@@ -32,15 +32,19 @@ import {
   ShopAllCoupouns,
   ShopPreviewPage,
 } from "./routes/ShopRoutes.js";
-import {AdminDashboardPage} from "./routes/AdminRoutes";
+import { AdminDashboardPage } from "./routes/AdminRoutes";
 import { useSelector } from "react-redux";
 import { ShopHomePage } from "./ShopRoutes.js";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
 import ProtectedRoute from "./ProtectedRoute";
 import { getAllProducts } from "./redux/actions/product";
 import { getAllEvents } from "./redux/actions/event";
+
 import axios from "axios";
 import { server } from "./server.js";
+
+import ProtectedAdminRoute from "./routes/ProtectedAdminRoute";
+
 const App = () => {
   const [stripeApikey, setStripeApiKey] = useState("");
 
@@ -165,9 +169,11 @@ const App = () => {
           <Route
             path="/admin/dashboard"
             element={
-             
+              <ProtectedAdminRoute>
+
                 <AdminDashboardPage />
-             
+              </ProtectedAdminRoute>
+
             }
           />
         </Routes>

@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const sendMail = require("../ultis/sendMail");
 const sendToken = require("../ultis/jwtToken");
 const Shop = require("../model/shop");
-const { isSeller } = require("../middleware/auth");
+const { isSeller, isAuthenticated, isAdmin } = require("../middleware/auth");
 const { promiseHooks } = require("v8");
 const { upload } = require("../multer");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
@@ -277,6 +277,29 @@ router.get(
         res.status(201).json({
           success: true,
           shop,
+        });
+      } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+    })
+  );
+
+
+  
+// all shop --- for admin
+router.get(
+    "/admin-all-seller",
+    isAuthenticated,
+    isAdmin("Admin"),
+    catchAsyncErrors(async (req, res, next) => {
+      try {
+        const seller = await Shop.find().sort({
+         
+          createdAt: -1,
+        });
+        res.status(201).json({
+          success: true,
+          seller,
         });
       } catch (error) {
         return next(new ErrorHandler(error.message, 500));

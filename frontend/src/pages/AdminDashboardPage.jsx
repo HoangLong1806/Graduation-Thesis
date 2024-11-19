@@ -1,7 +1,7 @@
 import React from 'react'
 import AdminHeader from '../components/Layout/AdminHeader'
 import AdminSidebar from '../components/Admin/Layout/AdminSidebar'
-import AdminDashboardHeroMain from '../components/Admin/AdminDashboardHeroMain'
+import AdminDashboardMain from '../components/Admin/AdminDashboardMain'
 const AdminDashboardPage = () => {
   return (
     <div>
@@ -11,7 +11,7 @@ const AdminDashboardPage = () => {
           <div className="w-[80px] 800px:w-[330px]">
             <AdminSidebar active={1} />
           </div>
-          <AdminDashboardHeroMain />
+          <AdminDashboardMain />
         </div>
       </div> 
     </div>
