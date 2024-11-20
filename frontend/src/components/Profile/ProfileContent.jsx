@@ -313,9 +313,7 @@ const AllRefundOrders = () => {
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
-          ? "greenColor"
-          : "redColor";
+        return params.row.status === "Delivered" ? "greenColor" : "redColor";
       },
     },
     {
@@ -325,7 +323,6 @@ const AllRefundOrders = () => {
       minWidth: 130,
       flex: 0.7,
     },
-
     {
       field: "total",
       headerName: "Total",
@@ -357,15 +354,14 @@ const AllRefundOrders = () => {
 
   const row = [];
 
-  eligibleOrders &&
-    eligibleOrders.forEach((item) => {
-      row.push({
-        id: item._id,
-        itemsQty: item.cart.length,
-        total: "US$ " + item.totalPrice,
-        status: item.status,
-      });
+  eligibleOrders.forEach((item) => {
+    row.push({
+      id: item._id,
+      itemsQty: item.cart.length,
+      total: "US$ " + item.totalPrice,
+      status: item.status,
     });
+  });
 
   return (
     <div className="pl-8 pt-1">
@@ -373,13 +369,12 @@ const AllRefundOrders = () => {
         rows={row}
         columns={columns}
         pageSize={10}
-        autoHeight
         disableSelectionOnClick
+        autoHeight
       />
     </div>
   );
 };
-
 const TrackOrder = () => {
   const orders = [
     {

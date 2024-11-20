@@ -139,12 +139,7 @@ router.put(
 
       await product.save({ validateBeforeSave: false });
 
-      // await Order.findByIdAndUpdate(
-      //   orderId,
-      //   { $set: { "cart.$[elem].isReviewed": true } },
-      //   { arrayFilters: [{ "elem._id": productId }], new: true }
-      // );
-
+   
       res.status(200).json({
         success: true,
         message: "Reviwed succesfully!",
