@@ -12,6 +12,7 @@ import {
   MdOutlineAdminPanelSettings,
   MdOutlinePassword,
   MdOutlineTrackChanges,
+  MdTrackChanges,
 } from "react-icons/md";
 import { Country, State } from "country-state-city";
 import { toast } from "react-toastify";
@@ -299,7 +300,7 @@ const AllRefundOrders = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
-  }, []);
+  }, [dispatch, user._id]);
 
   const eligibleOrders =
     orders && orders.filter((item) => item.status === "Processing refund");
@@ -375,19 +376,18 @@ const AllRefundOrders = () => {
     </div>
   );
 };
+
+
+
 const TrackOrder = () => {
-  const orders = [
-    {
-      _id: "1463hvbfbhrt28820221",
-      orderItems: [
-        {
-          name: "iphone 13asdkasdasdasdasdas",
-        },
-      ],
-      totalPrice: 1000,
-      orderStatus: "Delivered",
-    },
-  ];
+  const { user } = useSelector((state) => state.user);
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getAllOrdersOfUser(user._id));
+  }, []);
+
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
 
@@ -425,9 +425,9 @@ const TrackOrder = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/order/${params.id}`}>
+            <Link to={`/user/order/${params.id}`}>
               <Button>
-                <MdOutlineTrackChanges size={20} />
+                <AiOutlineArrowRight size={20} />
               </Button>
             </Link>
           </>
@@ -436,15 +436,17 @@ const TrackOrder = () => {
     },
   ];
   const row = [];
+
   orders &&
     orders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.orderItems.length,
+        itemsQty: item.cart.length,
         total: "US$ " + item.totalPrice,
-        status: item.orderStatus,
+        status: item.status,
       });
     });
+
   return (
     <div className="pl-8 pt-1">
       <DataGrid
