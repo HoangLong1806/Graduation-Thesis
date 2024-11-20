@@ -94,7 +94,7 @@ const ProfileContent = ({ active }) => {
           <div className="flex justify-center w-full">
             <div className="relative">
               <img
-                src={`${backend_url}${user?.avatar?.url}`} // Use `url` instead of `public_id`
+                src={`${backend_url}${user?.avatar?.public_id}`} 
                 className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
                 alt="User Avatar"
               />
