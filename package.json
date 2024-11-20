@@ -11,6 +11,8 @@
   "author": "nhomLongNam",
   "license": "ISC",
   "dependencies": {
+    "@stripe/react-stripe-js": "^3.0.0",
+    "@stripe/stripe-js": "^5.2.0",
     "axios": "^1.7.7",
     "backend": "file:",
     "bcrypt": "^5.1.1",

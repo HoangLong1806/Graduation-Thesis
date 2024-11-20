@@ -12,6 +12,7 @@ const { upload } = require("../multer");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../ultis/ErrorHandler");
 const sendShopToken = require("../ultis/shopToken");
+const shop = require("../model/shop");
 //create shop
 router.post("/create-shop", upload.single("file"), async(req, res, next) => {
     try {
@@ -306,6 +307,27 @@ router.get(
       }
     })
   );
+
+
+  //delete seller
+
+router.delete("/delete-seller/:id", isAuthenticated, isAdmin("Admin"), catchAsyncErrors(async (req, res, next) => {
+    try {
+      const seller = await Shop.findById(req.params.id);
+      if (!seller) {
+        return next(new ErrorHandler("Seller is not available with this id", 404));
+      }
+      await Shop.findByIdAndDelete(req.params.id);
+      res.status(201).json({
+        success: true,
+        message: "User deleted successfully",
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+  
+    }
+  
+  }));
 module.exports = router;
 
 

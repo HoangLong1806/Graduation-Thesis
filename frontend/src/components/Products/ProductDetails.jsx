@@ -178,8 +178,8 @@ const ProductDetails = ({ data }) => {
                       </h3>
                     </Link>
                     <h5 className="pb-3 text-[15px]">
-                      {/* ({data.shop.ratings}) Ratings */}
-                      (4/5) Ratings
+                       ({data.ratings}) Ratings 
+                      
                     </h5>
                   </div>
                   <div
