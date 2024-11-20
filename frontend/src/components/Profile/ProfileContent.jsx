@@ -213,75 +213,6 @@ const ProfileContent = ({ active }) => {
 const AllOrders = () => {
   const { user } = useSelector((state) => state.user);
   const { orders } = useSelector((state) => state.order);
-  console.log(orders);
-  
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (user && user._id) {
-      dispatch(getAllOrdersOfUser(user._id));
-    }
-  }, [dispatch, user]);
-
-  const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
-    {
-      field: "status",
-      headerName: "Status",
-      minWidth: 130,
-      flex: 0.7,
-      cellClassName: (params) => {
-        return params.getValue(params.id, "status") === "Delivered"
-          ? "greenColor"
-          : "redColor";
-      },
-    },
-    {
-      field: "itemsQty",
-      headerName: "Items Qty",
-      type: "number",
-      minWidth: 130,
-      flex: 0.7,
-    },
-    {
-      field: "amount",
-      headerName: "Amount",
-      type: "number",
-      minWidth: 130,
-      flex: 0.8,
-    },
-    {
-      field: "createdAt",
-      headerName: "Order Date",
-      type: "date",
-      minWidth: 150,
-      flex: 0.8,
-    },
-  ];
-
-  const rows = [];
-
-  orders &&
-    orders.forEach((item) => {
-      rows.push({
-        id: item._id,
-        itemsQty: item.orderItems.length,
-        amount: item.totalPrice,
-        status: item.orderStatus,
-        createdAt: item.createdAt,
-      });
-    });
-
-  return (
-    <div className="w-full">
-      <DataGrid rows={rows} columns={columns} pageSize={10} disableSelectionOnClick autoHeight />
-    </div>
-  );
-};
-
-const AllRefundOrders = () => {
-  const { user } = useSelector((state) => state.user);
-  const { orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
@@ -360,7 +291,8 @@ const AllRefundOrders = () => {
   );
 };
 
-const TrackOrder = () => {
+
+const AllRefundOrders = () => {
   const { user } = useSelector((state) => state.user);
   const { orders } = useSelector((state) => state.order);
   const dispatch = useDispatch();
@@ -368,6 +300,9 @@ const TrackOrder = () => {
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
   }, []);
+
+  const eligibleOrders =
+    orders && orders.filter((item) => item.status === "Processing refund");
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -378,7 +313,9 @@ const TrackOrder = () => {
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
-        return params.row.status === "Delivered" ? "greenColor" : "redColor";
+        return params.getValue(params.id, "status") === "Delivered"
+          ? "greenColor"
+          : "redColor";
       },
     },
     {
@@ -388,6 +325,7 @@ const TrackOrder = () => {
       minWidth: 130,
       flex: 0.7,
     },
+
     {
       field: "total",
       headerName: "Total",
@@ -406,9 +344,9 @@ const TrackOrder = () => {
       renderCell: (params) => {
         return (
           <>
-            <Link to={`/order/${params.id}`}>
+            <Link to={`/user/order/${params.id}`}>
               <Button>
-                <MdTrackChanges size={20} />
+                <AiOutlineArrowRight size={20} />
               </Button>
             </Link>
           </>
@@ -416,24 +354,27 @@ const TrackOrder = () => {
       },
     },
   ];
+
   const row = [];
-  orders &&
-    orders.forEach((item) => {
+
+  eligibleOrders &&
+    eligibleOrders.forEach((item) => {
       row.push({
         id: item._id,
-        itemsQty: item.orderItems.length,
+        itemsQty: item.cart.length,
         total: "US$ " + item.totalPrice,
-        status: item.orderStatus,
+        status: item.status,
       });
     });
+
   return (
     <div className="pl-8 pt-1">
       <DataGrid
         rows={row}
         columns={columns}
         pageSize={10}
-        disableSelectionOnClick
         autoHeight
+        disableSelectionOnClick
       />
     </div>
   );

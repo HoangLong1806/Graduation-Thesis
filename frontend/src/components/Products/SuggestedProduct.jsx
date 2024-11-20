@@ -7,7 +7,7 @@ import ProductCard from "../Route/ProductCard/ProductCard";
 const SuggestedProducts = ({ data }) => {
   const { allProducts } = useSelector((state) => state.products);
   const [filteredProducts, setFilteredProducts] = useState();
-
+  window.scrollTo(0, 0); // tự động scroll lên đầu trang khi chuyển qua trang khác
   useEffect(() => {
     const filtered =
       allProducts && allProducts.filter((i) => i.category === data.category);
@@ -16,10 +16,9 @@ const SuggestedProducts = ({ data }) => {
 
   // Function to handle click event
   const handleProductClick = (product) => {
-    // Do something with the product if needed, e.g., navigate to its details
     console.log("Product clicked:", product);
 
-    // Reload the page
+    
     window.location.reload();
   };
 

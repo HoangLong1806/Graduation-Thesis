@@ -6,7 +6,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { getAllProductsShop } from "../../redux/actions/product";
-import { set } from "mongoose";
 const ShopInfo = ({ isOwner }) => {
 //viết thêm
 const [data, setData] = useState({});
@@ -50,7 +49,7 @@ useEffect(() => {
       <div className=" w-full py-5">
         <div className="w-full flex justify-center item-center">
           <img
-            src={`${backend_url}${data.avatar}`}
+            src={`${backend_url}${data.avatar.public_id}`}
             alt=""
             className="w-[150px] h-[150px] rounded-full object-cover"
           />
