@@ -17,6 +17,7 @@ import {
   CheckoutPage,
   PaymentPage,
   OrderSuccessPage,
+  OrderDetailsPage,
 } from "./routes/Routes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -31,6 +32,8 @@ import {
   ShopAllEvents,
   ShopAllCoupouns,
   ShopPreviewPage,
+  ShopAllOrders,
+  ShopOrderDetails
 } from "./routes/ShopRoutes.js";
 import { AdminDashboardPage , AdminDashboardUsers} from "./routes/AdminRoutes";
 import { useSelector } from "react-redux";
@@ -107,6 +110,15 @@ const App = () => {
           />
 
           <Route
+            path="/user/order/:id"
+            element={
+              <ProtectedRoute>
+                <OrderDetailsPage />
+              </ProtectedRoute>
+            }
+          />
+
+<Route
             path="/profile"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
@@ -151,6 +163,22 @@ const App = () => {
             element={
               <SellerProtectedRoute>
                 <ShopAllProducts />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="dashboard-orders"
+            element={
+              <SellerProtectedRoute>
+                <ShopAllOrders />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/order/:id"
+            element={
+              <SellerProtectedRoute>
+                <ShopOrderDetails />
               </SellerProtectedRoute>
             }
           />
