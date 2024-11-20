@@ -62,10 +62,10 @@ const ProductCard = ({ data,isEvent }) => {
     }
   };
 
-  console.log(data?.images);  // Kiểm tra dữ liệu hình ảnh
+   // Kiểm tra dữ liệu hình ảnh
 
   const imageUrl = `${backend_url}${data.images && data.images[0]}`;
-  console.log(imageUrl); 
+  
   return (
     <>
       <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">

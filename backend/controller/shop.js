@@ -6,12 +6,13 @@ const jwt = require("jsonwebtoken");
 const sendMail = require("../ultis/sendMail");
 const sendToken = require("../ultis/jwtToken");
 const Shop = require("../model/shop");
-const { isSeller } = require("../middleware/auth");
+const { isSeller, isAuthenticated, isAdmin } = require("../middleware/auth");
 const { promiseHooks } = require("v8");
 const { upload } = require("../multer");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const ErrorHandler = require("../ultis/ErrorHandler");
 const sendShopToken = require("../ultis/shopToken");
+const shop = require("../model/shop");
 //create shop
 router.post("/create-shop", upload.single("file"), async(req, res, next) => {
     try {
@@ -283,6 +284,50 @@ router.get(
       }
     })
   );
+
+
+  
+// all shop --- for admin
+router.get(
+    "/admin-all-seller",
+    isAuthenticated,
+    isAdmin("Admin"),
+    catchAsyncErrors(async (req, res, next) => {
+      try {
+        const seller = await Shop.find().sort({
+         
+          createdAt: -1,
+        });
+        res.status(201).json({
+          success: true,
+          seller,
+        });
+      } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+    })
+  );
+
+
+  //delete seller
+
+router.delete("/delete-seller/:id", isAuthenticated, isAdmin("Admin"), catchAsyncErrors(async (req, res, next) => {
+    try {
+      const seller = await Shop.findById(req.params.id);
+      if (!seller) {
+        return next(new ErrorHandler("Seller is not available with this id", 404));
+      }
+      await Shop.findByIdAndDelete(req.params.id);
+      res.status(201).json({
+        success: true,
+        message: "User deleted successfully",
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+  
+    }
+  
+  }));
 module.exports = router;
 
 

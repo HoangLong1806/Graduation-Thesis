@@ -1,5 +1,6 @@
 const app = require("./app");
 const connectDatabase = require("./db/Database");
+ // Cho phép tất cả các nguồn
 
 //handling uncaught exceptions
 process.on("uncaughtException", (err) => {
