@@ -104,7 +104,7 @@ const ProductCard = ({ data,isEvent }) => {
               </h4>
             </div>
             <span className="font-[400] text-[17px] text-[#68d284]">
-              {data?.sold_out} sold
+              {!data?.sold_out + 100} sold
             </span>
           </div>
         </Link>

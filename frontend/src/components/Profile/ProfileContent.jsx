@@ -385,8 +385,10 @@ const TrackOrder = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getAllOrdersOfUser(user._id));
-  }, []);
+    if (user && user._id) {
+      dispatch(getAllOrdersOfUser(user._id));
+    }
+  }, [dispatch, user]);
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -424,28 +426,29 @@ const TrackOrder = () => {
       sortable: false,
       renderCell: (params) => {
         return (
-          <>
-            <Link to={`/user/order/${params.id}`}>
-              <Button>
-                <AiOutlineArrowRight size={20} />
-              </Button>
-            </Link>
-          </>
+          <Link to={`/user/track/order/${params.id}`}>
+            <Button>
+              <MdOutlineTrackChanges size={20} />
+            </Button>
+          </Link>
         );
       },
     },
   ];
+
   const row = [];
 
   orders &&
-    orders.forEach((item) => {
-      row.push({
-        id: item._id,
-        itemsQty: item.cart.length,
-        total: "US$ " + item.totalPrice,
-        status: item.status,
+    orders
+      .filter((item) => item.status?.trim() !== "") // Lọc những đơn hàng có status không trống
+      .forEach((item) => {
+        row.push({
+          id: item._id,
+          itemsQty: item.cart.length,
+          total: "US$ " + item.totalPrice,
+          status: item.status,
+        });
       });
-    });
 
   return (
     <div className="pl-8 pt-1">
