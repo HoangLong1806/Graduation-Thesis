@@ -42,6 +42,9 @@ import {
   AdminDashboardUsers,
   AdminDashboardSellers,
   AdminDashboardOrders,
+  AdminDashboardProducts,
+  AdminDashboardEvents,
+  
 } from "./routes/AdminRoutes";
 import { useSelector } from "react-redux";
 import { ShopHomePage } from "./ShopRoutes.js";
@@ -260,6 +263,22 @@ const App = () => {
             element={
               <ProtectedAdminRoute>
                 <AdminDashboardOrders />
+              </ProtectedAdminRoute>
+            }
+          />
+           <Route
+            path="/admin-products"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardProducts />
+              </ProtectedAdminRoute>
+            }
+          />
+            <Route
+            path="/admin-events"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardEvents />
               </ProtectedAdminRoute>
             }
           />
