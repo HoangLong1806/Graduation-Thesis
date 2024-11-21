@@ -36,6 +36,7 @@ import {
   ShopPreviewPage,
   ShopAllOrders,
   ShopOrderDetails,
+  ShopWithDrawMoneyPage,
 } from "./routes/ShopRoutes.js";
 import {
   AdminDashboardPage,
@@ -44,7 +45,7 @@ import {
   AdminDashboardOrders,
   AdminDashboardProducts,
   AdminDashboardEvents,
-  
+  AdminDashboardWithdraw,
 } from "./routes/AdminRoutes";
 import { useSelector } from "react-redux";
 import { ShopHomePage } from "./ShopRoutes.js";
@@ -200,7 +201,7 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
-          
+
           <Route
             path="/order/:id"
             element={
@@ -225,7 +226,14 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
-
+          <Route
+            path="/dashboard-withdraw-money"
+            element={
+              <SellerProtectedRoute>
+                <ShopWithDrawMoneyPage />
+              </SellerProtectedRoute>
+            }
+          />
           <Route
             path="dashboard-coupouns"
             element={
@@ -266,7 +274,7 @@ const App = () => {
               </ProtectedAdminRoute>
             }
           />
-           <Route
+          <Route
             path="/admin-products"
             element={
               <ProtectedAdminRoute>
@@ -274,11 +282,19 @@ const App = () => {
               </ProtectedAdminRoute>
             }
           />
-            <Route
+          <Route
             path="/admin-events"
             element={
               <ProtectedAdminRoute>
                 <AdminDashboardEvents />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-withdraw-request"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardWithdraw />
               </ProtectedAdminRoute>
             }
           />
