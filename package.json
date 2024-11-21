@@ -11,6 +11,7 @@
   "author": "nhomLongNam",
   "license": "ISC",
   "dependencies": {
+    "@mui/x-data-grid": "^7.22.2",
     "@stripe/react-stripe-js": "^3.0.0",
     "@stripe/stripe-js": "^5.2.0",
     "axios": "^1.7.7",

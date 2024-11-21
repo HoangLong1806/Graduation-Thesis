@@ -36,7 +36,6 @@ import {
   ShopPreviewPage,
   ShopAllOrders,
   ShopOrderDetails,
-  ShopWithDrawMoneyPage,
 } from "./routes/ShopRoutes.js";
 import {
   AdminDashboardPage,
@@ -201,7 +200,7 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
-
+          
           <Route
             path="/order/:id"
             element={
@@ -226,14 +225,7 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
-          <Route
-            path="/dashboard-withdraw-money"
-            element={
-              <SellerProtectedRoute>
-                <ShopWithDrawMoneyPage />
-              </SellerProtectedRoute>
-            }
-          />
+
           <Route
             path="dashboard-coupouns"
             element={
@@ -274,7 +266,7 @@ const App = () => {
               </ProtectedAdminRoute>
             }
           />
-          <Route
+           <Route
             path="/admin-products"
             element={
               <ProtectedAdminRoute>
@@ -282,7 +274,7 @@ const App = () => {
               </ProtectedAdminRoute>
             }
           />
-          <Route
+            <Route
             path="/admin-events"
             element={
               <ProtectedAdminRoute>
@@ -290,7 +282,7 @@ const App = () => {
               </ProtectedAdminRoute>
             }
           />
-          <Route
+           <Route
             path="/admin-withdraw-request"
             element={
               <ProtectedAdminRoute>

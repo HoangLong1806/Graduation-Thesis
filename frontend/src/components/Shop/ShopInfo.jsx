@@ -4,7 +4,7 @@ import { backend_url, server } from "../../server";
 import styles from "../../styles/styles";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getAllProductsShop } from "../../redux/actions/product";
 
 
@@ -92,9 +92,11 @@ const ShopInfo = ({ isOwner }) => {
 
       {isOwner && (
         <div className="py-3 px-4">
-          <div className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`}>
+          <Link to="/settings">
+           <div className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`}>
             <span className="text-white">Edit Shop</span>
           </div>
+           </Link>
           <div
             className={`${styles.button} !w-full !h-[42px] !rounded-[5px]`}
             onClick={logoutHandler}
