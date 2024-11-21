@@ -27,12 +27,12 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: [true, "Please enter your product stock!"],
   },
-  images:[
+  images:[ // dùng cái này ở local
     {
         type: String,
     },
 ],
-  // images: [
+  // images: [ /// cái này dùng cho cloudinary
   //   {
   //     public_id: {
   //       type: String,

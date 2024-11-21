@@ -1,38 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { getAllUsers } from "../../redux/actions/user";
-import { AiOutlineDelete } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
 import styles from "../../styles/styles";
 import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
+import { getAllSellers } from "../../redux/actions/sellers";
+import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 
-const AllUsers = () => {
+const AllSellers = () => {
   const dispatch = useDispatch();
-  const { users } = useSelector((state) => state.user);
+  const { sellers } = useSelector((state) => state.seller);
   const [open, setOpen] = useState(false);
   const [userId, setUserId] = useState("");
 
   useEffect(() => {
-    dispatch(getAllUsers());
+    dispatch(getAllSellers());
   }, [dispatch]);
 
   const handleDelete = async (id) => {
     await axios
-    .delete(`${server}/user/delete-user/${id}`, { withCredentials: true })
+    .delete(`${server}/shop/delete-seller/${id}`, { withCredentials: true })
     .then((res) => {
       toast.success(res.data.message);
     });
 
-  dispatch(getAllUsers());
+  dispatch(getAllSellers());
   };
 
   const columns = [
-    { field: "id", headerName: "User ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: "Seller ID", minWidth: 150, flex: 0.7 },
 
     {
       field: "name",
@@ -48,8 +48,8 @@ const AllUsers = () => {
       flex: 0.7,
     },
     {
-      field: "role",
-      headerName: "User Role",
+      field: "address",
+      headerName: "Seller Address",
       type: "text",
       minWidth: 130,
       flex: 0.7,
@@ -62,12 +62,30 @@ const AllUsers = () => {
       minWidth: 130,
       flex: 0.8,
     },
-
+    {
+        field: "  ",
+        flex: 1,
+        minWidth: 150,
+        headerName: "Preview Shop",
+        type: "number",
+        sortable: false,
+        renderCell: (params) => {
+          return (
+            <>
+            <Link to={`/shop/preview/${params.id}`}>
+            <Button>
+                <AiOutlineEye size={20} />
+              </Button>
+            </Link>
+            </>
+          );
+        },
+      },
     {
       field: " ",
       flex: 1,
       minWidth: 150,
-      headerName: "Delete User",
+      headerName: "Delete Seller",
       type: "number",
       sortable: false,
       renderCell: (params) => {
@@ -83,14 +101,14 @@ const AllUsers = () => {
   ];
 
   const row = [];
-  users &&
-    users.forEach((item) => {
+  sellers &&
+  sellers.forEach((item) => {
       row.push({
         id: item._id,
-        name: item.name,
-        email: item.email,
-        role: item.role,
+        name: item?.name,
+        email: item?.email,
         joinedAt: item.createdAt.slice(0, 10),
+        address: item.address,
       });
     });
 
@@ -138,4 +156,4 @@ const AllUsers = () => {
   );
 };
 
-export default AllUsers;  
+export default AllSellers;

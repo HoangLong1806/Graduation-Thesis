@@ -56,26 +56,14 @@ const AdminDashboardMain = () => {
             minWidth: 130,
             flex: 0.8,
         },
-
         {
-            field: " ",
-            flex: 1,
-            minWidth: 150,
-            headerName: "",
+            field: "joinedAt",
+            headerName: "Order Date",
             type: "number",
-            sortable: false,
-            renderCell: (params) => {
-                return (
-                    <>
-                        <Link to={`/dashboard/order/${params.id}`}>
-                            <Button>
-                                <AiOutlineArrowRight size={20} />
-                            </Button>
-                        </Link>
-                    </>
-                );
-            },
-        },
+            minWidth: 130,
+            flex: 0.8,
+          },
+      
     ];
 
     const row = [];
@@ -83,10 +71,11 @@ const AdminDashboardMain = () => {
     adminOrders && adminOrders.forEach((item)=> {
         row.push({
             id: item._id,
-            itemsQty: item.cart.reduce((acc, item) => acc + item.qty, 0),
-            itemsQty: item.qty,
-            total: item.totalPrice,
-            status: item.status,
+            itemsQty: item?.cart?.reduce((acc, item) => acc + item.qty, 0),
+            itemsQty: item?.qty,
+            total: item?.totalPrice,
+            status: item?.status,
+            joinedAt: new Date(item.createdAt).toLocaleDateString('vi-VN'),
         })});
        
     return (
