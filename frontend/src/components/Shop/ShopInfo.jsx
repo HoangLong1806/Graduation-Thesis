@@ -8,14 +8,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllProductsShop } from "../../redux/actions/product";
 
 const ShopInfo = ({ isOwner }) => {
-  const [data,setData] = useState({});
-  const {products} = useSelector((state) => state.products);
-  const [isLoading,setIsLoading] = useState(false);
-  const {id} = useParams();
-  const dispatch = useDispatch();
 
+
+
+
+
+  const [data, setData] = useState({});
+  const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(true);
+  const { products } = useSelector((state) => state.products); ///
+  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAllProductsShop(id));
+    dispatch(getAllProductsShop(id)); ///
+
     setIsLoading(true);
     axios.get(`${server}/shop/get-shop-info/${id}`).then((res) => {
      setData(res.data.shop);
@@ -34,14 +39,23 @@ const ShopInfo = ({ isOwner }) => {
     window.location.reload();
   };
 
+
   const totalReviewsLength =
     products &&
     products.reduce((acc, product) => acc + product.reviews.length, 0);
 
-  const totalRatings = products && products.reduce((acc,product) => acc + product.reviews.reduce((sum,review) => sum + review.rating, 0),0);
+const totalRatings =
+products &&
+products.reduce(
+  (acc, product) =>
+    acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+  0
+);
 
-  const averageRating = totalRatings / totalReviewsLength || 0;
+const avg = totalRatings / totalReviewsLength || 0;
 
+const averageRating = avg.toFixed(2);
+//---------------------------------------//
   return (
    <>
    {
@@ -71,12 +85,15 @@ const ShopInfo = ({ isOwner }) => {
         <h4 className="text-[#000000a6]">{data.phoneNumber}</h4>
       </div>
       <div className="p-3">
-        <h5 className="font-[600]">Total Products</h5>
+
+
+        <h5 className="font-[600]">Total Number</h5>
         <h4 className="text-[#000000a6]">{products && products.length}</h4>
       </div>
       <div className="p-3">
-        <h5 className="font-[600]">Shop Ratings</h5>
-        <h4 className="text-[#000000b0]">{averageRating}/5</h4>
+        <h5 className="font-[600]">Shop Rating</h5>
+        <h4 className="text-[#000000a6]">{averageRating}/5</h4>
+
       </div>
       <div className="p-3">
         <h5 className="font-[600]">Joined On</h5>

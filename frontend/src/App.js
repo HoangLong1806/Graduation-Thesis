@@ -38,6 +38,7 @@ import {
   ShopOrderDetails,
   ShopSettingsPage,
   ShopWithDrawMoneyPage,
+  ShopInboxPage,
 } from "./routes/ShopRoutes.js";
 import {
   AdminDashboardPage,
@@ -253,6 +254,14 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
+           <Route
+            path="/dashboard-messages"
+            element={
+              <SellerProtectedRoute>
+                <ShopInboxPage />
+              </SellerProtectedRoute>
+            }
+          />
           <Route
             path="/admin/dashboard"
             element={
@@ -309,6 +318,7 @@ const App = () => {
               </ProtectedAdminRoute>
             }
           />
+            
         </Routes>
         <ToastContainer
           position="top-right"

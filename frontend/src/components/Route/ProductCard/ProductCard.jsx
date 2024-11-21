@@ -65,7 +65,7 @@ const ProductCard = ({ data,isEvent }) => {
    // Kiểm tra dữ liệu hình ảnh
 
   const imageUrl = `${backend_url}${data.images && data.images[0]}`;
-  
+
   return (
     <>
       <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
