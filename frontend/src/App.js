@@ -20,6 +20,7 @@ import {
   OrderDetailsPage,
   TrackOrderPage,
   ShopAllRefunds,
+  
 } from "./routes/Routes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -36,6 +37,8 @@ import {
   ShopPreviewPage,
   ShopAllOrders,
   ShopOrderDetails,
+  ShopSettingsPage,
+  
 } from "./routes/ShopRoutes.js";
 import {
   AdminDashboardPage,
@@ -159,6 +162,15 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
+
+          <Route
+            path="/settings"
+            element={
+              <SellerProtectedRoute>
+                <ShopSettingsPage />
+              </SellerProtectedRoute>
+            }
+          />
           <Route
             path="dashboard"
             element={
@@ -200,7 +212,7 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
-          
+
           <Route
             path="/order/:id"
             element={
