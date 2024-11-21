@@ -1,3 +1,6 @@
+
+
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "../../styles/styles";
@@ -23,7 +26,7 @@ const Payment = () => {
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
-
+  
   useEffect(() => {
     const orderData = JSON.parse(localStorage.getItem("latestOrder"));
     setOrderData(orderData);
@@ -31,7 +34,7 @@ const Payment = () => {
 
   const createOrder = (data, actions) => {
     return actions.order
-      .create({
+    .create({
         purchase_units: [
           {
             description: "Sunflower",
@@ -61,9 +64,9 @@ const Payment = () => {
   const onApprove = async (data, actions) => {
     return actions.order.capture().then(function (details) {
       const { payer } = details;
-
+      
       let paymentInfo = payer;
-
+      
       if (paymentInfo !== undefined) {
         paypalPaymentHandler(paymentInfo);
       }
@@ -84,8 +87,8 @@ const Payment = () => {
     };
 
     await axios
-      .post(`${server}/order/create-order`, order, config)
-      .then((res) => {
+    .post(`${server}/order/create-order`, order, config)
+    .then((res) => {
         setOpen(false);
         navigate("/order/success");
         toast.success("Order successful!");
@@ -94,11 +97,11 @@ const Payment = () => {
         window.location.reload();
       });
   };
-
+  
   const paymentData = {
     amount: Math.round(orderData?.totalPrice * 100),
   };
-
+  
   const paymentHandler = async (e) => {
     e.preventDefault();
     try {
@@ -115,7 +118,7 @@ const Payment = () => {
       );
 
       const client_secret = data.client_secret;
-
+      
       if (!stripe || !elements) return;
       const result = await stripe.confirmCardPayment(client_secret, {
         payment_method: {
@@ -134,8 +137,8 @@ const Payment = () => {
           };
 
           await axios
-            .post(`${server}/order/create-order`, order, config)
-            .then((res) => {
+          .post(`${server}/order/create-order`, order, config)
+          .then((res) => {
               setOpen(false);
               navigate("/order/success");
               toast.success("Order successful!");
@@ -143,7 +146,7 @@ const Payment = () => {
               localStorage.setItem("latestOrder", JSON.stringify([]));
               window.location.reload();
             });
-        }
+          }
       }
     } catch (error) {
       toast.error(error);
@@ -207,7 +210,7 @@ const PaymentInfo = ({
   cashOnDeliveryHandler,
 }) => {
   const [select, setSelect] = useState(1);
-
+  
   return (
     <div className="w-full 800px:w-[95%] bg-[#fff] rounded-md p-5 pb-8">
       {/* select buttons */}
@@ -216,7 +219,7 @@ const PaymentInfo = ({
           <div
             className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center"
             onClick={() => setSelect(1)}
-          >
+            >
             {select === 1 ? (
               <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
             ) : null}
@@ -238,7 +241,7 @@ const PaymentInfo = ({
                     placeholder={user && user.name}
                     className={`${styles.input} !w-[95%] text-[#444]`}
                     value={user && user.name}
-                  />
+                    />
                 </div>
                 <div className="w-[50%]">
                   <label className="block pb-2">Exp Date</label>
@@ -260,7 +263,7 @@ const PaymentInfo = ({
                         },
                       },
                     }}
-                  />
+                    />
                 </div>
               </div>
 
@@ -314,7 +317,7 @@ const PaymentInfo = ({
                 type="submit"
                 value="Submit"
                 className={`${styles.button} !bg-[#f63b60] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
-              />
+                />
             </form>
           </div>
         ) : null}
@@ -327,7 +330,7 @@ const PaymentInfo = ({
           <div
             className="w-[25px] h-[25px] rounded-full bg-transparent border-[3px] border-[#1d1a1ab4] relative flex items-center justify-center"
             onClick={() => setSelect(2)}
-          >
+            >
             {select === 2 ? (
               <div className="w-[13px] h-[13px] bg-[#1d1a1acb] rounded-full" />
             ) : null}
@@ -343,7 +346,7 @@ const PaymentInfo = ({
             <div
               className={`${styles.button} !bg-[#f63b60] text-white h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
               onClick={() => setOpen(true)}
-            >
+              >
               Pay Now
             </div>
             {open && (
@@ -359,14 +362,14 @@ const PaymentInfo = ({
                     <PayPalScriptProvider
                       options={{
                         "client-id":
-                          "Aczac4Ry9_QA1t4c7TKH9UusH3RTe6onyICPoCToHG10kjlNdI-qwobbW9JAHzaRQwFMn2-k660853jn",
-                      }}
+                          "AQpQWnKpHrKdhMSiXKt2Ttlw2eEsJEtf01JOvgjfpU4BIYkDTKPK8BOPYNjYNYWeQmMeS3i0AMnX2KFK",
+                        }}
                     >
                       <PayPalButtons
                         style={{ layout: "vertical" }}
                         onApprove={onApprove}
                         createOrder={createOrder}
-                      />
+                        />
                     </PayPalScriptProvider>
                 </div>
               </div>

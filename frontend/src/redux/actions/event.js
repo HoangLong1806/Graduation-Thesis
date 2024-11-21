@@ -4,19 +4,21 @@ import { server } from "../../server";
 // create event
 export const createevent = (data) => async (dispatch) => {
   try {
-    dispatch({
-      type: "eventCreateRequest",
-    });
+    dispatch({ type: "eventCreateRequest" });
 
-    const { d } = await axios.post(`${server}/event/create-event`, data);
+    // Gọi API và lấy dữ liệu trả về từ `response.data`
+    const response = await axios.post(`${server}/event/create-event`, data);
+    const { event } = response.data;
+
+    // Dispatch action thành công
     dispatch({
       type: "eventCreateSuccess",
-      payload: d.event,
+      payload: event,
     });
   } catch (error) {
     dispatch({
       type: "eventCreateFail",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || "Something went wrong",
     });
   }
 };
@@ -67,7 +69,6 @@ export const deleteEvent = (id) => async (dispatch) => {
   }
 };
 
-// get all events
 export const getAllEvents = () => async (dispatch) => {
   try {
     dispatch({
@@ -75,6 +76,7 @@ export const getAllEvents = () => async (dispatch) => {
     });
 
     const { data } = await axios.get(`${server}/event/get-all-events`);
+
     dispatch({
       type: "getAlleventsSuccess",
       payload: data.events,
@@ -82,7 +84,7 @@ export const getAllEvents = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "getAlleventsFailed",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || "An error occurred",
     });
   }
 };

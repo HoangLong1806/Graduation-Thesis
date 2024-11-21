@@ -1,19 +1,22 @@
 import LoginPage from "../../src/pages/Login";
-import SignupPage from "../../src/pages/SignupPage.jsx";
+import SignupPage from "../../src/pages/SignupPage";
 import ActivationPage from "../../src/pages/ActivationPage";
 import HomePage from "../../src/pages/HomePage";
 import ProductsPage from "../../src/pages/ProductsPage";
 import BestSellingPage from "../../src/pages/BestSellingPage";
 import EventsPage from "../../src/pages/EventsPage";
 import FAQPage from "../../src/pages/FAQPage.jsx";
-import ProductDetailsPage from "../../src/pages/ProductDetailsPage.jsx";
+import ProductDetailsPage from "../../src/pages/ProductDetailsPage";
 import ShopCreatePage from "../../src/pages/ShopCreate";
 import SellerActivationPage from "../../src/pages/SellerActivationPage";
 import ShopLoginPage from "../../src/pages/ShopLoginPage";
-import ProfilePage from "../../src/pages/ProfilePage.jsx";
+import ProfilePage from "../../src/pages/ProfilePage";
 import CheckoutPage from "../pages/CheckoutPage";
 import PaymentPage from "../pages/PaymentPage";
 import OrderSuccessPage from "../pages/OrderSuccessPage";
+import OrderDetailsPage from "../pages/OrderDetailsPage";
+import TrackOrderPage from "../pages/TrackOrderPage";
+import ShopAllRefunds from "../pages/ShopAllRefunds.jsx";
 export {
      LoginPage,
      SignupPage,
@@ -31,4 +34,7 @@ export {
      CheckoutPage,
      PaymentPage,
      OrderSuccessPage,
+     OrderDetailsPage,
+     TrackOrderPage,
+     ShopAllRefunds
 };

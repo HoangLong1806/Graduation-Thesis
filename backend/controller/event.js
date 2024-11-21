@@ -8,7 +8,6 @@ const ErrorHandler = require("../ultis/ErrorHandler");
 const { isSeller } = require("../middleware/auth");
 const fs = require("fs");
 
-// create event
 router.post(
   "/create-event",
   upload.array("images"),
@@ -69,32 +68,49 @@ router.delete(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const productId = req.params.id;
+
+      // Tìm sự kiện cần xóa
       const eventData = await Event.findById(productId);
-      eventData.images.forEach((imageUrl) => {
-        const filename = imageUrl;
-        const filePath = `uploads/${filename}`;
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.log(err);
-          }
+
+      // Kiểm tra nếu không tìm thấy sự kiện
+      if (!eventData) {
+        return res.status(404).json({
+          success: false,
+          message: "Event not found with this id!",
         });
-      });
-      const event = await Event.findByIdAndDelete(productId);
-      if (!event) {
-        return next(new ErrorHandler("Event not found with this id!", 500));
       }
-      res.status(201).json({
+
+      // Xóa sự kiện trước để phản hồi ngay lập tức
+      await Event.findByIdAndDelete(productId);
+
+      // Phản hồi thành công ngay sau khi xóa sự kiện
+      res.status(200).json({
         success: true,
         message: "Event Deleted successfully!",
       });
+
+      // Xóa hình ảnh sau khi đã phản hồi thành công
+      const deleteFiles = eventData.images.map(async (imageUrl) => {
+        const filePath = `uploads/${imageUrl}`;
+        try {
+          await fs.promises.unlink(filePath);
+        } catch (err) {
+          console.error(`Failed to delete file ${filePath}:`, err);
+        }
+      });
+
+      // Dùng Promise.all để đảm bảo xóa tất cả file cùng lúc
+      await Promise.all(deleteFiles);
+
     } catch (error) {
-      return next(new ErrorHandler(error, 400));
+      return next(new ErrorHandler(error.message || "Something went wrong", 400));
     }
   })
 );
+
+
+
 module.exports = router;
-
-
 
 
 // const express = require("express");
