@@ -36,6 +36,8 @@ import {
   ShopPreviewPage,
   ShopAllOrders,
   ShopOrderDetails,
+  ShopSettingsPage,
+  ShopWithDrawMoneyPage,
 } from "./routes/ShopRoutes.js";
 import {
   AdminDashboardPage,
@@ -159,6 +161,14 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
+            <Route
+          path="/settings"
+          element={
+            <SellerProtectedRoute>
+              <ShopSettingsPage />
+            </SellerProtectedRoute>
+          }
+        />
           <Route
             path="dashboard"
             element={
@@ -200,7 +210,7 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
-          
+
           <Route
             path="/order/:id"
             element={
@@ -231,6 +241,15 @@ const App = () => {
             element={
               <SellerProtectedRoute>
                 <ShopAllCoupouns />
+              </SellerProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard-withdraw-money"
+            element={
+              <SellerProtectedRoute>
+                <ShopWithDrawMoneyPage />
               </SellerProtectedRoute>
             }
           />
@@ -266,7 +285,7 @@ const App = () => {
               </ProtectedAdminRoute>
             }
           />
-           <Route
+          <Route
             path="/admin-products"
             element={
               <ProtectedAdminRoute>
@@ -274,7 +293,7 @@ const App = () => {
               </ProtectedAdminRoute>
             }
           />
-            <Route
+          <Route
             path="/admin-events"
             element={
               <ProtectedAdminRoute>
@@ -282,7 +301,7 @@ const App = () => {
               </ProtectedAdminRoute>
             }
           />
-           <Route
+          <Route
             path="/admin-withdraw-request"
             element={
               <ProtectedAdminRoute>
@@ -292,7 +311,7 @@ const App = () => {
           />
         </Routes>
         <ToastContainer
-          position="bottom-center"
+          position="top-right"
           autoClose={5000}
           hideProgressBar={false}
           newestOnTop={false}
