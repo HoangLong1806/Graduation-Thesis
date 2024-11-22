@@ -20,6 +20,7 @@ import {
   OrderDetailsPage,
   TrackOrderPage,
   ShopAllRefunds,
+  UserInbox,
 } from "./routes/Routes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -144,6 +145,14 @@ const App = () => {
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inbox"
+            element={
+              <ProtectedRoute>
+                <UserInbox />
               </ProtectedRoute>
             }
           />
