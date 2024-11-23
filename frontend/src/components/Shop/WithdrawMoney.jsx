@@ -4,6 +4,7 @@ import { getAllOrdersOfShop } from "../../redux/actions/order";
 import styles from "../../styles/styles";
 
 const WithdrawMoney = () => {
+  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const { orders } = useSelector((state) => state.order);
   const { seller } = useSelector((state) => state.seller);
@@ -35,6 +36,13 @@ const WithdrawMoney = () => {
           Withdraw
         </div>
       </div>
+      {
+        open && (
+          <div className="w-full fixed top-0 left-0 flex items-center justify-center bg-[#0000004e]">
+
+          </div>
+        )
+      }
     </div>
   );
 };
