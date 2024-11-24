@@ -1,7 +1,7 @@
 import axios from "axios";
 import { server } from "../../server";
 
-// load seller
+// load user
 export const loadUser = () => async (dispatch) => {
   try {
     const { data } = await axios.get(`${server}/user/getuser`, {

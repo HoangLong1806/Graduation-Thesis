@@ -18,6 +18,9 @@ import {
   PaymentPage,
   OrderSuccessPage,
   OrderDetailsPage,
+  TrackOrderPage,
+  ShopAllRefunds,
+  UserInbox,
 } from "./routes/Routes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -33,9 +36,20 @@ import {
   ShopAllCoupouns,
   ShopPreviewPage,
   ShopAllOrders,
-  ShopOrderDetails
+  ShopOrderDetails,
+  ShopSettingsPage,
+  ShopWithDrawMoneyPage,
+  ShopInboxPage,
 } from "./routes/ShopRoutes.js";
-import { AdminDashboardPage , AdminDashboardUsers, AdminDashboardSellers} from "./routes/AdminRoutes";
+import {
+  AdminDashboardPage,
+  AdminDashboardUsers,
+  AdminDashboardSellers,
+  AdminDashboardOrders,
+  AdminDashboardProducts,
+  AdminDashboardEvents,
+  AdminDashboardWithdraw,
+} from "./routes/AdminRoutes";
 import { useSelector } from "react-redux";
 import { ShopHomePage } from "./ShopRoutes.js";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
@@ -50,7 +64,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import ProtectedAdminRoute from "./routes/ProtectedAdminRoute.js";
 const App = () => {
   const [stripeApikey, setStripeApiKey] = useState("");
-  
+
   async function getStripeApikey() {
     const { data } = await axios.get(`${server}/payment/stripeapikey`);
     setStripeApiKey(data.stripeApikey);
@@ -66,20 +80,20 @@ const App = () => {
   return (
     <div>
       <BrowserRouter>
-      {stripeApikey && (
-        <Elements stripe={loadStripe(stripeApikey)}>
-          <Routes>
-            <Route
-              path="/payment"
-              element={
-                <ProtectedRoute>
-                  <PaymentPage />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </Elements>
-      )}
+        {stripeApikey && (
+          <Elements stripe={loadStripe(stripeApikey)}>
+            <Routes>
+              <Route
+                path="/payment"
+                element={
+                  <ProtectedRoute>
+                    <PaymentPage />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </Elements>
+        )}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -117,12 +131,28 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/user/track/order/:id"
+            element={
+              <ProtectedRoute>
+                <TrackOrderPage />
+              </ProtectedRoute>
+            }
+          />
 
-<Route
+          <Route
             path="/profile"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated}>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/inbox"
+            element={
+              <ProtectedRoute>
+                <UserInbox />
               </ProtectedRoute>
             }
           />
@@ -141,6 +171,14 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
+            <Route
+          path="/settings"
+          element={
+            <SellerProtectedRoute>
+              <ShopSettingsPage />
+            </SellerProtectedRoute>
+          }
+        />
           <Route
             path="dashboard"
             element={
@@ -175,6 +213,15 @@ const App = () => {
             }
           />
           <Route
+            path="dashboard-refunds"
+            element={
+              <SellerProtectedRoute>
+                <ShopAllRefunds />
+              </SellerProtectedRoute>
+            }
+          />
+
+          <Route
             path="/order/:id"
             element={
               <SellerProtectedRoute>
@@ -207,36 +254,83 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
+
+          <Route
+            path="/dashboard-withdraw-money"
+            element={
+              <SellerProtectedRoute>
+                <ShopWithDrawMoneyPage />
+              </SellerProtectedRoute>
+            }
+          />
+           <Route
+            path="/dashboard-messages"
+            element={
+              <SellerProtectedRoute>
+                <ShopInboxPage />
+              </SellerProtectedRoute>
+            }
+          />
           <Route
             path="/admin/dashboard"
             element={
               <ProtectedAdminRoute>
                 <AdminDashboardPage />
               </ProtectedAdminRoute>
-
             }
           />
-           <Route
+          <Route
             path="/admin-users"
             element={
               <ProtectedAdminRoute>
                 <AdminDashboardUsers />
               </ProtectedAdminRoute>
-
             }
           />
-           <Route
+          <Route
             path="/admin-sellers"
             element={
               <ProtectedAdminRoute>
                 <AdminDashboardSellers />
               </ProtectedAdminRoute>
-
             }
           />
+          <Route
+            path="/admin-orders"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardOrders />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-products"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardProducts />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-events"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardEvents />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-withdraw-request"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardWithdraw />
+              </ProtectedAdminRoute>
+            }
+          />
+            
         </Routes>
         <ToastContainer
-          position="bottom-center"
+          position="top-right"
           autoClose={5000}
           hideProgressBar={false}
           newestOnTop={false}

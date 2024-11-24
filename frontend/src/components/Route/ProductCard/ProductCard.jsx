@@ -65,7 +65,7 @@ const ProductCard = ({ data,isEvent }) => {
    // Kiểm tra dữ liệu hình ảnh
 
   const imageUrl = `${backend_url}${data.images && data.images[0]}`;
-  
+
   return (
     <>
       <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
@@ -104,7 +104,7 @@ const ProductCard = ({ data,isEvent }) => {
               </h4>
             </div>
             <span className="font-[400] text-[17px] text-[#68d284]">
-              {data?.sold_out} sold
+              {!data?.sold_out + 100} sold
             </span>
           </div>
         </Link>

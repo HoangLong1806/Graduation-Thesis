@@ -5,7 +5,7 @@ const { upload } = require("../multer");
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const Shop = require("../model/shop");
 const ErrorHandler = require("../ultis/ErrorHandler");
-const { isSeller } = require("../middleware/auth");
+const { isSeller, isAdmin, isAuthenticated } = require("../middleware/auth");
 const fs = require("fs");
 
 router.post(
@@ -108,6 +108,27 @@ router.delete(
   })
 );
 
+  
+// all event --- for admin
+router.get(
+  "/admin-all-events",
+  isAuthenticated,
+  isAdmin("Admin"),
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const events = await Event.find().sort({
+       
+        createdAt: -1,
+      });
+      res.status(201).json({
+        success: true,
+        events,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
 
 
 module.exports = router;

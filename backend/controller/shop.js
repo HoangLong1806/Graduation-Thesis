@@ -196,7 +196,6 @@ router.post(
 );
 
 // login shop
-
 router.post(
     "/login-shop",
     catchAsyncErrors(async(req, res, next) => {
@@ -309,8 +308,7 @@ router.get(
   );
 
 
-  //delete seller
-
+  //delete seller by admin
 router.delete("/delete-seller/:id", isAuthenticated, isAdmin("Admin"), catchAsyncErrors(async (req, res, next) => {
     try {
       const seller = await Shop.findById(req.params.id);
@@ -328,6 +326,79 @@ router.delete("/delete-seller/:id", isAuthenticated, isAdmin("Admin"), catchAsyn
     }
   
   }));
+
+
+  // update seller avatar
+  router.put(
+    "/update-avatar",
+    isSeller,
+    upload.single("image"),
+    catchAsyncErrors(async (req, res, next) => {
+      try {
+        const existsUser = await Shop.findById(req.seller.id);
+  
+        // Xóa avatar cũ nếu tồn tại
+        if (existsUser.avatar?.url) {
+          const existsAvatarPath = `uploads/${existsUser.avatar.public_id}`;
+          if (fs.existsSync(existsAvatarPath)) {
+            fs.unlinkSync(existsAvatarPath);
+          }
+        }
+  
+        // Lấy thông tin file mới
+        const file = req.file;
+        const public_id = req.body.public_id || file.originalname; // Dùng tên đầy đủ của file (bao gồm đuôi file)
+        const url = `uploads/${public_id}`; // Xây dựng URL từ public_id
+  
+        existsUser.avatar = { public_id, url };
+        await existsUser.save();
+  
+        res.status(201).json({
+          success: true,
+          seller: existsUser,
+        });
+      } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+    })
+  );
+  
+  
+
+  
+// update seller info
+router.put(
+    "/update-seller-info",
+    isSeller,
+    catchAsyncErrors(async (req, res, next) => {
+      try {
+        const { name, description, address, phoneNumber, zipCode } = req.body;
+  
+        const shop = await Shop.findOne(req.seller._id);
+  
+        if (!shop) {
+          return next(new ErrorHandler("User not found", 400));
+        }
+  
+        shop.name = name;
+        shop.description = description;
+        shop.address = address;
+        shop.phoneNumber = phoneNumber;
+        shop.zipCode = zipCode;
+  
+        await shop.save();
+  
+        res.status(201).json({
+          success: true,
+          shop,
+        });
+      } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+    })
+  );
+
+
 module.exports = router;
 
 
