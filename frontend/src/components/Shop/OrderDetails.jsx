@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "../../styles/styles";
 import { BsFillBagFill } from "react-icons/bs";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersOfShop } from "../../redux/actions/order";
-import { backend_url, server } from "../../server";
+import { server } from "../../server";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -22,7 +22,11 @@ const OrderDetails = () => {
   }, [dispatch]);
 
   const data = orders && orders.find((item) => item._id === id);
-
+  useEffect(() => {
+    if (data?.status) {
+      setStatus((prevStatus) => prevStatus || data.status); // Chỉ cập nhật nếu prevStatus rỗng
+    }
+  }, [data]);
   const orderUpdateHandler = async (e) => {
     await axios
       .put(
@@ -34,29 +38,45 @@ const OrderDetails = () => {
       )
       .then((res) => {
         toast.success("Order updated!");
+        setStatus(res.data.updatedStatus || status); // Giữ nguyên trạng thái hoặc cập nhật từ phản hồi
         navigate("/dashboard-orders");
       })
       .catch((error) => {
         toast.error(error.response.data.message);
       });
   };
+  //-------------------------------------------------///
+  const options = useMemo(() => {
+    if (data?.status === "Processing refund" || data?.status === "Refund Success") {
+      return ["Processing refund", "Refund Success"];
+    }
+    return [
+      "Processing",
+      "Transferred to delivery partner",
+      "Shipping",
+      "Received",
+      "On the way",
+      "Delivered",
+    ];
+  }, [data?.status]);
+  //-------------------------------------------------///
 
   const refundOrderUpdateHandler = async (e) => {
     await axios
-    .put(
-      `${server}/order/order-refund-success/${id}`,
-      {
-        status,
-      },
-      { withCredentials: true }
-    )
-    .then((res) => {
-      toast.success("Order updated!");
-      dispatch(getAllOrdersOfShop(seller._id));
-    })
-    .catch((error) => {
-      toast.error(error.response.data.message);
-    });
+      .put(
+        `${server}/order/order-refund-success/${id}`,
+        {
+          status,
+        },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        toast.success("Order updated!");
+        dispatch(getAllOrdersOfShop(seller._id));
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
   }
 
   console.log(data?.status);
@@ -94,7 +114,7 @@ const OrderDetails = () => {
         data?.cart.map((item, index) => (
           <div className="w-full flex items-start mb-5">
             <img
-              src={`${backend_url}${item.images[0]}`}
+              src={`${item.images[0]?.url}`}
               alt=""
               className="w-[80x] h-[80px]"
             />
@@ -143,53 +163,35 @@ const OrderDetails = () => {
           onChange={(e) => setStatus(e.target.value)}
           className="w-[200px] mt-2 border h-[35px] rounded-[5px]"
         >
-          {[
-            "Processing",
-            "Transferred to delivery partner",
-            "Shipping",
-            "Received",
-            "On the way",
-            "Delivered",
-          ]
-            .slice(
-              [
-                "Processing",
-                "Transferred to delivery partner",
-                "Shipping",
-                "Received",
-                "On the way",
-                "Delivered",
-              ].indexOf(data?.status)
-            )
-            .map((option, index) => (
-              <option value={option} key={index}>
-                {option}
-              </option>
-            ))}
+          {options.map((option, index) => (
+            <option value={option} key={index}>
+              {option}
+            </option>
+          ))}
         </select>
       )}
       {
         data?.status === "Processing refund" || data?.status === "Refund Success" ? (
-          <select value={status} 
-       onChange={(e) => setStatus(e.target.value)}
-       className="w-[200px] mt-2 border h-[35px] rounded-[5px]"
-      >
-        {[
-            "Processing refund",
-            "Refund Success",
-          ]
-            .slice(
-              [
-                "Processing refund",
-                "Refund Success",
-              ].indexOf(data?.status)
-            )
-            .map((option, index) => (
-              <option value={option} key={index}>
-                {option}
-              </option>
-            ))}
-      </select>
+          <select value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-[200px] mt-2 border h-[35px] rounded-[5px]"
+          >
+            {[
+              "Processing refund",
+              "Refund Success",
+            ]
+              .slice(
+                [
+                  "Processing refund",
+                  "Refund Success",
+                ].indexOf(data?.status)
+              )
+              .map((option, index) => (
+                <option value={option} key={index}>
+                  {option}
+                </option>
+              ))}
+          </select>
         ) : null
       }
 
