@@ -3,7 +3,6 @@ const router = express.Router();
 const path = require("path");
 const User = require("../model/user");
 const { upload } = require("../multer");
-
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
@@ -14,28 +13,22 @@ const { isAuthenticated, isAdmin } = require("../middleware/auth");
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-
     const userEmail = await User.findOne({ email });
     if (userEmail) {
       const filename = req.file.filename;
       const filePath = `uploads/${filename}`;
-
       fs.unlink(filePath, (err) => {
         if (err) {
           console.log(err);
           return res.status(500).json({ message: "Error deleting file" });
         }
       });
-
       return next(new ErrorHandler("User already exists", 400));
     }
-
     // If email doesn't exist, create a new user
     const filename = req.file.filename;
     const fileUrl = path.join("/uploads", filename);
-
     const public_id = filename;
-
     const user = {
       name: name,
       email: email,
@@ -47,7 +40,6 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     };
     const newUser = await User.create(user);
     const activationToken = createActivationToken(user);
-    // const activationUrl = `http://localhost:3001/activation/${activationToken}`;
     const isProduction = process.env.NODE_ENV === "production";
     const activationUrl = isProduction
       ? `https://frontend-one-kappa-74.vercel.app/activation/${activationToken}`
@@ -82,19 +74,15 @@ router.post(
   catchAsyncErrors(async (req, res, next) => {
     try {
       const { activation_token } = req.body;
-
       const newUser = jwt.verify(
         activation_token,
         process.env.ACTIVATION_SECRET
       );
-
       if (!newUser) {
         return next(new ErrorHandler("Invalid token", 400));
       }
       const { name, email, password, avatar } = newUser;
-
       let user = await User.findOne({ email });
-
       if (user) {
         return next(new ErrorHandler("User already exists", 400));
       }
