@@ -11,9 +11,9 @@ import { DataGrid } from "@mui/x-data-grid";
 
 const DashboardHero = () => {
   const dispatch = useDispatch();
-  const { orders = [] } = useSelector((state) => state.order || {}); 
-  const { seller = {} } = useSelector((state) => state.seller || {}); 
-  const { products = [] } = useSelector((state) => state.products || {}); 
+  const { orders = [] } = useSelector((state) => state.order || {});
+  const { seller = {} } = useSelector((state) => state.seller || {});
+  const { products = [] } = useSelector((state) => state.products || {});
   const [deliveredOrder, setDeliveredOrder] = useState([]);
 
   useEffect(() => {
@@ -23,20 +23,11 @@ const DashboardHero = () => {
     }
   }, [dispatch, seller?._id]);
 
-  useEffect(() => {
-    if (orders) {
-      const orderData = orders.filter((item) => item.status === "Delivered");
-      setDeliveredOrder(orderData);
-    }
-  }, [orders]);
 
-  const totalEarningWithoutTax = deliveredOrder.reduce(
-    (acc, item) => acc + (item.totalPrice || 0),
-    0
-  );
-  const serviceCharge = totalEarningWithoutTax * 0.1;
-  const availableBalance = (totalEarningWithoutTax - serviceCharge).toFixed(2);
 
+
+
+  const availableBalance = seller?.availableBalance.toFixed(2);
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
     {
@@ -45,7 +36,7 @@ const DashboardHero = () => {
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) =>
-        params.row.status === "Delivered" && "Succeeded"? "greenColor" : "redColor",
+        params.row.status === "Delivered" && "Succeeded" ? "greenColor" : "redColor",
     },
     {
       field: "itemsQty",
