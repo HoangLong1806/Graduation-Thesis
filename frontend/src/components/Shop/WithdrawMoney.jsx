@@ -105,13 +105,13 @@ const WithdrawMoney = () => {
     <div className="w-full h-[90vh] p-8">
       <div className="w-full bg-white h-full rounded flex items-center justify-center flex-col">
         <h5 className="text-[20px] pb-4">
-          Available Balance: ${availableBalance}
+          Số dư khả dụng: ${availableBalance}
         </h5>
         <div
           className={`${styles.button} text-white !h-[42px] !rounded`}
           onClick={() => (availableBalance < 50 ? error() : setOpen(true))}
         >
-          Withdraw
+          Rút tiền
         </div>
       </div>
       {open && (
@@ -130,12 +130,14 @@ const WithdrawMoney = () => {
             {paymentMethod ? (
               <div>
                 <h3 className="text-[22px] font-Poppins text-center font-[600]">
-                  Add new Withdraw Method:
+
+                  Thêm phương thức rút tiền mới:
                 </h3>
                 <form onSubmit={handleSubmit}>
                   <div>
                     <label>
-                      Bank Name <span className="text-red-500">*</span>
+
+                      Tên ngân hàng <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -152,7 +154,7 @@ const WithdrawMoney = () => {
                   </div>
                   <div className="pt-2">
                     <label>
-                      Bank Country <span className="text-red-500">*</span>
+                      Quốc gia  <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -172,7 +174,7 @@ const WithdrawMoney = () => {
                   </div>
                   <div className="pt-2">
                     <label>
-                      Bank Swift Code <span className="text-red-500">*</span>
+                      Mã Swift của Ngân hàng <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -193,7 +195,7 @@ const WithdrawMoney = () => {
 
                   <div className="pt-2">
                     <label>
-                      Bank Account Number{" "}
+                      Số tài khoản ngân hàng{" "}
                       <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -214,7 +216,7 @@ const WithdrawMoney = () => {
                   </div>
                   <div className="pt-2">
                     <label>
-                      Bank Holder Name <span className="text-red-500">*</span>
+                      Tên chủ tài khoản ngân hàng<span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -235,7 +237,7 @@ const WithdrawMoney = () => {
 
                   <div className="pt-2">
                     <label>
-                      Bank Address <span className="text-red-500">*</span>
+                      Địa chỉ ngân hàng <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -258,14 +260,14 @@ const WithdrawMoney = () => {
                     type="submit"
                     className={`${styles.button} mb-3 text-white`}
                   >
-                    Add
+                    Thêm
                   </button>
                 </form>
               </div>
             ) : (
               <>
                 <h3 className="text-[22px] font-Poppins">
-                  Available Withdraw Methods:
+                  Các phương thức rút tiền có sẵn:
                 </h3>
 
                 {seller && seller?.withdrawMethod ? (
@@ -273,13 +275,13 @@ const WithdrawMoney = () => {
                     <div className="800px:flex w-full justify-between items-center">
                       <div className="800px:w-[50%]">
                         <h5>
-                          Account Number:{" "}
+                          Số tài khoản:{" "}
                           {"*".repeat(
                             seller?.withdrawMethod.bankAccountNumber.length - 3
                           ) +
                             seller?.withdrawMethod.bankAccountNumber.slice(-3)}
                         </h5>
-                        <h5>Bank Name: {seller?.withdrawMethod.bankName}</h5>
+                        <h5>Tên chủ tài khoản: {seller?.withdrawMethod.bankName}</h5>
                       </div>
                       <div className="800px:w-[50%]">
                         <AiOutlineDelete
@@ -290,35 +292,35 @@ const WithdrawMoney = () => {
                       </div>
                     </div>
                     <br />
-                    <h4>Available Balance: {seller?.availableBalance}$</h4>
+                    <h4>Số dư khả dụng: {seller?.availableBalance}$</h4>
                     <br />
                     <div className="800px:flex w-full items-center">
                       <input
                         type="number"
-                        placeholder="Amount..."
+                        placeholder="số tiền muốn rút ......"
                         value={withdrawAmount}
                         onChange={(e) => setWithdrawAmount(e.target.value)}
-                        className="800px:w-[100px] w-[full] border 800px:mr-3 p-1 rounded"
+                        className="800px:w-[200px] w-[full] border 800px:mr-3 p-1 rounded"
                       />
                       <div
                         className={`${styles.button} !h-[42px] text-white`}
                         onClick={withdrawHandler}
                       >
-                        Withdraw
+                        Rút tiền
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div>
                     <p className="text-[18px] pt-2">
-                      No Withdraw Methods available!
+                      Không có phương thức rút tiền nào!
                     </p>
                     <div className="w-full flex items-center">
                       <div
                         className={`${styles.button} text-[#fff] text-[18px] mt-4`}
                         onClick={() => setPaymentMethod(true)}
                       >
-                        Add new
+                        Thêm mới
                       </div>
                     </div>
                   </div>

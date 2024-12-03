@@ -18,27 +18,27 @@ const AllOrders = () => {
   }, [dispatch]);
 
   const columns = [
-    { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: "Mã đơn hàng", minWidth: 150, flex: 0.7 },
 
     {
       field: "status",
-      headerName: "Status",
+      headerName: "Trạng thái",
       minWidth: 130,
       flex: 0.7,
       cellClassName: (params) => {
-        return params.row.status === "Delivered" ? "greenColor" : "redColor";
+        return params.row.status === "Đã giao hàng" ? "greenColor" : "redColor";
       },
     },
     {
       field: "itemsQty",
-      headerName: "Items Qty",
+      headerName: "Số lượng mặt hàng",
       type: "number",
       minWidth: 130,
       flex: 0.7,
     },
     {
       field: "total",
-      headerName: "Total",
+      headerName: "Tổng tiền ( đơn giá đô )",
       type: "number",
       minWidth: 130,
       flex: 0.8,

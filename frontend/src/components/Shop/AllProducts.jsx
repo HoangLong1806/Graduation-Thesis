@@ -10,8 +10,8 @@ import Loader from "../Layout/Loader";
 
 const AllProducts = () => {
   const { products, isLoading } = useSelector((state) => state.products);
- 
-  
+
+
   const { seller } = useSelector((state) => state.seller);
 
   const dispatch = useDispatch();
@@ -23,25 +23,26 @@ const AllProducts = () => {
   const handleDelete = (id) => {
     dispatch(deleteProduct(id));
     window.location.reload();
+    window.location.reload();
   };
 
   const columns = [
-    { field: "id", headerName: "Product Id", minWidth: 150, flex: 0.7 },
+    { field: "id", headerName: "Mã sản phẩm", minWidth: 150, flex: 0.7 },
     {
       field: "name",
-      headerName: "Name",
+      headerName: "Tên sản phẩm",
       minWidth: 180,
       flex: 1.4,
     },
     {
       field: "price",
-      headerName: "Price",
+      headerName: "Giá ( đơn giá đô )",
       minWidth: 100,
       flex: 0.6,
     },
     {
       field: "Stock",
-      headerName: "Stock",
+      headerName: "Số lượng",
       type: "number",
       minWidth: 80,
       flex: 0.5,
@@ -49,7 +50,7 @@ const AllProducts = () => {
 
     {
       field: "sold",
-      headerName: "Sold out",
+      headerName: "Số lượng bán ra",
       type: "number",
       minWidth: 130,
       flex: 0.6,
@@ -58,7 +59,7 @@ const AllProducts = () => {
       field: "Preview",
       flex: 0.8,
       minWidth: 100,
-      headerName: "",
+      headerName: "Xem sản phẩm",
       type: "number",
       sortable: false,
       renderCell: (params) => {
@@ -77,7 +78,7 @@ const AllProducts = () => {
       field: "Delete",
       flex: 0.8,
       minWidth: 120,
-      headerName: "",
+      headerName: "Xóa sản phẩm",
       type: "number",
       sortable: false,
       renderCell: (params) => {

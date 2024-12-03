@@ -1,17 +1,17 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Please enter your product name!"],
+    required: [true, 'Please enter your product name!'],
   },
   description: {
     type: String,
-    required: [true, "Please enter your product description!"],
+    required: [true, 'Please enter your product description!'],
   },
   category: {
     type: String,
-    required: [true, "Please enter your product category!"],
+    required: [true, 'Please enter your product category!'],
   },
   tags: {
     type: String,
@@ -21,29 +21,30 @@ const productSchema = new mongoose.Schema({
   },
   discountPrice: {
     type: Number,
-    required: [true, "Please enter your product price!"],
+    required: [true, 'Please enter your product price!'],
   },
   stock: {
     type: Number,
-    required: [true, "Please enter your product stock!"],
+    required: [true, 'Please enter your product stock!'],
   },
-  images:[ // dùng cái này ở local
-    {
-        type: String,
-    },
-],
-  // images: [ /// cái này dùng cho cloudinary
-  //   {
-  //     public_id: {
-  //       type: String,
-  //       required: true,
+  //   images:[ // dùng cái này ở local
+  //     {
+  //         type: String,
   //     },
-  //     url: {
-  //       type: String,
-  //       required: true,
-  //     },
-  //   },
   // ],
+  images: [
+    /// cái này dùng cho cloudinary
+    {
+      public_id: {
+        type: String,
+        required: true,
+      },
+      url: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
   reviews: [
     {
       user: {
@@ -58,7 +59,7 @@ const productSchema = new mongoose.Schema({
       productId: {
         type: String,
       },
-      createdAt:{
+      createdAt: {
         type: Date,
         default: Date.now(),
       },
@@ -89,4 +90,4 @@ const productSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = mongoose.model('Product', productSchema);

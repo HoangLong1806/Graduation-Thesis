@@ -1,28 +1,117 @@
-import axios from "axios";
-import { server } from "../../server";
-// create product
-// export const createProduct = (newForm) => async (dispatch) => {
+// import axios from "axios";
+// import { server } from "../../server";
+
+// export const createProduct =
+//   (
+//     name,
+//     description,
+//     category,
+//     tags,
+//     originalPrice,
+//     discountPrice,
+//     stock,
+//     shopId,
+//     images
+//   ) =>
+//   async (dispatch) => {
+//     try {
+//       dispatch({
+//         type: "productCreateRequest",
+//       });
+
+//       const { data } = await axios.post(
+//         `${server}/product/create-product`,
+//         name,
+//         description,
+//         category,
+//         tags,
+//         originalPrice,
+//         discountPrice,
+//         stock,
+//         shopId,
+//         images,
+//       );
+//       dispatch({
+//         type: "productCreateSuccess",
+//         payload: data.product,
+//       });
+//     } catch (error) {
+//       dispatch({
+//         type: "productCreateFail",
+//         payload: error.response.data.message,
+//       });
+//     }
+//   };
+// // get All Products of a shop
+// export const getAllProductsShop = (id) => async (dispatch) => {
 //   try {
 //     dispatch({
-//       type: "productCreateRequest",
+//       type: "getAllProductsShopRequest",
 //     });
-//     const config = { headers: { "Content-Type": "multipart/form-data" } };
-//     const { data } = await axios.post(
-//       `${server}/product/create-product`,
-//       newForm,
-//       config
+
+//     const { data } = await axios.get(
+//       `${server}/product/get-all-products-shop/${id}`
 //     );
 //     dispatch({
-//       type: "productCreateSuccess",
-//       payload: data.product,
+//       type: "getAllProductsShopSuccess",
+//       payload: data.products,
 //     });
 //   } catch (error) {
 //     dispatch({
-//       type: "productCreateFail",
+//       type: "getAllProductsShopFailed",
 //       payload: error.response.data.message,
 //     });
 //   }
 // };
+
+// // delete product of a shop
+// export const deleteProduct = (id) => async (dispatch) => {
+//   try {
+//     dispatch({
+//       type: "deleteProductRequest",
+//     });
+
+//     const { data } = await axios.delete(
+//       `${server}/product/delete-shop-product/${id}`,
+//       {
+//         withCredentials: true,
+//       }
+//     );
+
+//     dispatch({
+//       type: "deleteProductSuccess",
+//       payload: data.message,
+//     });
+//   } catch (error) {
+//     dispatch({
+//       type: "deleteProductFailed",
+//       payload: error.response.data.message,
+//     });
+//   }
+// };
+
+// // get all products
+// export const getAllProducts = () => async (dispatch) => {
+//   try {
+//     dispatch({
+//       type: "getAllProductsRequest",
+//     });
+
+//     const { data } = await axios.get(`${server}/product/get-all-products`);
+//     dispatch({
+//       type: "getAllProductsSuccess",
+//       payload: data.products,
+//     });
+//   } catch (error) {
+//     dispatch({
+//       type: "getAllProductsFailed",
+//       payload: error.response.data.message,
+//     });
+//   }
+// };
+import axios from 'axios';
+import { server } from '../../server';
+
 // create product
 export const createProduct =
   (
@@ -39,7 +128,7 @@ export const createProduct =
   async (dispatch) => {
     try {
       dispatch({
-        type: "productCreateRequest",
+        type: 'productCreateRequest',
       });
 
       const { data } = await axios.post(
@@ -52,36 +141,37 @@ export const createProduct =
         discountPrice,
         stock,
         shopId,
-        images,
+        images
       );
       dispatch({
-        type: "productCreateSuccess",
+        type: 'productCreateSuccess',
         payload: data.product,
       });
     } catch (error) {
       dispatch({
-        type: "productCreateFail",
+        type: 'productCreateFail',
         payload: error.response.data.message,
       });
     }
   };
+
 // get All Products of a shop
 export const getAllProductsShop = (id) => async (dispatch) => {
   try {
     dispatch({
-      type: "getAllProductsShopRequest",
+      type: 'getAllProductsShopRequest',
     });
 
     const { data } = await axios.get(
       `${server}/product/get-all-products-shop/${id}`
     );
     dispatch({
-      type: "getAllProductsShopSuccess",
+      type: 'getAllProductsShopSuccess',
       payload: data.products,
     });
   } catch (error) {
     dispatch({
-      type: "getAllProductsShopFailed",
+      type: 'getAllProductsShopFailed',
       payload: error.response.data.message,
     });
   }
@@ -91,7 +181,7 @@ export const getAllProductsShop = (id) => async (dispatch) => {
 export const deleteProduct = (id) => async (dispatch) => {
   try {
     dispatch({
-      type: "deleteProductRequest",
+      type: 'deleteProductRequest',
     });
 
     const { data } = await axios.delete(
@@ -102,34 +192,32 @@ export const deleteProduct = (id) => async (dispatch) => {
     );
 
     dispatch({
-      type: "deleteProductSuccess",
+      type: 'deleteProductSuccess',
       payload: data.message,
     });
   } catch (error) {
     dispatch({
-      type: "deleteProductFailed",
+      type: 'deleteProductFailed',
       payload: error.response.data.message,
     });
   }
 };
 
-
-
 // get all products
 export const getAllProducts = () => async (dispatch) => {
   try {
     dispatch({
-      type: "getAllProductsRequest",
+      type: 'getAllProductsRequest',
     });
 
     const { data } = await axios.get(`${server}/product/get-all-products`);
     dispatch({
-      type: "getAllProductsSuccess",
+      type: 'getAllProductsSuccess',
       payload: data.products,
     });
   } catch (error) {
     dispatch({
-      type: "getAllProductsFailed",
+      type: 'getAllProductsFailed',
       payload: error.response.data.message,
     });
   }

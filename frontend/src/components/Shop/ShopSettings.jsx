@@ -8,7 +8,7 @@ import { loadSeller } from "../../redux/actions/user";
 import { toast } from "react-toastify";
 
 const ShopSettings = () => {
-    const { user, error, successMessage } = useSelector((state) => state.user);
+  const { user, error, successMessage } = useSelector((state) => state.user);
   const { seller } = useSelector((state) => state.seller);
   const [avatar, setAvatar] = useState();
   const [name, setName] = useState(seller && seller.name);
@@ -21,30 +21,56 @@ const ShopSettings = () => {
 
   const dispatch = useDispatch();
 
+  // const handleImage = async (e) => {
+  //   const file = e.target.files[0];
+  //   setAvatar(file);
+
+  //   const formData = new FormData();
+  //   formData.append("image", file);
+  //   formData.append("public_id", file.name); // Lưu tên đầy đủ của hình ảnh
+
+  //   await axios
+  //     .put(`${server}/shop/update-avatar`, formData, {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //       withCredentials: true,
+  //     })
+  //     .then((response) => {
+  //       toast.success("Avatar updated successfully!");
+  //       window.location.reload();
+  //     })
+  //     .catch((error) => {
+  //       toast.error(error.response?.data?.message || "Failed to update avatar.");
+  //     });
+  // };
+
   const handleImage = async (e) => {
-    const file = e.target.files[0];
-    setAvatar(file);
-  
-    const formData = new FormData();
-    formData.append("image", file);
-    formData.append("public_id", file.name); // Lưu tên đầy đủ của hình ảnh
-  
-    await axios
-      .put(`${server}/shop/update-avatar`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      })
-      .then((response) => {
-        toast.success("Avatar updated successfully!");
-        window.location.reload();
-      })
-      .catch((error) => {
-        toast.error(error.response?.data?.message || "Failed to update avatar.");
-      });
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatar(reader.result);
+        axios
+          .put(
+            `${server}/shop/update-shop-avatar`,
+            { avatar: reader.result },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((res) => {
+            dispatch(loadSeller());
+            toast.success("Avatar updated successfully!");
+          })
+          .catch((error) => {
+            toast.error(error.response.data.message);
+          });
+      }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
   };
-  
 
   const updateHandler = async (e) => {
     e.preventDefault();
@@ -69,14 +95,13 @@ const ShopSettings = () => {
         toast.error(error.response.data.message);
       });
   };
-
   return (
     <div className="w-full min-h-screen flex flex-col items-center">
       <div className="flex w-full 800px:w-[80%] flex-col justify-center my-5">
         <div className="w-full flex items-center justify-center">
           <div className="relative">
             <img
-               src={`${backend_url}${seller?.avatar?.public_id}`} 
+              src={avatar ? avatar : `${seller.avatar?.url}`}
               alt=""
               className="w-[200px] h-[200px] rounded-full cursor-pointer"
             />
@@ -102,7 +127,7 @@ const ShopSettings = () => {
         >
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Name</label>
+              <label className="block pb-2">Tên cửa hàng</label>
             </div>
             <input
               type="name"
@@ -115,15 +140,14 @@ const ShopSettings = () => {
           </div>
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop description</label>
+              <label className="block pb-2">Mô tả cửa hàng</label>
             </div>
             <input
               type="name"
-              placeholder={`${
-                seller?.description
-                  ? seller.description
-                  : "Enter your shop description"
-              }`}
+              placeholder={`${seller?.description
+                ? seller.description
+                : "Nhập mô tả cửa hàng"
+                }`}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -131,7 +155,7 @@ const ShopSettings = () => {
           </div>
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Address</label>
+              <label className="block pb-2">Địa chỉ cửa hàng</label>
             </div>
             <input
               type="name"
@@ -145,7 +169,7 @@ const ShopSettings = () => {
 
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Phone Number</label>
+              <label className="block pb-2">Số điện thoại cửa hàng</label>
             </div>
             <input
               type="number"
@@ -159,7 +183,7 @@ const ShopSettings = () => {
 
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <div className="w-full pl-[3%]">
-              <label className="block pb-2">Shop Zip Code</label>
+              <label className="block pb-2">Mã bưu chính của cửa hàng</label>
             </div>
             <input
               type="number"
@@ -174,7 +198,7 @@ const ShopSettings = () => {
           <div className="w-[100%] flex items-center flex-col 800px:w-[50%] mt-5">
             <input
               type="submit"
-              value="Update Shop"
+              value="Cập nhật cửa hàng"
               className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
               required
               readOnly

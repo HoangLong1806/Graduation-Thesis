@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const messagesSchema = new mongoose.Schema(
   {
@@ -12,10 +12,15 @@ const messagesSchema = new mongoose.Schema(
       type: String,
     },
     images: {
+      public_id: {
         type: String,
+      },
+      url: {
+        type: String,
+      },
     },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Messages", messagesSchema);
+module.exports = mongoose.model('Messages', messagesSchema);

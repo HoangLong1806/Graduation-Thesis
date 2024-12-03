@@ -13,134 +13,127 @@ const catchAsyncErrors = require('../middleware/catchAsyncErrors');
 const ErrorHandler = require('../ultis/ErrorHandler');
 const sendShopToken = require('../ultis/shopToken');
 const shop = require('../model/shop');
+const cloudinary = require('cloudinary');
 //create shop
-router.post('/create-shop', upload.single('file'), async (req, res, next) => {
-  try {
-    // Lấy email và chuyển về chữ thường, loại bỏ khoảng trắng
-    const email = req.body.email.trim().toLowerCase();
-    const { name, password, phoneNumber, zipCode, address } = req.body;
+// router.post('/create-shop', upload.single('file'), async (req, res, next) => {
+//   try {
+//     // Lấy email và chuyển về chữ thường, loại bỏ khoảng trắng
+//     const email = req.body.email.trim().toLowerCase();
+//     const { name, password, phoneNumber, zipCode, address } = req.body;
 
-    // Kiểm tra xem email đã tồn tại chưa
-    const sellerEmail = await Shop.findOne({ email });
-    if (sellerEmail) {
-      return res.status(400).json({
-        success: false,
-        message:
-          'Người dùng đã tồn tại, vui lòng đăng nhập thay vì tạo tài khoản mới.',
-      });
-    }
+//     // Kiểm tra xem email đã tồn tại chưa
+//     const sellerEmail = await Shop.findOne({ email });
+//     if (sellerEmail) {
+//       return res.status(400).json({
+//         success: false,
+//         message:
+//           'Người dùng đã tồn tại, vui lòng đăng nhập thay vì tạo tài khoản mới.',
+//       });
+//     }
+//     const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+//       folder: 'avatars',
+//     });
 
-    // Xử lý địa chỉ nếu nó là mảng
-    let shopAddress = address;
-    if (Array.isArray(shopAddress)) {
-      shopAddress = shopAddress.join(', ');
-    }
-
-    // Tiếp tục tạo shop
-    const filename = req.file.filename;
-    const fileUrl = path.join('/uploads', filename);
-    const public_id = filename;
-
-    const seller = {
-      name,
-      email,
-      password,
-      avatar: {
-        url: fileUrl,
-        public_id,
-      },
-      address: shopAddress,
-      phoneNumber,
-      zipCode,
-    };
-
-    const activationToken = createActivationToken(seller);
-    // const activationUrl = `http://localhost:3001/seller/activation/${activationToken}`;
-    const isProduction = process.env.NODE_ENV === 'production';
-    const activationUrl = isProduction
-      ? `https://frontend-one-kappa-74.vercel.app/seller/activation/${activationToken}`
-      : `http://localhost:3000/seller/activation/${activationToken}`;
-
-    // Gửi email kích hoạt
-    await sendMail({
-      email: seller.email,
-      subject: 'Activate your account',
-      message: `Hello ${seller.name}, please click on the link to activate your account: ${activationUrl}`,
-    });
-
-    res.status(201).json({
-      success: true,
-      message: `Vui lòng kiểm tra email của bạn: ${seller.email} để kích hoạt shop!`,
-    });
-  } catch (error) {
-    return next(new ErrorHandler(error.message, 400));
-  }
-});
-
-// router.post("/create-shop", upload.single("file"), async (req, res, next) => {
-//     try{
-//          const{email} = req.body;
-//          const sellerEmail = await Shop.findOne({email});
-//          if (sellerEmail) {
-//             const filename = req.file.filename;
-//             const filePath = `uploads/${filename}`;
-//             fs.unlink(filePath, (err) => {
-//               if (err) {
-//                 console.log(err);
-//                 return res.status(500).json({ message: "Error deleting file" });
-//               }
-//             });
-//             return next(new ErrorHandler("User already exists", 400));
-//           }
-//            // Kiểm tra nếu địa chỉ chưa được cung cấp
-//         if (!address) {
-//           return res.status(400).json({ message: "Địa chỉ không được xác định" });
-//       }
-//     // Chuyển đổi địa chỉ thành chuỗi nếu nó là mảng
+//     // Xử lý địa chỉ nếu nó là mảng
 //     let shopAddress = address;
 //     if (Array.isArray(shopAddress)) {
-//         shopAddress = shopAddress.join(", "); // Nối các phần tử của mảng thành một chuỗi
+//       shopAddress = shopAddress.join(', ');
 //     }
-//           // If email doesn't exist, create a new user
-//     const filename = req.file.filename;
-//     const fileUrl = path.join("/uploads", filename);
 
-//     const public_id = filename;
+//     // // Tiếp tục tạo shop
+//     // const filename = req.file.filename;
+//     // const fileUrl = path.join('/uploads', filename);
+//     // const public_id = filename;
 
 //     const seller = {
 //       name: req.body.name,
 //       email: email,
 //       password: req.body.password,
 //       avatar: {
-//         url: fileUrl,
-//         public_id,
+//         public_id: myCloud.public_id,
+//         url: myCloud.secure_url,
 //       },
-//       address: shopAddress,
+//       address: req.body.address,
 //       phoneNumber: req.body.phoneNumber,
-//         zipCode: req.body.zipCode,
+//       zipCode: req.body.zipCode,
 //     };
+
 //     const activationToken = createActivationToken(seller);
+//     // const activationUrl = `http://localhost:3001/seller/activation/${activationToken}`;
+//     const isProduction = process.env.NODE_ENV === 'production';
+//     const activationUrl = isProduction
+//       ? `https://frontend-one-kappa-74.vercel.app/seller/activation/${activationToken}`
+//       : `http://localhost:3000/seller/activation/${activationToken}`;
 
-//     const activationUrl = `http://localhost:3000/seller/activation/${activationToken}`;
+//     // Gửi email kích hoạt
+//     await sendMail({
+//       email: seller.email,
+//       subject: 'Activate your account',
+//       message: `Hello ${seller.name}, please click on the link to activate your account: ${activationUrl}`,
+//     });
 
-//      try {
-//       await sendMail({
-//         email: seller.email,
-//         subject: "Activate your account",
-//         message: `Hello ${seller.name}, please click on the link to activate your shop: ${activationUrl}`,
-//       });
-//       res.status(201).json({
-//         success: true,
-//         message: `please check your email:- ${seller.email} to activate your shop !`,
-//       });
-//     } catch (error) {
-//       return next(new ErrorHandler(error.message, 500));
-//     }
-
-//     }catch(error){
-//         return next(new ErrorHandler(error.message, 400));
-//     }
+//     res.status(201).json({
+//       success: true,
+//       message: `Vui lòng kiểm tra email của bạn: ${seller.email} để kích hoạt shop!`,
+//     });
+//   } catch (error) {
+//     return next(new ErrorHandler(error.message, 400));
+//   }
 // });
+// create shop
+
+// create shop
+router.post(
+  '/create-shop',
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { email } = req.body;
+      const sellerEmail = await Shop.findOne({ email });
+      if (sellerEmail) {
+        return next(new ErrorHandler('User already exists', 400));
+      }
+
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: 'avatars',
+      });
+
+      const seller = {
+        name: req.body.name,
+        email: email,
+        password: req.body.password,
+        avatar: {
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
+        },
+        address: req.body.address,
+        phoneNumber: req.body.phoneNumber,
+        zipCode: req.body.zipCode,
+      };
+
+      const activationToken = createActivationToken(seller);
+      // const activationUrl = `http://localhost:3001/seller/activation/${activationToken}`;
+      const isProduction = process.env.NODE_ENV === 'production';
+      const activationUrl = isProduction
+        ? `https://frontend-one-kappa-74.vercel.app/seller/activation/${activationToken}`
+        : `http://localhost:3000/seller/activation/${activationToken}`;
+      try {
+        await sendMail({
+          email: seller.email,
+          subject: 'Activate your Shop',
+          message: `Hello ${seller.name}, please click on the link to activate your shop: ${activationUrl}`,
+        });
+        res.status(201).json({
+          success: true,
+          message: `please check your email:- ${seller.email} to activate your shop!`,
+        });
+      } catch (error) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  })
+);
 
 // create activation token
 const createActivationToken = (seller) => {
@@ -330,32 +323,43 @@ router.delete(
 
 // update seller avatar
 router.put(
-  '/update-avatar',
+  '/update-shop-avatar',
   isSeller,
   upload.single('image'),
   catchAsyncErrors(async (req, res, next) => {
     try {
-      const existsUser = await Shop.findById(req.seller.id);
+      let existsSeller = await Shop.findById(req.seller._id);
+      const imageId = existsSeller.avatar.public_id;
 
-      // Xóa avatar cũ nếu tồn tại
-      if (existsUser.avatar?.url) {
-        const existsAvatarPath = `uploads/${existsUser.avatar.public_id}`;
-        if (fs.existsSync(existsAvatarPath)) {
-          fs.unlinkSync(existsAvatarPath);
-        }
-      }
+      await cloudinary.v2.uploader.destroy(imageId);
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: 'avatars',
+        width: 150,
+      });
+      existsSeller.avatar = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      };
 
-      // Lấy thông tin file mới
-      const file = req.file;
-      const public_id = req.body.public_id || file.originalname; // Dùng tên đầy đủ của file (bao gồm đuôi file)
-      const url = `uploads/${public_id}`; // Xây dựng URL từ public_id
+      // // Xóa avatar cũ nếu tồn tại
+      // if (existsUser.avatar?.url) {
+      //   const existsAvatarPath = `uploads/${existsUser.avatar.public_id}`;
+      //   if (fs.existsSync(existsAvatarPath)) {
+      //     fs.unlinkSync(existsAvatarPath);
+      //   }
+      // }
 
-      existsUser.avatar = { public_id, url };
-      await existsUser.save();
+      // // Lấy thông tin file mới
+      // const file = req.file;
+      // const public_id = req.body.public_id || file.originalname; // Dùng tên đầy đủ của file (bao gồm đuôi file)
+      // const url = `uploads/${public_id}`; // Xây dựng URL từ public_id
 
+      // existsUser.avatar = { public_id, url };
+      // await existsUser.save();
+      await existsSeller.save();
       res.status(201).json({
         success: true,
-        seller: existsUser,
+        seller: existsSeller,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

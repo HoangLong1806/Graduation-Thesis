@@ -11,32 +11,29 @@ const ShopCreate = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [phoneNumber , setPhoneNumber] = useState();
+  const [phoneNumber, setPhoneNumber] = useState();
   const [address, setAddress] = useState("");
-  const [zipCode, setZipCode] = useState(); 
+  const [zipCode, setZipCode] = useState();
   const [avatar, setAvatar] = useState();
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const config = { headers: {} };
-    const newForm = new FormData();
-    newForm.append("file", avatar);
-    newForm.append("name", name);
-    newForm.append("email", email);
-    newForm.append("password", password);
-    newForm.append("zipCode", zipCode);
-    newForm.append("address", address);
-    newForm.append("address", address);
-    newForm.append("phoneNumber", phoneNumber);
     axios
-      .post(`${server}/shop/create-shop`, newForm, config)
+      .post(`${server}/shop/create-shop`, {
+        name,
+        email,
+        password,
+        avatar,
+        zipCode,
+        address,
+        phoneNumber,
+      })
       .then((res) => {
-        console.log(res);
         toast.success(res.data.message);
-        navigate("/shop-login");
         setName("");
         setEmail("");
         setPassword("");
@@ -45,21 +42,28 @@ const ShopCreate = () => {
         setAddress("");
         setPhoneNumber();
       })
-      .catch((err) => {
-        console.log(err);
-        toast.error(err.response.data.message);
+      .catch((error) => {
+        toast.error(error.response.data.message);
       });
-    
   };
+
   const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
-    setAvatar(file);
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatar(reader.result);
+      }
+    };
+
+    reader.readAsDataURL(e.target.files[0]);
   };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Reaister as a seller
+          Đăng kí người bán
         </h2>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-[35rem]">
@@ -71,13 +75,13 @@ const ShopCreate = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Shop Name
+                Tên cửa hàng
               </label>
               <div className="mt-1">
                 <input
                   type="name"
                   name="name"
-                 
+                  placeholder="Vui lòng điền tên cửa hàng........"
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -91,13 +95,13 @@ const ShopCreate = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Phone Number
+                Số điện thoại
               </label>
               <div className="mt-1">
                 <input
                   type="number"
                   name="phone-number"
-                 
+                  placeholder="Vui lòng điền số điện thoại....."
                   required
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
@@ -111,13 +115,13 @@ const ShopCreate = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Email address
+                Địa chỉ email
               </label>
               <div className="mt-1">
                 <input
                   type="email"
                   name="email"
-                  placeholder="Please email"
+                  placeholder="Vui lòng điền email"
                   autoComplete="email"
                   required
                   value={email}
@@ -132,13 +136,13 @@ const ShopCreate = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                Address
+                Địa chi
               </label>
               <div className="mt-1">
                 <input
                   type="address"
                   name="address"
-                 
+                  placeholder="Vui lòng điền địa chỉ....."
                   required
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
@@ -152,13 +156,13 @@ const ShopCreate = () => {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-               Zip Code
+                Mã bưu chính
               </label>
               <div className="mt-1">
                 <input
                   type="number"
                   name="zipcode"
-                 
+                  placeholder="Vui lòng điền mã bưu chính....."
                   required
                   value={zipCode}
                   onChange={(e) => setZipCode(e.target.value)}
@@ -173,13 +177,13 @@ const ShopCreate = () => {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
-                Password
+                Mật khẩu
               </label>
               <div className="mt-1 relative">
                 <input
                   type={visible ? "text" : "password"}
                   name="password"
-                  placeholder="Please Password"
+                  placeholder="Vui lòng điền mật khẩu....."
                   autoComplete="current-password"
                   required
                   value={password}
@@ -212,7 +216,7 @@ const ShopCreate = () => {
                 <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
                   {avatar ? (
                     <img
-                      src={URL.createObjectURL(avatar)}
+                      src={avatar}
                       alt="avatar"
                       className="h-full w-full object-cover rounded-full"
                     />
@@ -224,12 +228,12 @@ const ShopCreate = () => {
                   htmlFor="file-input"
                   className="ml-5 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                 >
-                  <span>Upload a file</span>
+                  <span>Thêm ảnh</span>
                   <input
                     type="file"
                     name="avatar"
                     id="file-input"
-                    
+
                     onChange={handleFileInputChange}
                     className="sr-only"
                   />
@@ -242,13 +246,13 @@ const ShopCreate = () => {
                 type="submit"
                 className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >
-                Submit
+                Đăng kí
               </button>
             </div>
             <div className={`${styles.noramlFlex} w-full`}>
-              <h4>Already have any account?</h4>
+              <h4>Bạn Đã Có Tài Khoản ?</h4>
               <Link to="/shop-login" className="text-blue-600 pl-2">
-                Sign In
+                Đăng Nhập
               </Link>
             </div>
           </form>
