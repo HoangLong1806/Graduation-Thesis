@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { getAllUsers } from "../../redux/actions/user";
 import { AiOutlineDelete } from "react-icons/ai";
-import { Button } from '@mui/material';
-import { DataGrid } from "@mui/x-data-grid";
 import styles from "../../styles/styles";
 import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
+import { Button } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 
 const AllUsers = () => {
   const dispatch = useDispatch();
@@ -95,7 +95,7 @@ const AllUsers = () => {
     });
 
   return (
-    <div className="w-100% flex justify-center pt-5">
+    <div className="w-full flex justify-center pt-5">
       <div className="w-[97%]">
         <h3 className="text-[22px] font-Poppins pb-2">All Users</h3>
         <div className="w-full min-h-[45vh] bg-white rounded">
@@ -138,4 +138,4 @@ const AllUsers = () => {
   );
 };
 
-export default AllUsers;
+export default AllUsers;  

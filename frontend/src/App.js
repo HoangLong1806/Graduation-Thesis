@@ -20,6 +20,7 @@ import {
   OrderDetailsPage,
   TrackOrderPage,
   ShopAllRefunds,
+  UserInbox,
 } from "./routes/Routes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -36,11 +37,18 @@ import {
   ShopPreviewPage,
   ShopAllOrders,
   ShopOrderDetails,
+  ShopSettingsPage,
+  ShopWithDrawMoneyPage,
+  ShopInboxPage,
 } from "./routes/ShopRoutes.js";
 import {
   AdminDashboardPage,
   AdminDashboardUsers,
   AdminDashboardSellers,
+  AdminDashboardOrders,
+  AdminDashboardProducts,
+  AdminDashboardEvents,
+  AdminDashboardWithdraw,
 } from "./routes/AdminRoutes";
 import { useSelector } from "react-redux";
 import { ShopHomePage } from "./ShopRoutes.js";
@@ -140,6 +148,14 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/inbox"
+            element={
+              <ProtectedRoute>
+                <UserInbox />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
 
@@ -155,6 +171,14 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
+            <Route
+          path="/settings"
+          element={
+            <SellerProtectedRoute>
+              <ShopSettingsPage />
+            </SellerProtectedRoute>
+          }
+        />
           <Route
             path="dashboard"
             element={
@@ -196,7 +220,7 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
-          
+
           <Route
             path="/order/:id"
             element={
@@ -230,6 +254,23 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
+
+          <Route
+            path="/dashboard-withdraw-money"
+            element={
+              <SellerProtectedRoute>
+                <ShopWithDrawMoneyPage />
+              </SellerProtectedRoute>
+            }
+          />
+           <Route
+            path="/dashboard-messages"
+            element={
+              <SellerProtectedRoute>
+                <ShopInboxPage />
+              </SellerProtectedRoute>
+            }
+          />
           <Route
             path="/admin/dashboard"
             element={
@@ -254,9 +295,42 @@ const App = () => {
               </ProtectedAdminRoute>
             }
           />
+          <Route
+            path="/admin-orders"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardOrders />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-products"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardProducts />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-events"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardEvents />
+              </ProtectedAdminRoute>
+            }
+          />
+          <Route
+            path="/admin-withdraw-request"
+            element={
+              <ProtectedAdminRoute>
+                <AdminDashboardWithdraw />
+              </ProtectedAdminRoute>
+            }
+          />
+            
         </Routes>
         <ToastContainer
-          position="bottom-center"
+          position="top-right"
           autoClose={5000}
           hideProgressBar={false}
           newestOnTop={false}
