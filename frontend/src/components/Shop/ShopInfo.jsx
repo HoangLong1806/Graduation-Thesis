@@ -31,7 +31,7 @@ const ShopInfo = ({ isOwner }) => {
 
 
   const logoutHandler = async () => {
-<<<<<<< Updated upstream
+
     axios
       .get(`${server}/shop/logout`, { withCredentials: true })
       .then((res) => {
@@ -42,13 +42,7 @@ const ShopInfo = ({ isOwner }) => {
       .catch((error) => {
         console.log(error.response.data.message);
       });
-=======
-    axios.get(`${server}/shop/logout`, {
-      withCredentials: true,
-    });
-    window.location.href = '/login';  // Điều hướng về trang login
 
->>>>>>> Stashed changes
   };
 
 
