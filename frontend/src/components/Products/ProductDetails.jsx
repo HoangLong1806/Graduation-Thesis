@@ -198,7 +198,7 @@ const ProductDetails = ({ data }) => {
                   onClick={() => addToCartHandler(data._id)}
                 >
                   <span className="text-white flex items-center">
-                    Add to cart <AiOutlineShoppingCart className="ml-1" />
+                    Thêm giỏ hàng<AiOutlineShoppingCart className="ml-1" />
                   </span>
                 </div>
                 <div className="flex items-center pt-8">
@@ -224,7 +224,7 @@ const ProductDetails = ({ data }) => {
                     onClick={handleMessageSubmit}
                   >
                     <span className="text-white flex items-center">
-                      Send Message <AiOutlineMessage className="ml-1" />
+                      Gữi tin nhắn <AiOutlineMessage className="ml-1" />
                     </span>
                   </div>
                 </div>
@@ -239,7 +239,12 @@ const ProductDetails = ({ data }) => {
     </div>
   );
 };
-const ProductDetailsInfo = ({ data, products, totalReviewsLength, averageRating }) => {
+const ProductDetailsInfo = ({
+  data,
+  products,
+  totalReviewsLength,
+  averageRating,
+}) => {
   const [active, setActive] = useState(1);
 
   return (
@@ -252,7 +257,8 @@ const ProductDetailsInfo = ({ data, products, totalReviewsLength, averageRating 
             }
             onClick={() => setActive(1)}
           >
-            Product Details
+
+            Chi tiết sản phẩm
           </h5>
           {active === 1 ? (
             <div className={`${styles.active_indicator}`} />
@@ -265,7 +271,7 @@ const ProductDetailsInfo = ({ data, products, totalReviewsLength, averageRating 
             }
             onClick={() => setActive(2)}
           >
-            Product Reviews
+            Đánh giá sản phẩm
           </h5>
           {active === 2 ? (
             <div className={`${styles.active_indicator}`} />
@@ -278,7 +284,8 @@ const ProductDetailsInfo = ({ data, products, totalReviewsLength, averageRating 
             }
             onClick={() => setActive(3)}
           >
-            Seller Information
+
+            Thông tin người bán
           </h5>
           {active === 3 ? (
             <div className={`${styles.active_indicator}`} />
@@ -314,7 +321,8 @@ const ProductDetailsInfo = ({ data, products, totalReviewsLength, averageRating 
 
           <div className="w-full flex justify-center">
             {data && data.reviews.length === 0 && (
-              <h5>No Reviews have for this product!</h5>
+              <h5>
+                Chưa có đánh giá nào cho sản phẩm này!</h5>
             )}
           </div>
         </div>
@@ -331,7 +339,8 @@ const ProductDetailsInfo = ({ data, products, totalReviewsLength, averageRating 
                 />
                 <div className="pl-3">
                   <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
-                  <h5 className="pb-2 text-[15px]">(4/5) Ratings</h5>
+                  <h5 className="pb-2 text-[15px]">({averageRating}/5)
+                    Xếp hạng</h5>
                 </div>
               </div>
             </Link>
@@ -340,25 +349,25 @@ const ProductDetailsInfo = ({ data, products, totalReviewsLength, averageRating 
           <div className="w-full 800px:w-[50%] mt-5 800px:flex flex-col items-end">
             <div className="text-left">
               <h5 className="font-[600]">
-                Joined on:{" "}
+                Ngày tham gia:{" "}
                 <span className="font-[500]">
                   {data.shop?.createdAt?.slice(0, 10)}
                 </span>
               </h5>
               <h5 className="font-[600] pt-3">
-                Total Products:{" "}
+                Tất cả sản phẩm:{" "}
                 <span className="font-[500]">
                   {products && products.length}
                 </span>
               </h5>
               <h5 className="font-[600] pt-3">
-                Total Reviews: <span className="font-[500]">{totalReviewsLength}</span>
+                Tất cả đánh giá: <span className="font-[500]">{totalReviewsLength}</span>
               </h5>
               <Link to="/">
                 <div
                   className={`${styles.button} !rounded-[4px] !h-[39,5px] mt-3`}
                 >
-                  <h4 className="text-white">Visit Shop</h4>
+                  <h4 className="text-white">Ghé thăm cửa hàng</h4>
                 </div>
               </Link>
             </div>

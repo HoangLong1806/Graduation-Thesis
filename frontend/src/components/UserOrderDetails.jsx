@@ -28,29 +28,40 @@ const UserOrderDetails = () => {
   const data = orders && orders.find((item) => item._id === id);
 
   const reviewHandler = async (e) => {
-    await axios
-      .put(
+    if (!selectedItem || !selectedItem._id) {
+      toast.error("Chưa chọn sản phẩm để đánh giá");
+      return;
+    }
+
+    if (!user || !rating || !comment) {
+      toast.error("Vui lòng điền đầy đủ thông tin đánh giá.");
+      return;
+    }
+
+    try {
+      const res = await axios.put(
         `${server}/product/create-new-review`,
         {
           user,
           rating,
           comment,
-          productId: selectedItem?._id,
+          productId: selectedItem._id,
           orderId: id,
         },
         { withCredentials: true }
-      )
-      .then((res) => {
-        toast.success(res.data.message);
-        dispatch(getAllOrdersOfUser(user._id));
-        setComment("");
-        setRating(null);
-        setOpen(false);
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
+      );
+      toast.success(res.data.message);
+      dispatch(getAllOrdersOfUser(user._id));
+      setComment("");
+      setRating(null);
+      setOpen(false);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response ? error.response.data : "Có lỗi xảy ra");
+    }
   };
+
+
 
   const refundHandler = async () => {
     await axios.put(`${server}/order/order-refund/${id}`, {
