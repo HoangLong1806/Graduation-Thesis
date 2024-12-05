@@ -11,7 +11,7 @@ import { HiOutlineReceiptRefund } from "react-icons/hi";
 
 const DashboardSideBar = ({ active }) => {
   return (
-    <div className="w-full h-[90vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
+    <div className="dashboard-sidebar w-full h-screen bg-white shadow-sm overflow-y-auto z-10">
       {/* single item */}
       <div className="w-full flex items-center p-4">
         <Link to="/dashboard" className="w-full flex items-center">
@@ -20,7 +20,7 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 1 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 1 ? "text-[crimson]" : "text-[#555]"
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 1 ? "text-[crimson]" : "text-[#555]"}
               }`}
           >
             Quản Lí
@@ -35,7 +35,7 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 2 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 2 ? "text-[crimson]" : "text-[#555]"
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 2 ? "text-[crimson]" : "text-[#555]"}
               }`}
           >
             Tất cả đơn hàng
@@ -47,7 +47,7 @@ const DashboardSideBar = ({ active }) => {
         <Link to="/dashboard-products" className="w-full flex items-center">
           <FiPackage size={30} color={`${active === 3 ? "crimson" : "#555"}`} />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 3 ? "text-[crimson]" : "text-[#555]"
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 3 ? "text-[crimson]" : "text-[#555]"}
               }`}
           >
             Tất cả sản phẩm
@@ -65,7 +65,7 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 4 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 4 ? "text-[crimson]" : "text-[#555]"
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 4 ? "text-[crimson]" : "text-[#555]"}
               }`}
           >
             Tạo sản phẩm
@@ -80,7 +80,7 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 5 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 5 ? "text-[crimson]" : "text-[#555]"
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 5 ? "text-[crimson]" : "text-[#555]"}
               }`}
           >
             Tất cả sự kiện
@@ -95,7 +95,7 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 6 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 6 ? "text-[crimson]" : "text-[#555]"
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 6 ? "text-[crimson]" : "text-[#555]"}
               }`}
           >
             Tạo sự kiện
@@ -113,7 +113,7 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 7 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 7 ? "text-[crimson]" : "text-[#555]"
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 7 ? "text-[crimson]" : "text-[#555]"}
               }`}
           >
             Rút tiền
@@ -128,7 +128,7 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 8 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 8 ? "text-[crimson]" : "text-[#555]"
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 8 ? "text-[crimson]" : "text-[#555]"}
               }`}
           >
             Hộp thư
@@ -143,7 +143,7 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 9 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 9 ? "text-[crimson]" : "text-[#555]"
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 9 ? "text-[crimson]" : "text-[#555]"}
               }`}
           >
             Mã giảm giá
@@ -158,7 +158,7 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 10 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 10 ? "text-[crimson]" : "text-[#555]"
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 10 ? "text-[crimson]" : "text-[#555]"}
               }`}
           >
             Hoàn tiền
@@ -173,7 +173,7 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 11 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 11 ? "text-[crimson]" : "text-[#555]"
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 11 ? "text-[crimson]" : "text-[#555]"}
               }`}
           >
             Cài đặt
