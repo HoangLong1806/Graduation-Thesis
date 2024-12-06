@@ -108,7 +108,7 @@ const Login = () => {
               </div>
               <div className="text-sm">
                 <a
-                  href=".forgot-password"
+                  href="/forgot-password"
                   className="font-medium text-blue-600 hover:text-blue-500"
                 >
                   Quên mật khẩu ?

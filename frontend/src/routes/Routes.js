@@ -18,6 +18,8 @@ import OrderDetailsPage from "../pages/OrderDetailsPage";
 import TrackOrderPage from "../pages/TrackOrderPage";
 import ShopAllRefunds from "../pages/ShopAllRefunds";
 import UserInbox from "../pages/UserInbox";
+import ForgotPassword from "../pages/ForgotPassword.jsx";
+import ResetPassword from "../pages/ResetPassword.jsx";
 export {
      LoginPage,
      SignupPage,
@@ -38,5 +40,7 @@ export {
      OrderDetailsPage,
      TrackOrderPage,
      ShopAllRefunds,
-     UserInbox
+     UserInbox,
+     ForgotPassword,
+     ResetPassword
 };
