@@ -7,12 +7,12 @@ import { BsPencil } from "react-icons/bs";
 import { RxCross1 } from "react-icons/rx";
 import styles from "../../styles/styles";
 import { toast } from "react-toastify";
-
+import ReactPaginate from 'react-paginate';
 const AllWithdraw = () => {
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [withdrawData, setWithdrawData] = useState();
-  const [withdrawStatus,setWithdrawStatus] = useState('Processing');
+  const [withdrawStatus, setWithdrawStatus] = useState('Processing');
 
   useEffect(() => {
     axios
@@ -72,7 +72,7 @@ const AllWithdraw = () => {
         return (
           <BsPencil
             size={20}
-            className={`${params.row.status !== "Processing" ? 'hidden' : '' } mr-5 cursor-pointer`}
+            className={`${params.row.status !== "Processing" ? 'hidden' : ''} mr-5 cursor-pointer`}
             onClick={() => setOpen(true) || setWithdrawData(params.row)}
           />
         );
@@ -82,9 +82,9 @@ const AllWithdraw = () => {
 
   const handleSubmit = async () => {
     await axios
-      .put(`${server}/withdraw/update-withdraw-request/${withdrawData.id}`,{
+      .put(`${server}/withdraw/update-withdraw-request/${withdrawData.id}`, {
         sellerId: withdrawData.shopId,
-      },{withCredentials: true})
+      }, { withCredentials: true })
       .then((res) => {
         toast.success("Withdraw request updated successfully!");
         setData(res.data.withdraws);
@@ -105,16 +105,43 @@ const AllWithdraw = () => {
         createdAt: item.createdAt.slice(0, 10),
       });
     });
+
+  // State for pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage] = useState(12);
+
+  // Handle page click and update rows displayed
+  const handlePageClick = (event) => {
+    setPage(event.selected);
+  };
+
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentRows = row.slice(startIndex, endIndex);  // Get rows for the current page
   return (
     <div className="w-full flex items-center pt-5 justify-center">
       <div className="w-[95%] bg-white">
+        {/* Pass only the currentRows to DataGrid */}
         <DataGrid
-          rows={row}
+          rows={currentRows}  // Pass only rows for the current page
           columns={columns}
-          pageSize={10}
           disableSelectionOnClick
           autoHeight
         />
+
+        {/* Pagination */}
+        <div className="pagination-container flex justify-center py-4">
+          <ReactPaginate
+            pageCount={Math.ceil(row.length / rowsPerPage)}
+            onPageChange={handlePageClick}
+            containerClassName={'pagination flex items-center space-x-2'}
+            activeClassName={'active'}
+            pageClassName={'page px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+            previousClassName={'previous px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+            nextClassName={'next px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+            disabledClassName={'disabled cursor-not-allowed opacity-50'}
+          />
+        </div>
       </div>
       {open && (
         <div className="w-full fixed h-screen top-0 left-0 bg-[#00000031] z-[9999] flex items-center justify-center">

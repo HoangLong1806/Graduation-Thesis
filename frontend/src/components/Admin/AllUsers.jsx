@@ -10,7 +10,7 @@ import { server } from "../../server";
 import { toast } from "react-toastify";
 import { Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-
+import ReactPaginate from 'react-paginate';
 const AllUsers = () => {
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.user);
@@ -23,12 +23,12 @@ const AllUsers = () => {
 
   const handleDelete = async (id) => {
     await axios
-    .delete(`${server}/user/delete-user/${id}`, { withCredentials: true })
-    .then((res) => {
-      toast.success(res.data.message);
-    });
+      .delete(`${server}/user/delete-user/${id}`, { withCredentials: true })
+      .then((res) => {
+        toast.success(res.data.message);
+      });
 
-  dispatch(getAllUsers());
+    dispatch(getAllUsers());
   };
 
   const columns = [
@@ -93,19 +93,44 @@ const AllUsers = () => {
         joinedAt: item.createdAt.slice(0, 10),
       });
     });
+  // State for pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage] = useState(12);
 
+  // Handle page click and update rows displayed
+  const handlePageClick = (event) => {
+    setPage(event.selected);
+  };
+
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentRows = row.slice(startIndex, endIndex);  // Get rows for the current page
   return (
     <div className="w-full flex justify-center pt-5">
       <div className="w-[97%]">
         <h3 className="text-[22px] font-Poppins pb-2">All Users</h3>
-        <div className="w-full min-h-[45vh] bg-white rounded">
+        <div className="w-[97%] min-h-[25vh] bg-white rounded">
+          {/* Pass only the currentRows to DataGrid */}
           <DataGrid
-            rows={row}
+            rows={currentRows}  // Pass only rows for the current page
             columns={columns}
-            pageSize={10}
             disableSelectionOnClick
             autoHeight
           />
+
+          {/* Pagination */}
+          <div className="pagination-container flex justify-center py-4">
+            <ReactPaginate
+              pageCount={Math.ceil(row.length / rowsPerPage)}
+              onPageChange={handlePageClick}
+              containerClassName={'pagination flex items-center space-x-2'}
+              activeClassName={'active'}
+              pageClassName={'page px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+              previousClassName={'previous px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+              nextClassName={'next px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+              disabledClassName={'disabled cursor-not-allowed opacity-50'}
+            />
+          </div>
         </div>
         {open && (
           <div className="w-full fixed top-0 left-0 z-[999] bg-[#00000039] flex items-center justify-center h-screen">
@@ -125,7 +150,7 @@ const AllUsers = () => {
                 </div>
                 <div
                   className={`${styles.button} text-white text-[18px] !h-[42px] ml-4`}
-                  onClick={() =>  setOpen(false) || handleDelete(userId)}
+                  onClick={() => setOpen(false) || handleDelete(userId)}
                 >
                   confirm
                 </div>

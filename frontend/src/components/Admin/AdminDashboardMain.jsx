@@ -76,7 +76,7 @@ const AdminDashboardMain = () => {
 
     // State cho phân trang
     const [page, setPage] = useState(0);
-    const [rowsPerPage] = useState(7);
+    const [rowsPerPage] = useState(6);
 
     // Tính toán số lượng dữ liệu cần hiển thị dựa trên trang hiện tại
     const handlePageClick = (event) => {

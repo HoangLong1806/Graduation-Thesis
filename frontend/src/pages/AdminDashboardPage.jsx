@@ -7,7 +7,7 @@ import AdminSideBar from "../components/Admin/Layout/AdminSidebar";
 const AdminDashboardPage = () => {
   return (
     <div>
-      <AdminHeader />
+      <AdminHeader active={1} />
       <div className="w-full flex">
         <div className="flex items-start justify-between w-full">
           <div className="w-[80px] 800px:w-[330px]">

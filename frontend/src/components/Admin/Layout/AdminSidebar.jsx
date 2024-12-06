@@ -5,11 +5,38 @@ import { GrWorkshop } from 'react-icons/gr';
 import { RxDashboard } from "react-icons/rx";
 import { HiOutlineUserGroup } from 'react-icons/hi';
 import { CiMoneyBill, CiSettings } from "react-icons/ci";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { BsBag } from "react-icons/bs";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { IoSettingsOutline } from "react-icons/io5";
-const AdminSideBar = ({ active }) => {
+const AdminSideBar = ({  }) => {
+  const location = useLocation();
+
+  // Xác định giá trị active dựa trên đường dẫn hiện tại
+  const getActiveIndex = (path) => {
+    switch (path) {
+      case "/admin/dashboard":
+        return 1;
+      case "/admin-orders":
+        return 2;
+      case "/admin-sellers":
+        return 3;
+      case "/admin-users":
+        return 4;
+      case "/admin-products":
+        return 5;
+      case "/admin-events":
+        return 6;
+      case "/admin-withdraw-request":
+        return 7;
+      case "/profile":
+        return 8;
+      default:
+        return 0;
+    }
+  };
+
+  const active = getActiveIndex(location.pathname);
   return (
     <div className="w-full h-[90vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
       {/* single item */}

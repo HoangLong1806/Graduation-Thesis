@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { backend_url, server } from "../../server";
 import { useDispatch, useSelector } from "react-redux";
+import ReactPaginate from 'react-paginate';
 import {
   AiOutlineArrowRight,
   AiOutlineCamera,
@@ -30,6 +31,7 @@ import {
 } from "../../redux/actions/user";
 import axios from "axios";
 import { getAllOrdersOfUser } from "../../redux/actions/order";
+import UserInbox from "../../pages/UserInbox";
 
 const ProfileContent = ({ active }) => {
   const { user, error, successMessage } = useSelector((state) => state.user);
@@ -194,25 +196,32 @@ const ProfileContent = ({ active }) => {
           <AllRefundOrders />
         </div>
       )}
-      {/* TrackOrder */}
       {active === 5 && (
+        <div>
+          <AllRefundOrders />
+        </div>
+      )}
+
+      {/* TrackOrder */}
+      {active === 6 && (
         <div>
           <TrackOrder />
         </div>
       )}
       {/* ChangePassword */}
-      {active === 6 && (
+      {active === 7 && (
         <div>
           <ChangePassword />
         </div>
       )}
       {/* Address */}
-      {active === 7 && (
+      {active === 8 && (
         <div>
           <Address />
         </div>
       )}
     </div>
+    
   );
 };
 
@@ -283,16 +292,41 @@ const AllOrders = () => {
       status: item.status,
     });
   });
+  // State for pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage] = useState(8);
 
+  // Handle page click and update rows displayed
+  const handlePageClick = (event) => {
+    setPage(event.selected);
+  };
+
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentRows = row.slice(startIndex, endIndex);  // Get rows for the current page
   return (
     <div className="pl-8 pt-1">
+      {/* Pass only the currentRows to DataGrid */}
       <DataGrid
-        rows={row}
+        rows={currentRows}  // Pass only rows for the current page
         columns={columns}
-        pageSize={10}
         disableSelectionOnClick
         autoHeight
       />
+
+      {/* Pagination */}
+      <div className="pagination-container flex justify-center py-4">
+        <ReactPaginate
+          pageCount={Math.ceil(row.length / rowsPerPage)}
+          onPageChange={handlePageClick}
+          containerClassName={'pagination flex items-center space-x-2'}
+          activeClassName={'active'}
+          pageClassName={'page px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          previousClassName={'previous px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          nextClassName={'next px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          disabledClassName={'disabled cursor-not-allowed opacity-50'}
+        />
+      </div>
     </div>
   );
 };
@@ -368,16 +402,41 @@ const AllRefundOrders = () => {
       status: item.status,
     });
   });
+  // State for pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage] = useState(12);
 
+  // Handle page click and update rows displayed
+  const handlePageClick = (event) => {
+    setPage(event.selected);
+  };
+
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentRows = row.slice(startIndex, endIndex);  // Get rows for the current page
   return (
     <div className="pl-8 pt-1">
+      {/* Pass only the currentRows to DataGrid */}
       <DataGrid
-        rows={row}
+        rows={currentRows}  // Pass only rows for the current page
         columns={columns}
-        pageSize={10}
         disableSelectionOnClick
         autoHeight
       />
+
+      {/* Pagination */}
+      <div className="pagination-container flex justify-center py-4">
+        <ReactPaginate
+          pageCount={Math.ceil(row.length / rowsPerPage)}
+          onPageChange={handlePageClick}
+          containerClassName={'pagination flex items-center space-x-2'}
+          activeClassName={'active'}
+          pageClassName={'page px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          previousClassName={'previous px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          nextClassName={'next px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          disabledClassName={'disabled cursor-not-allowed opacity-50'}
+        />
+      </div>
     </div>
   );
 };
@@ -454,16 +513,41 @@ const TrackOrder = () => {
           status: item.status,
         });
       });
+  // State for pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage] = useState(8);
 
+  // Handle page click and update rows displayed
+  const handlePageClick = (event) => {
+    setPage(event.selected);
+  };
+
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentRows = row.slice(startIndex, endIndex);  // Get rows for the current page
   return (
     <div className="pl-8 pt-1">
+      {/* Pass only the currentRows to DataGrid */}
       <DataGrid
-        rows={row}
+        rows={currentRows}  // Pass only rows for the current page
         columns={columns}
-        pageSize={10}
         disableSelectionOnClick
         autoHeight
       />
+
+      {/* Pagination */}
+      <div className="pagination-container flex justify-center py-4">
+        <ReactPaginate
+          pageCount={Math.ceil(row.length / rowsPerPage)}
+          onPageChange={handlePageClick}
+          containerClassName={'pagination flex items-center space-x-2'}
+          activeClassName={'active'}
+          pageClassName={'page px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          previousClassName={'previous px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          nextClassName={'next px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          disabledClassName={'disabled cursor-not-allowed opacity-50'}
+        />
+      </div>
     </div>
   );
 };
