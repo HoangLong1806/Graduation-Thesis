@@ -6,73 +6,7 @@ const { isAuthenticated, isSeller, isAdmin } = require('../middleware/auth');
 const Order = require('../model/order');
 const Shop = require('../model/shop');
 const Product = require('../model/product');
-// Create new order route
-// // Tạo đơn hàng mới
-// router.post(
-//   '/create-order',
-//   catchAsyncErrors(async (req, res, next) => {
-//     try {
-//       const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
 
-//       // Nhóm các mặt hàng trong giỏ hàng theo shopId
-//       const shopItemsMap = new Map();
-
-//       for (const item of cart) {
-//         const shopId = item.shopId;
-//         if (!shopItemsMap.has(shopId)) {
-//           shopItemsMap.set(shopId, []);
-//         }
-//         shopItemsMap.get(shopId).push(item);
-//       }
-
-//       // Tạo đơn hàng cho từng shop
-//       const orders = [];
-
-//       for (const [shopId, items] of shopItemsMap) {
-//         const order = await Order.create({
-//           cart: items,
-//           shippingAddress,
-//           user,
-//           totalPrice,
-//           paymentInfo,
-//         });
-//         orders.push(order);
-
-//         // Cập nhật tồn kho và trạng thái sold_out cho mỗi mặt hàng trong đơn hàng
-//         for (const item of items) {
-//           // Kiểm tra giá trị productId
-//           console.log('productId:', item.productId);
-
-//           // Giả sử item.productId tồn tại và được truyền chính xác
-//           const product = await Product.findById(item.productId);
-//           console.log('Product ID:', item.productId);
-//           if (!product) {
-//             return next(new ErrorHandler('Sản phẩm không tồn tại', 404));
-//           }
-
-//           // Giảm tồn kho theo số lượng đã đặt
-//           product.stock -= item.qty;
-
-//           // Nếu tồn kho <= 0, đánh dấu sản phẩm là sold_out
-//           if (product.stock <= 0) {
-//             product.sold_out = true;
-//             product.stock = 0; // Đảm bảo tồn kho không bị âm
-//           }
-
-//           // Lưu sản phẩm đã được cập nhật
-//           await product.save();
-//         }
-//       }
-
-//       res.status(201).json({
-//         success: true,
-//         orders,
-//       });
-//     } catch (error) {
-//       return next(new ErrorHandler(error.message, 500));
-//     }
-//   })
-// );
 // create new order
 router.post(
   '/create-order',
@@ -80,7 +14,7 @@ router.post(
     try {
       const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
 
-      //   group cart items by shopId
+      // group cart items by shopId
       const shopItemsMap = new Map();
 
       for (const item of cart) {
@@ -102,6 +36,36 @@ router.post(
           totalPrice,
           paymentInfo,
         });
+
+        // Update stock and sold_out for each product
+        for (const item of items) {
+          const product = await Product.findById(item._id); // Ensure you use _id, not productId
+
+          // Check if the product exists
+          if (!product) {
+            return next(
+              new ErrorHandler('Product not found with ID: ' + item._id, 404)
+            );
+          }
+
+          // Check if there's enough stock
+          if (product.stock >= item.qty) {
+            // Decrease stock and increase sold_out
+            product.stock -= item.qty;
+            product.sold_out += item.qty;
+
+            await product.save();
+          } else {
+            // If stock is not enough, throw an error
+            return next(
+              new ErrorHandler(
+                'Not enough stock for product: ' + product.name,
+                400
+              )
+            );
+          }
+        }
+
         orders.push(order);
       }
 
@@ -114,6 +78,48 @@ router.post(
     }
   })
 );
+
+// //create new order
+// router.post(
+//   '/create-order',
+//   catchAsyncErrors(async (req, res, next) => {
+//     try {
+//       const { cart, shippingAddress, user, totalPrice, paymentInfo } = req.body;
+
+//       //   group cart items by shopId
+//       const shopItemsMap = new Map();
+
+//       for (const item of cart) {
+//         const shopId = item.shopId;
+//         if (!shopItemsMap.has(shopId)) {
+//           shopItemsMap.set(shopId, []);
+//         }
+//         shopItemsMap.get(shopId).push(item);
+//       }
+
+//       // create an order for each shop
+//       const orders = [];
+
+//       for (const [shopId, items] of shopItemsMap) {
+//         const order = await Order.create({
+//           cart: items,
+//           shippingAddress,
+//           user,
+//           totalPrice,
+//           paymentInfo,
+//         });
+//         orders.push(order);
+//       }
+
+//       res.status(201).json({
+//         success: true,
+//         orders,
+//       });
+//     } catch (error) {
+//       return next(new ErrorHandler(error.message, 500));
+//     }
+//   })
+// );
 
 // get all orders of user
 router.get(
@@ -174,7 +180,7 @@ router.put(
 
       order.status = req.body.status;
 
-      if (req.body.status === 'Delivered') {
+      if (req.body.status === 'Đã giao hàng') {
         order.deliveredAt = Date.now();
         order.paymentInfo.status = 'Succeeded';
         const serviceCharge = order.totalPrice * 0.1;

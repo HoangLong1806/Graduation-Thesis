@@ -351,7 +351,7 @@ const ProductDetailsInfo = ({
               <h5 className="font-[600]">
                 Ngày tham gia:{" "}
                 <span className="font-[500]">
-                  {data.shop?.createdAt?.slice(0, 10)}
+                  {new Date(data?.createdAt).toLocaleDateString('vi-VN')}
                 </span>
               </h5>
               <h5 className="font-[600] pt-3">

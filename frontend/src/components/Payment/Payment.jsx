@@ -149,9 +149,18 @@ const Payment = () => {
       toast.error(error);
     }
   };
+  console.log(order.cart);
 
   const cashOnDeliveryHandler = async (e) => {
     e.preventDefault();
+
+    // Kiểm tra cart và từng item để đảm bảo productId (_id) hợp lệ
+    for (const item of order.cart) {
+      if (!item.productId && !item._id) {
+        toast.error("Một hoặc nhiều sản phẩm không có ID hợp lệ!");
+        return;
+      }
+    }
 
     const config = {
       headers: {
@@ -163,16 +172,19 @@ const Payment = () => {
       type: "Cash On Delivery",
     };
 
-    await axios
-      .post(`${server}/order/create-order`, order, config)
-      .then((res) => {
-        setOpen(false);
-        navigate("/order/success");
-        toast.success("Order successful!");
-        localStorage.setItem("cartItems", JSON.stringify([]));
-        localStorage.setItem("latestOrder", JSON.stringify([]));
-        window.location.reload();
-      });
+    try {
+      const res = await axios.post(`${server}/order/create-order`, order, config);
+
+      setOpen(false);
+      navigate("/order/success");
+      toast.success("Order successful!");
+      localStorage.setItem("cartItems", JSON.stringify([]));
+      localStorage.setItem("latestOrder", JSON.stringify([]));
+      window.location.reload();
+    } catch (error) {
+      toast.error("Error occurred. Please try again!");
+      console.error(error);
+    }
   };
 
   return (
