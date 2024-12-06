@@ -21,6 +21,8 @@ import {
   TrackOrderPage,
   ShopAllRefunds,
   UserInbox,
+  ForgotPassword,
+  ResetPassword
 } from './routes/Routes';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -97,6 +99,8 @@ const App = () => {
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/login' element={<LoginPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path='/sign-up' element={<SignupPage />} />
           <Route
             path='/activation/:activation_token'

@@ -412,40 +412,79 @@ router.get(
     }
   })
 );
-// forgot password
 
+// forgot-password route
 router.post(
   "/forgot-password",
   catchAsyncErrors(async (req, res, next) => {
     try {
       const { email } = req.body;
       const user = await User.findOne({ email });
+
       if (!user) {
-        return next(new ErrorHandler("User not found with this email", 404));
+        return next(new ErrorHandler("User with this email does not exist", 404));
       }
-      const resetToken = user.getResetPasswordToken();
-      await user.save();
-      const resetUrl = `https://frontend-one-kappa-74.vercel.app/reset-password/${resetToken}`;
+
+      const resetToken = createPasswordResetToken(user);
       const isProduction = process.env.NODE_ENV === "production";
-      const resetPasswordUrl = isProduction
+      const resetUrl = isProduction
         ? `https://frontend-one-kappa-74.vercel.app/reset-password/${resetToken}`
         : `http://localhost:3000/reset-password/${resetToken}`;
+
       try {
         await sendMail({
           email: user.email,
-          subject: "Password Recovery",
-          message: `Your password reset token is as follow: \n\n ${resetUrl}`,
+          subject: "Password Reset Request",
+          message: `Hello ${user.name},\n\nPlease click on the link below to reset your password:\n\n${resetUrl}`,
         });
+
         res.status(200).json({
           success: true,
-          message: `Email sent to: ${user.email}`,
+          message: `Password reset link has been sent to ${user.email}`,
         });
       } catch (error) {
-        user.resetPasswordToken = undefined;
-        user.resetPasswordExpire = undefined;
-        await user.save();
         return next(new ErrorHandler(error.message, 500));
       }
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// Create reset token
+const createPasswordResetToken = (user) => {
+  const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: "1h", // Token will expire in 1 hour
+  });
+  return resetToken;
+};
+
+// reset-password route
+router.post(
+  "/reset-password/:token",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { token } = req.params;
+      const { newPassword, confirmPassword } = req.body;
+
+      if (newPassword !== confirmPassword) {
+        return next(new ErrorHandler("Passwords do not match", 400));
+      }
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      const user = await User.findById(decoded.id);
+
+      if (!user) {
+        return next(new ErrorHandler("Invalid or expired token", 400));
+      }
+
+      user.password = newPassword; // Update the password
+      await user.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Password has been successfully reset",
+      });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
