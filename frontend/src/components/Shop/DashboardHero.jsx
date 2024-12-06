@@ -17,8 +17,8 @@ import {
   Legend,
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import DatePicker from "react-datepicker"; 
-import "react-datepicker/dist/react-datepicker.css"; 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import styles from "../../styles/styles";
 
 ChartJS.register(
@@ -36,11 +36,11 @@ const DashboardHero = () => {
   const { orders = [] } = useSelector((state) => state.order || {});
   const { seller = {} } = useSelector((state) => state.seller || {});
   const { products = [] } = useSelector((state) => state.products || {});
-  
+
   // Set the default start date to 7 days ago from today
   const defaultStartDate = new Date();
   defaultStartDate.setDate(defaultStartDate.getDate() - 7);
-  
+
   const [startDate, setStartDate] = useState(defaultStartDate); // Lưu ngày bắt đầu
   const [endDate, setEndDate] = useState(new Date()); // Lưu ngày kết thúc
 
@@ -188,7 +188,7 @@ const DashboardHero = () => {
 
       <br />
       <h3 className="text-[22px] font-Poppins pb-2">Đơn hàng mới nhất</h3>
-      <div className="w-full min-h-[45vh] bg-white rounded">
+      <div className="w-full min-h-[20vh] bg-white rounded">
         <div className="flex justify-between items-center mb-4">
           {/* Chọn khoảng thời gian */}
           <div className="flex items-center">
@@ -204,8 +204,8 @@ const DashboardHero = () => {
               onChange={(date) => setEndDate(date)}
               dateFormat="dd/MM/yyyy"
               className="p-2 border rounded"
-            /> 
-          <span className="ml-4">Tổng số ngày: {Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24))}</span>
+            />
+            <span className="ml-4">Tổng số ngày: {Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24))}</span>
           </div>
         </div>
         <Bar data={chartData} options={chartOptions} />
