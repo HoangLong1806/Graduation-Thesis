@@ -37,12 +37,11 @@ const DashboardHero = () => {
   const { seller = {} } = useSelector((state) => state.seller || {});
   const { products = [] } = useSelector((state) => state.products || {});
 
-  // Set the default start date to 7 days ago from today
   const defaultStartDate = new Date();
   defaultStartDate.setDate(defaultStartDate.getDate() - 7);
 
-  const [startDate, setStartDate] = useState(defaultStartDate); // Lưu ngày bắt đầu
-  const [endDate, setEndDate] = useState(new Date()); // Lưu ngày kết thúc
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState(new Date());
 
   useEffect(() => {
     if (seller?._id) {
@@ -53,7 +52,6 @@ const DashboardHero = () => {
 
   const availableBalance = seller?.availableBalance.toFixed(2);
 
-  // Hàm nhóm đơn hàng theo ngày
   const groupOrdersByDate = (orders) => {
     const grouped = {};
 
@@ -68,10 +66,8 @@ const DashboardHero = () => {
     return grouped;
   };
 
-  // Nhóm các đơn hàng theo ngày
   const groupedOrders = groupOrdersByDate(orders);
 
-  // Hàm lọc dữ liệu theo khoảng thời gian
   const getFilteredData = (startDate, endDate) => {
     const filteredOrders = Object.keys(groupedOrders)
       .filter((date) => {
@@ -83,33 +79,37 @@ const DashboardHero = () => {
         return acc;
       }, {});
 
-    return filteredOrders;
+    const sortedDates = Object.keys(filteredOrders).sort((a, b) => new Date(a) - new Date(b));
+
+    const sortedFilteredOrders = {};
+    sortedDates.forEach((date) => {
+      sortedFilteredOrders[date] = filteredOrders[date];
+    });
+
+    return sortedFilteredOrders;
   };
 
-  // Lọc dữ liệu cho khoảng thời gian đã chọn
   const filteredOrders = getFilteredData(startDate, endDate);
 
-  // Tạo dữ liệu cho biểu đồ
   const chartData = {
-    labels: Object.keys(filteredOrders), // Các ngày (YYYY-MM-DD)
+    labels: Object.keys(filteredOrders),
     datasets: [
       {
         label: "Tổng tiền (US$)",
-        data: Object.values(filteredOrders), // Tổng tiền mỗi ngày
-        backgroundColor: "rgba(75, 192, 192, 0.6)", // Màu sắc của các cột
-        borderColor: "rgba(75, 192, 192, 1)", // Màu viền của các cột
+        data: Object.values(filteredOrders),
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        borderColor: "rgba(75, 192, 192, 1)",
         borderWidth: 1,
         datalabels: {
           align: "top",
           anchor: "end",
           color: "black",
-          formatter: (value) => value.toFixed(2), // Hiển thị số tiền với 2 chữ số sau dấu phẩy
+          formatter: (value) => value.toFixed(2),
         },
       },
     ],
   };
 
-  // Cấu hình biểu đồ
   const chartOptions = {
     responsive: true,
     plugins: {
@@ -119,14 +119,14 @@ const DashboardHero = () => {
       tooltip: {
         callbacks: {
           label: function (tooltipItem) {
-            return `US$ ${tooltipItem.raw.toFixed(2)}`; // Hiển thị tổng tiền với 2 chữ số sau dấu phẩy
+            return `US$ ${tooltipItem.raw.toFixed(2)}`;
           },
         },
       },
       datalabels: {
         display: true,
         color: "black",
-        formatter: (value) => value.toFixed(2), // Hiển thị số tiền trực tiếp trên cột
+        formatter: (value) => value.toFixed(2),
       },
     },
   };
@@ -135,7 +135,6 @@ const DashboardHero = () => {
     <div className="w-full p-8">
       <h3 className="text-[22px] font-Poppins pb-2">Tổng quan</h3>
       <div className="w-full block 800px:flex items-center justify-between">
-        {/* Tổng quan: Số dư tài khoản */}
         <div className="w-full mb-4 800px:w-[30%] min-h-[10vh] bg-white shadow rounded px-2 py-5">
           <div className="flex items-center">
             <AiOutlineMoneyCollect size={30} className="mr-2" fill="#00000085" />
@@ -152,7 +151,6 @@ const DashboardHero = () => {
           </Link>
         </div>
 
-        {/* Tổng quan: Tất cả đơn hàng */}
         <div className="w-full mb-4 800px:w-[30%] min-h-[10vh] bg-white shadow rounded px-2 py-5">
           <div className="flex items-center">
             <MdBorderClear size={30} className="mr-2" fill="#00000085" />
@@ -169,7 +167,6 @@ const DashboardHero = () => {
           </Link>
         </div>
 
-        {/* Tổng quan: Tất cả sản phẩm */}
         <div className="w-full mb-4 800px:w-[30%] min-h-[10vh] bg-white shadow rounded px-2 py-5">
           <div className="flex items-center">
             <AiOutlineMoneyCollect size={30} className="mr-2" fill="#00000085" />
@@ -190,7 +187,6 @@ const DashboardHero = () => {
       <h3 className="text-[22px] font-Poppins pb-2">Đơn hàng mới nhất</h3>
       <div className="w-full min-h-[20vh] bg-white rounded">
         <div className="flex justify-between items-center mb-4">
-          {/* Chọn khoảng thời gian */}
           <div className="flex items-center">
             <DatePicker
               selected={startDate}

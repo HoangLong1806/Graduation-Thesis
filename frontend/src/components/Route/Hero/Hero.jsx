@@ -6,7 +6,7 @@ const Hero = () => {
   return (
     <div
       className={`relative min-h-[70vh] 700px:min-h-[70vh] w-[full] ${styles.noramlFlex}`}
-      style={{
+      style={{  
         backgroundImage:
           "url(https://themes.rslahmed.dev/rafcart/assets/images/banner-2.jpg)",
         backgroundSize: "cover", // Đảm bảo hình ảnh phủ đầy vùng chứa
