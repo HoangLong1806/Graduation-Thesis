@@ -7,13 +7,15 @@ import { getAllOrdersOfAdmin } from "../../redux/actions/order";
 import Loader from "../Layout/Loader";
 import { getAllSellers } from "../../redux/actions/sellers";
 import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import Chart from "chart.js/auto";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css"; // Đừng quên import CSS của react-datepicker
-import { format, differenceInDays, subDays } from "date-fns"; // Thêm thư viện tính số ngày
+import { format, differenceInDays, subDays } from "date-fns";
 import "../../styles/admin.css";
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 // Helper function to format currency to two decimal places
+
+
 const formatMoney = (amount) => {
   return amount.toFixed(2);
 };
@@ -34,7 +36,6 @@ const AdminDashboardMain = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    // Lọc và tính toán dữ liệu cho biểu đồ
     if (adminOrders) {
       const filteredOrders = adminOrders.filter(order => {
         const orderDate = new Date(order.createdAt);
@@ -44,30 +45,47 @@ const AdminDashboardMain = () => {
       const data = filteredOrders.reduce((acc, item) => {
         const orderDate = new Date(item.createdAt);
         const dateKey = orderDate.toISOString().split('T')[0]; // Lấy ngày dạng YYYY-MM-DD
-        if (!acc[dateKey]) acc[dateKey] = 0;
-        acc[dateKey] += item.totalPrice;
+        if (!acc[dateKey]) acc[dateKey] = { earnings: 0, orders: 0 };
+        acc[dateKey].earnings += item.totalPrice;
+        acc[dateKey].orders += 1;
         return acc;
       }, {});
 
-      const labels = Object.keys(data);
-      const values = Object.values(data);
+      const sortedLabels = Object.keys(data).sort();
+      const earningsData = sortedLabels.map(date => data[date].earnings);
+      const ordersData = sortedLabels.map(date => data[date].orders);
 
       setChartData({
-        labels,
-        datasets: [
-          {
-            label: "Earnings",
-            data: values,
-            fill: false,
-            borderColor: "#077f9c",
-            tension: 0.1,
-          },
-        ],
+        earningsChartData: {
+          labels: sortedLabels,
+          datasets: [
+            {
+              label: "Earnings",
+              data: earningsData,
+              backgroundColor: "#ff6384", // Màu cho biểu đồ cột
+              borderColor: "#ff6384",
+              borderWidth: 1,
+              type: 'bar', // Biểu đồ cột
+            },
+          ],
+        },
+        ordersChartData: {
+          labels: sortedLabels,
+          datasets: [
+            {
+              label: "Orders",
+              data: ordersData,
+              fill: false,
+              borderColor: "#077f9c",
+              tension: 0.1,
+              type: 'line', // Biểu đồ đường
+            },
+          ],
+        },
       });
     }
   }, [adminOrders, startDate, endDate]);
 
-  // Tính tổng số ngày giữa startDate và endDate
   const totalDays = differenceInDays(endDate, startDate);
 
   return (
@@ -111,14 +129,13 @@ const AdminDashboardMain = () => {
             </div>
           </div>
 
-          {/* <br /> */}
-          <h3 className="text-[22px] font-Poppins pb-2">Latest Orders</h3>
+          <h3 className="text-[22px] font-Poppins pb-2">Thống kê</h3>
 
           {/* Chọn ngày bắt đầu và ngày kết thúc */}
           <div className="flex items-center justify-between px-4 py-2">
             <div>
               <div className="flex items-center space-x-4">
-              <h5 className="text-[18px] font-[400]">Select Date Range:</h5>
+                <h5 className="text-[18px] font-[400]">Ngày thống kê:</h5>
                 <DatePicker
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
@@ -136,18 +153,26 @@ const AdminDashboardMain = () => {
                 />
               </div>
             </div>
-              <h5 className="text-[18px] font-[400]">Total Days: {totalDays}</h5> {/* Hiển thị tổng số ngày */}
-            <div>
-            </div>
+            <h5 className="text-[18px] font-[400]">Tổng số ngày: {totalDays}</h5>
           </div>
-
+<br />
           {/* Biểu đồ */}
-          <div className="w-full min-h-[50vh] bg-white rounded">
-            {chartData ? (
-              <Line data={chartData} options={{ responsive: true }} />
-            ) : (
-              <div>Loading chart data...</div>
-            )}
+          <div className="w-full flex gap-4 h-[40vh] bg-white rounded">
+            <div className="w-[50%]">
+              {chartData && chartData.earningsChartData ? (
+                <Bar data={chartData.earningsChartData} options={{ responsive: true }} />
+              ) : (
+                <div>Loading chart data...</div>
+              )}
+            </div>
+
+            <div className="w-[50%]">
+              {chartData && chartData.ordersChartData ? (
+                <Line data={chartData.ordersChartData} options={{ responsive: true }} />
+              ) : (
+                <div>Loading chart data...</div>
+              )}
+            </div>
           </div>
         </div>
       )}

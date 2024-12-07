@@ -11,7 +11,7 @@ import { HiOutlineReceiptRefund } from "react-icons/hi";
 
 const DashboardSideBar = ({ active }) => {
   return (
-    <div className="dashboard-sidebar w-[100%] min-h-screen bg-white shadow-sm overflow-y-auto z-10">
+    <div className="dashboard-sidebar w-[100%] h-[90vh] bg-white shadow-sm overflow-y-auto z-10">
       {/* single item */}
       <div className="w-full flex items-center p-4">
         <Link to="/dashboard" className="w-full flex items-center">
