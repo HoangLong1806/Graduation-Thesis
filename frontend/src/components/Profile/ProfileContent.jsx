@@ -198,30 +198,25 @@ const ProfileContent = ({ active }) => {
       )}
       {active === 5 && (
         <div>
-          <AllRefundOrders />
+          <TrackOrder />
         </div>
       )}
 
       {/* TrackOrder */}
       {active === 6 && (
         <div>
-          <TrackOrder />
+          <ChangePassword />
         </div>
       )}
       {/* ChangePassword */}
       {active === 7 && (
         <div>
-          <ChangePassword />
-        </div>
-      )}
-      {/* Address */}
-      {active === 8 && (
-        <div>
           <Address />
         </div>
       )}
+
     </div>
-    
+
   );
 };
 
