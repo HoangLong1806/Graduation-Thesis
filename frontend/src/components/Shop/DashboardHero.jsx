@@ -6,12 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllOrdersOfShop } from "../../redux/actions/order";
 import { getAllProductsShop } from "../../redux/actions/product";
 import { Button } from "@mui/material";
-import { Bar } from "react-chartjs-2";
+import { Bar, Line } from "react-chartjs-2"; // Import Line chart
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
+  LineElement, // Import LineElement for line chart
   Title,
   Tooltip,
   Legend,
@@ -25,6 +26,7 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  LineElement, // Register LineElement
   Title,
   Tooltip,
   Legend,
@@ -37,12 +39,11 @@ const DashboardHero = () => {
   const { seller = {} } = useSelector((state) => state.seller || {});
   const { products = [] } = useSelector((state) => state.products || {});
 
-  // Set the default start date to 7 days ago from today
   const defaultStartDate = new Date();
   defaultStartDate.setDate(defaultStartDate.getDate() - 7);
 
-  const [startDate, setStartDate] = useState(defaultStartDate); // Lưu ngày bắt đầu
-  const [endDate, setEndDate] = useState(new Date()); // Lưu ngày kết thúc
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState(new Date());
 
   useEffect(() => {
     if (seller?._id) {
@@ -53,25 +54,23 @@ const DashboardHero = () => {
 
   const availableBalance = seller?.availableBalance.toFixed(2);
 
-  // Hàm nhóm đơn hàng theo ngày
   const groupOrdersByDate = (orders) => {
     const grouped = {};
 
     orders.forEach((order) => {
       const date = new Date(order.createdAt).toISOString().split("T")[0];
       if (!grouped[date]) {
-        grouped[date] = 0;
+        grouped[date] = { totalAmount: 0, orderCount: 0 };
       }
-      grouped[date] += order.totalPrice || 0;
+      grouped[date].totalAmount += order.totalPrice || 0;
+      grouped[date].orderCount += 1;
     });
 
     return grouped;
   };
 
-  // Nhóm các đơn hàng theo ngày
   const groupedOrders = groupOrdersByDate(orders);
 
-  // Hàm lọc dữ liệu theo khoảng thời gian
   const getFilteredData = (startDate, endDate) => {
     const filteredOrders = Object.keys(groupedOrders)
       .filter((date) => {
@@ -83,33 +82,60 @@ const DashboardHero = () => {
         return acc;
       }, {});
 
-    return filteredOrders;
+    const sortedDates = Object.keys(filteredOrders).sort(
+      (a, b) => new Date(a) - new Date(b)
+    );
+
+    const sortedFilteredOrders = {};
+    sortedDates.forEach((date) => {
+      sortedFilteredOrders[date] = filteredOrders[date];
+    });
+
+    return sortedFilteredOrders;
   };
 
-  // Lọc dữ liệu cho khoảng thời gian đã chọn
   const filteredOrders = getFilteredData(startDate, endDate);
 
-  // Tạo dữ liệu cho biểu đồ
   const chartData = {
-    labels: Object.keys(filteredOrders), // Các ngày (YYYY-MM-DD)
+    labels: Object.keys(filteredOrders),
     datasets: [
       {
-        label: "Tổng tiền (US$)",
-        data: Object.values(filteredOrders), // Tổng tiền mỗi ngày
-        backgroundColor: "rgba(75, 192, 192, 0.6)", // Màu sắc của các cột
-        borderColor: "rgba(75, 192, 192, 1)", // Màu viền của các cột
+        label: "Tổng tiền (US$) - Cột",
+        data: Object.values(filteredOrders).map((order) => order.totalAmount),
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        borderColor: "rgba(75, 192, 192, 3)",
         borderWidth: 1,
+        type: "bar", // Biểu đồ cột
         datalabels: {
           align: "top",
           anchor: "end",
           color: "black",
-          formatter: (value) => value.toFixed(2), // Hiển thị số tiền với 2 chữ số sau dấu phẩy
+          formatter: (value) => value.toFixed(2),
         },
       },
     ],
   };
 
-  // Cấu hình biểu đồ
+  const lineChartData = {
+    labels: Object.keys(filteredOrders),
+    datasets: [
+      {
+        label: "Số lượng đơn hàng - Đường",
+        data: Object.values(filteredOrders).map((order) => order.orderCount),
+        fill: false,
+        borderColor: "rgba(54, 162, 235, 1)",
+        tension: 0.4,
+        type: "line", // Biểu đồ đường
+        datalabels: {
+          align: "bottom",
+          anchor: "start",
+          color: "black",
+          formatter: (value) => value.toFixed(0),
+        },
+      },
+    ],
+  };
+
   const chartOptions = {
     responsive: true,
     plugins: {
@@ -119,14 +145,14 @@ const DashboardHero = () => {
       tooltip: {
         callbacks: {
           label: function (tooltipItem) {
-            return `US$ ${tooltipItem.raw.toFixed(2)}`; // Hiển thị tổng tiền với 2 chữ số sau dấu phẩy
+            return `US$ ${tooltipItem.raw.toFixed(2)}`;
           },
         },
       },
       datalabels: {
         display: true,
         color: "black",
-        formatter: (value) => value.toFixed(2), // Hiển thị số tiền trực tiếp trên cột
+        formatter: (value) => value.toFixed(2),
       },
     },
   };
@@ -135,12 +161,18 @@ const DashboardHero = () => {
     <div className="w-full p-8">
       <h3 className="text-[22px] font-Poppins pb-2">Tổng quan</h3>
       <div className="w-full block 800px:flex items-center justify-between">
-        {/* Tổng quan: Số dư tài khoản */}
         <div className="w-full mb-4 800px:w-[30%] min-h-[10vh] bg-white shadow rounded px-2 py-5">
           <div className="flex items-center">
-            <AiOutlineMoneyCollect size={30} className="mr-2" fill="#00000085" />
-            <h3 className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}>
-              Số dư tài khoản <span className="text-[16px]">(-10% phí dịch vụ)</span>
+            <AiOutlineMoneyCollect
+              size={30}
+              className="mr-2"
+              fill="#00000085"
+            />
+            <h3
+              className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
+            >
+              Số dư tài khoản{" "}
+              <span className="text-[16px]">(-10% phí dịch vụ)</span>
             </h3>
             <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
               ${availableBalance || "0.00"}
@@ -152,11 +184,12 @@ const DashboardHero = () => {
           </Link>
         </div>
 
-        {/* Tổng quan: Tất cả đơn hàng */}
         <div className="w-full mb-4 800px:w-[30%] min-h-[10vh] bg-white shadow rounded px-2 py-5">
           <div className="flex items-center">
             <MdBorderClear size={30} className="mr-2" fill="#00000085" />
-            <h3 className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}>
+            <h3
+              className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
+            >
               Tất cả đơn hàng
             </h3>
             <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
@@ -169,11 +202,16 @@ const DashboardHero = () => {
           </Link>
         </div>
 
-        {/* Tổng quan: Tất cả sản phẩm */}
         <div className="w-full mb-4 800px:w-[30%] min-h-[10vh] bg-white shadow rounded px-2 py-5">
           <div className="flex items-center">
-            <AiOutlineMoneyCollect size={30} className="mr-2" fill="#00000085" />
-            <h3 className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}>
+            <AiOutlineMoneyCollect
+              size={30}
+              className="mr-2"
+              fill="#00000085"
+            />
+            <h3
+              className={`${styles.productTitle} !text-[18px] leading-5 !font-[400] text-[#00000085]`}
+            >
               Tất cả sản phẩm
             </h3>
             <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
@@ -188,28 +226,43 @@ const DashboardHero = () => {
 
       <br />
       <h3 className="text-[22px] font-Poppins pb-2">Đơn hàng mới nhất</h3>
-      <div className="w-full min-h-[20vh] bg-white rounded">
-        <div className="flex justify-between items-center mb-4">
-          {/* Chọn khoảng thời gian */}
-          <div className="flex items-center">
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              dateFormat="dd/MM/yyyy"
-              className="mr-4 p-2 border rounded"
-            />
-            <span className="mr-4">đến</span>
-            <DatePicker
-              selected={endDate}
-              onChange={(date) => setEndDate(date)}
-              dateFormat="dd/MM/yyyy"
-              className="p-2 border rounded"
-            />
+      <div className="w-full min-h-[50vh] bg-white shadow rounded px-2 py-5">
+        {/* Chọn ngày bắt đầu và ngày kết thúc */}
+        <div className="flex items-center justify-between px-4 py-2">
+            <div>
+              <div className="flex items-center space-x-4">
+                <h5 className="text-[18px] font-[400]">Select Date Range:</h5>
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  dateFormat="dd/MM/yyyy"
+                  className="px-2 py-1 border border-gray-300 rounded"
+                  placeholderText="Start Date"
+                />
+                <span>-</span>
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  dateFormat="dd/MM/yyyy"
+                  className="px-2 py-1 border border-gray-300 rounded"
+                  placeholderText="End Date"
+                />
+              </div>
+            </div>
             <span className="ml-4">Tổng số ngày: {Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24))}</span>
           </div>
+        <br />
+        <div className="w-full flex justify-between">
+          <div className="w-full max-w-[48%]">
+            <Bar data={chartData} options={chartOptions} />
+          </div>
+          <div className="w-full max-w-[48%]">
+            <Line data={lineChartData} options={chartOptions} />
+          </div>
         </div>
-        <Bar data={chartData} options={chartOptions} />
       </div>
+
+      
     </div>
   );
 };

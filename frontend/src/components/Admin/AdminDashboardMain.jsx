@@ -15,7 +15,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 // Helper function to format currency to two decimal places
 
-
 const formatMoney = (amount) => {
   return amount.toFixed(2);
 };
@@ -23,7 +22,9 @@ const formatMoney = (amount) => {
 const AdminDashboardMain = () => {
   const dispatch = useDispatch();
 
-  const { adminOrders, adminOrderLoading } = useSelector((state) => state.order);
+  const { adminOrders, adminOrderLoading } = useSelector(
+    (state) => state.order
+  );
   const { sellers } = useSelector((state) => state.seller);
 
   const [startDate, setStartDate] = useState(subDays(new Date(), 7)); // Ngày bắt đầu là 7 ngày trước ngày hiện tại
@@ -37,14 +38,14 @@ const AdminDashboardMain = () => {
 
   useEffect(() => {
     if (adminOrders) {
-      const filteredOrders = adminOrders.filter(order => {
+      const filteredOrders = adminOrders.filter((order) => {
         const orderDate = new Date(order.createdAt);
         return orderDate >= startDate && orderDate <= endDate; // Kiểm tra xem ngày đơn hàng có nằm trong khoảng thời gian đã chọn không
       });
 
       const data = filteredOrders.reduce((acc, item) => {
         const orderDate = new Date(item.createdAt);
-        const dateKey = orderDate.toISOString().split('T')[0]; // Lấy ngày dạng YYYY-MM-DD
+        const dateKey = orderDate.toISOString().split("T")[0]; // Lấy ngày dạng YYYY-MM-DD
         if (!acc[dateKey]) acc[dateKey] = { earnings: 0, orders: 0 };
         acc[dateKey].earnings += item.totalPrice;
         acc[dateKey].orders += 1;
@@ -52,8 +53,8 @@ const AdminDashboardMain = () => {
       }, {});
 
       const sortedLabels = Object.keys(data).sort();
-      const earningsData = sortedLabels.map(date => data[date].earnings);
-      const ordersData = sortedLabels.map(date => data[date].orders);
+      const earningsData = sortedLabels.map((date) => data[date].earnings);
+      const ordersData = sortedLabels.map((date) => data[date].orders);
 
       setChartData({
         earningsChartData: {
@@ -65,7 +66,7 @@ const AdminDashboardMain = () => {
               backgroundColor: "#ff6384", // Màu cho biểu đồ cột
               borderColor: "#ff6384",
               borderWidth: 1,
-              type: 'bar', // Biểu đồ cột
+              type: "bar", // Biểu đồ cột
             },
           ],
         },
@@ -78,7 +79,7 @@ const AdminDashboardMain = () => {
               fill: false,
               borderColor: "#077f9c",
               tension: 0.1,
-              type: 'line', // Biểu đồ đường
+              type: "line", // Biểu đồ đường
             },
           ],
         },
@@ -98,20 +99,37 @@ const AdminDashboardMain = () => {
           <div className="w-full block 800px:flex items-center justify-between">
             <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
               <div className="flex items-center">
-                <AiOutlineMoneyCollect size={30} className="mr-2" fill="#00000085" />
-                <h3 className="productTitle text-[18px] leading-5 font-[400] text-[#00000085]">Total Earning</h3>
+                <AiOutlineMoneyCollect
+                  size={30}
+                  className="mr-2"
+                  fill="#00000085"
+                />
+                <h3 className="productTitle text-[18px] leading-5 font-[400] text-[#00000085]">
+                  Total Earning
+                </h3>
               </div>
               <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
-                ${adminOrders && formatMoney(adminOrders.reduce((acc, item) => acc + item.totalPrice * 0.1, 0))}
+                $
+                {adminOrders &&
+                  formatMoney(
+                    adminOrders.reduce(
+                      (acc, item) => acc + item.totalPrice * 0.1,
+                      0
+                    )
+                  )}
               </h5>
             </div>
 
             <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
               <div className="flex items-center">
                 <MdBorderClear size={30} className="mr-2" fill="#00000085" />
-                <h3 className="productTitle text-[18px] leading-5 font-[400] text-[#00000085]">All Sellers</h3>
+                <h3 className="productTitle text-[18px] leading-5 font-[400] text-[#00000085]">
+                  All Sellers
+                </h3>
               </div>
-              <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">{sellers && sellers.length}</h5>
+              <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
+                {sellers && sellers.length}
+              </h5>
               <Link to="/admin-sellers">
                 <h5 className="pt-4 pl-2 text-[#077f9c]">View Sellers</h5>
               </Link>
@@ -119,10 +137,18 @@ const AdminDashboardMain = () => {
 
             <div className="w-full mb-4 800px:w-[30%] min-h-[20vh] bg-white shadow rounded px-2 py-5">
               <div className="flex items-center">
-                <AiOutlineMoneyCollect size={30} className="mr-2" fill="#00000085" />
-                <h3 className="productTitle text-[18px] leading-5 font-[400] text-[#00000085]">All Orders</h3>
+                <AiOutlineMoneyCollect
+                  size={30}
+                  className="mr-2"
+                  fill="#00000085"
+                />
+                <h3 className="productTitle text-[18px] leading-5 font-[400] text-[#00000085]">
+                  All Orders
+                </h3>
               </div>
-              <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">{adminOrders && adminOrders.length}</h5>
+              <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
+                {adminOrders && adminOrders.length}
+              </h5>
               <Link to="/admin-orders">
                 <h5 className="pt-4 pl-2 text-[#077f9c]">View Orders</h5>
               </Link>
@@ -153,14 +179,19 @@ const AdminDashboardMain = () => {
                 />
               </div>
             </div>
-            <h5 className="text-[18px] font-[400]">Tổng số ngày: {totalDays}</h5>
+            <h5 className="text-[18px] font-[400]">
+              Tổng số ngày: {totalDays}
+            </h5>
           </div>
-<br />
+          <br />
           {/* Biểu đồ */}
           <div className="w-full flex gap-4 h-[40vh] bg-white rounded">
             <div className="w-[50%]">
               {chartData && chartData.earningsChartData ? (
-                <Bar data={chartData.earningsChartData} options={{ responsive: true }} />
+                <Bar
+                  data={chartData.earningsChartData}
+                  options={{ responsive: true }}
+                />
               ) : (
                 <div>Loading chart data...</div>
               )}
@@ -168,7 +199,10 @@ const AdminDashboardMain = () => {
 
             <div className="w-[50%]">
               {chartData && chartData.ordersChartData ? (
-                <Line data={chartData.ordersChartData} options={{ responsive: true }} />
+                <Line
+                  data={chartData.ordersChartData}
+                  options={{ responsive: true }}
+                />
               ) : (
                 <div>Loading chart data...</div>
               )}
