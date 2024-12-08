@@ -41,9 +41,13 @@ const DashboardHero = () => {
 
   const defaultStartDate = new Date();
   defaultStartDate.setDate(defaultStartDate.getDate() - 7);
+  defaultStartDate.setHours(0, 0, 0, 0);
+
+  const defaultEndDate = new Date();
+  defaultEndDate.setHours(23, 59, 59, 999);
 
   const [startDate, setStartDate] = useState(defaultStartDate);
-  const [endDate, setEndDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(defaultEndDate);
 
   useEffect(() => {
     if (seller?._id) {
@@ -231,7 +235,7 @@ const DashboardHero = () => {
         <div className="flex items-center justify-between px-4 py-2">
             <div>
               <div className="flex items-center space-x-4">
-                <h5 className="text-[18px] font-[400]">Select Date Range:</h5>
+                <h5 className="text-[18px] font-[400]">Ngày thống Kê</h5>
                 <DatePicker
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
