@@ -418,10 +418,13 @@ const CartData = ({
       {showCouponDetails && coupons && coupons.length > 0 && (
         <div className="mt-2">
           {coupons.map((coupon) => (
-            <div key={coupon._id} className="cursor-pointer" onClick={() => handleCouponClick(coupon.name)}>
-              <p>Tên mã giảm giá: {coupon.name}</p> {/* Display coupon name */}
-              <p>Số tiền: ${coupon.value}</p>
-            </div>
+            <button
+              key={coupon._id}
+              onClick={() => handleCouponClick(coupon.name)}
+              className="w-full p-2 mb-2 text-white bg-[#f63b60] rounded-md cursor-pointer"
+            >
+              {coupon.name} - ${coupon.value} 
+            </button>
           ))}
         </div>
       )}

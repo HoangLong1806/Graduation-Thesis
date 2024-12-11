@@ -9,12 +9,12 @@ import { getAllSellers } from "../../redux/actions/sellers";
 import { Line } from "react-chartjs-2";
 import { Bar } from "react-chartjs-2";
 import Chart from "chart.js/auto";
-import { format, differenceInDays, subDays } from "date-fns";
+import { format, differenceInDays, subDays, setHours, setMinutes } from "date-fns";
 import "../../styles/admin.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-// Helper function to format currency to two decimal places
 
+// Helper function to format currency to two decimal places
 const formatMoney = (amount) => {
   return amount.toFixed(2);
 };
@@ -27,8 +27,18 @@ const AdminDashboardMain = () => {
   );
   const { sellers } = useSelector((state) => state.seller);
 
-  const [startDate, setStartDate] = useState(subDays(new Date(), 7)); // Ngày bắt đầu là 7 ngày trước ngày hiện tại
-  const [endDate, setEndDate] = useState(new Date()); // Ngày kết thúc là ngày hiện tại
+  const defaultStartDate = new Date();
+  defaultStartDate.setDate(defaultStartDate.getDate() - 7);
+  defaultStartDate.setHours(0, 0, 0, 0);
+
+  const defaultEndDate = new Date();
+  defaultEndDate.setDate(defaultEndDate.getDate() + 1);
+  defaultEndDate.setHours(23, 59, 59, 999);
+
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState(defaultEndDate);
+  
+  
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -39,8 +49,8 @@ const AdminDashboardMain = () => {
   useEffect(() => {
     if (adminOrders) {
       const filteredOrders = adminOrders.filter((order) => {
-        const orderDate = new Date(order.createdAt);
-        return orderDate >= startDate && orderDate <= endDate; // Kiểm tra xem ngày đơn hàng có nằm trong khoảng thời gian đã chọn không
+        const orderDate = new Date(order.createdAt).getTime(); // Lấy timestamp của order
+        return orderDate >= startDate.getTime() && orderDate <= endDate.getTime(); // So sánh chính xác đến mili giây
       });
 
       const data = filteredOrders.reduce((acc, item) => {

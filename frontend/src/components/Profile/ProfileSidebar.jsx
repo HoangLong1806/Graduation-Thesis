@@ -75,7 +75,7 @@ const ProfileSidebar = ({ setActive, active }) => {
         className='flex items-center cursor-pointer w-full mb-8'
         onClick={() => {
           setActive(4); // Chỉ cập nhật trạng thái active
-          navigate('/inbox'); // Duy trì điều hướng đến Inbox nếu cần thiết, nhưng vẫn trong trang hiện tại
+          // navigate('/inbox'); // Duy trì điều hướng đến Inbox nếu cần thiết, nhưng vẫn trong trang hiện tại
         }}
       >
         <AiOutlineMessage size={20} color={active === 4 ? 'red' : ''} />

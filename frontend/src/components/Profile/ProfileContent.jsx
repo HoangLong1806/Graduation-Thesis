@@ -196,6 +196,12 @@ const ProfileContent = ({ active }) => {
           <AllRefundOrders />
         </div>
       )}
+      {/* inbox */}
+      {active === 4 && (
+        <div>
+          <UserInbox />
+        </div>
+      )}
       {active === 5 && (
         <div>
           <TrackOrder />
