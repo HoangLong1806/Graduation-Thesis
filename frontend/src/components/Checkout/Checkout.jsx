@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "../../styles/styles";
 import { Country, State } from "country-state-city";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 import { server } from "../../server";
@@ -20,7 +20,9 @@ const Checkout = () => {
   const [couponCode, setCouponCode] = useState("");
   const [couponCodeData, setCouponCodeData] = useState(null);
   const [discountPrice, setDiscountPrice] = useState(null);
+
   const navigate = useNavigate();
+
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -322,7 +324,50 @@ const CartData = ({
   couponCode,
   setCouponCode,
   discountPercentenge,
+
 }) => {
+  // Define state for showing coupon details
+  const [showCouponDetails, setShowCouponDetails] = useState(false); // Add this line
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [coupons, setCoupons] = useState([]);
+  const [minAmount, setMinAmount] = useState(null);
+  const [maxAmount, setMaxAmount] = useState(null);
+  const [selectedProducts, setSelectedProducts] = useState(null);
+  const [value, setValue] = useState(null);
+  const { seller } = useSelector((state) => state.seller);
+  const { products } = useSelector((state) => state.products);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    setIsLoading(true);
+    axios
+      .get(`${server}/coupon/get-coupon/${seller._id}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setIsLoading(false);
+        setCoupons(res.data.couponCodes);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+      });
+  }, [dispatch]);
+  const row = [];
+  coupons &&
+    coupons.forEach((item) => {
+      row.push({
+        id: item._id,
+        name: item.name,
+        price: item.value + " %",
+        sold: 10,
+      });
+    });
+  const handleCouponClick = (couponName) => {
+    setCouponCode(couponName);  // Set the coupon code when a coupon is clicked
+  };
+
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
       <div className="flex justify-between">
@@ -331,14 +376,12 @@ const CartData = ({
       </div>
       <br />
       <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">
-          Vận chuyển::</h3>
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">Vận chuyển:</h3>
         <h5 className="text-[18px] font-[600]">${shipping.toFixed(2)}</h5>
       </div>
       <br />
       <div className="flex justify-between border-b pb-3">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">
-          Giảm giá::</h3>
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">Giảm giá:</h3>
         <h5 className="text-[18px] font-[600]">
           - {discountPercentenge ? "$" + discountPercentenge.toString() : null}
         </h5>
@@ -361,6 +404,30 @@ const CartData = ({
           type="submit"
         />
       </form>
+      <br />
+      <div className="flex justify-between">
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">Mã giảm giá</h3>
+        <button
+          onClick={() => setShowCouponDetails(!showCouponDetails)}
+          className="text-[#f63b60] text-[20px]"
+        >
+          {showCouponDetails ? '▲' : '▼'}
+        </button>
+      </div>
+
+      {showCouponDetails && coupons && coupons.length > 0 && (
+        <div className="mt-2">
+          {coupons.map((coupon) => (
+            <button
+              key={coupon._id}
+              onClick={() => handleCouponClick(coupon.name)}
+              className="w-full p-2 mb-2 text-white bg-[#f63b60] rounded-md cursor-pointer"
+            >
+              {coupon.name} - ${coupon.value} 
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

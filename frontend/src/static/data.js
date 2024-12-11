@@ -4,10 +4,7 @@ export const navItems = [
     title: 'Trang Chủ',
     url: '/',
   },
-  {
-    title: '',
-    url: '/best-selling',
-  },
+
   {
     title: 'Sản Phẩm',
     url: '/products',
@@ -632,18 +629,9 @@ export const footercompanyLinks = [
 
 export const footerSupportLinks = [
   {
-    name: 'FAQ',
+    name: 'Trần Đặng Hoài Nam - 20041631',
   },
   {
-    name: 'Reviews',
-  },
-  {
-    name: 'Contact Us',
-  },
-  {
-    name: 'Shipping',
-  },
-  {
-    name: 'Live chat',
+    name: 'Đặng Hoàng Long - 20041071',
   },
 ];
