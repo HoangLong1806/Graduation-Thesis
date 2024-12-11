@@ -110,7 +110,7 @@ const UserOrderDetails = () => {
                   US${item.discountPrice} x {item.qty}
                 </h5>
               </div>
-              {!item.isReviewed && data?.status === "Delivered" ? <div
+              {!item.isReviewed && data?.status === "Đã giao hàng" ? <div
                 className={`${styles.button} text-[#fff]`}
                 onClick={() => setOpen(true) || setSelectedItem(item)}
               >
@@ -236,7 +236,7 @@ const UserOrderDetails = () => {
           </h4>
           <br />
           {
-            data?.status === "Delivered" && (
+            data?.status === "Đã giao hàng" && (
               <div className={`${styles.button} text-white`}
                 onClick={refundHandler}
               >Give a Refund</div>

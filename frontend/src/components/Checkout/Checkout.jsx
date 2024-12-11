@@ -109,7 +109,7 @@ const Checkout = () => {
     ? (subTotalPrice + shipping - discountPercentenge).toFixed(2)
     : (subTotalPrice + shipping).toFixed(2);
 
-  console.log(discountPercentenge);
+
 
   return (
     <div className="w-full flex flex-col items-center py-8">
@@ -226,15 +226,10 @@ const ShippingInfo = ({
               onChange={(e) => setCountry(e.target.value)}
             >
               <option className="block pb-2" value="">
-
                 Chọn quốc gia của bạn
               </option>
-              {Country &&
-                Country.getAllCountries().map((item) => (
-                  <option key={item.isoCode} value={item.isoCode}>
-                    {item.name}
-                  </option>
-                ))}
+              {/* Lọc quốc gia chỉ hiển thị Vietnam và mặc định là 'VN' */}
+              <option value="VN">Vietnam</option>
             </select>
           </div>
           <div className="w-[50%]">
@@ -343,7 +338,7 @@ const CartData = ({
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`${server}/coupon/get-coupon/${seller._id}`, {
+      .get(`${server}/coupon/get-coupon/${seller}`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -358,7 +353,7 @@ const CartData = ({
   coupons &&
     coupons.forEach((item) => {
       row.push({
-        id: item._id,
+
         name: item.name,
         price: item.value + " %",
         sold: 10,
@@ -423,7 +418,7 @@ const CartData = ({
               onClick={() => handleCouponClick(coupon.name)}
               className="w-full p-2 mb-2 text-white bg-[#f63b60] rounded-md cursor-pointer"
             >
-              {coupon.name} - ${coupon.value} 
+              {coupon.name} - {coupon.value}%
             </button>
           ))}
         </div>

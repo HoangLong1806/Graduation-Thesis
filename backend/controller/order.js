@@ -182,7 +182,7 @@ router.put(
 
       if (req.body.status === 'Đã giao hàng') {
         order.deliveredAt = Date.now();
-        order.paymentInfo.status = 'Succeeded';
+        order.paymentInfo.status = 'Thành Công';
         const serviceCharge = order.totalPrice * 0.1;
         await updateSellerInfo(order.totalPrice - serviceCharge);
       }

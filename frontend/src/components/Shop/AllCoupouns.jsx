@@ -9,6 +9,7 @@ import styles from "../../styles/styles";
 import Loader from "../Layout/Loader";
 import { server } from "../../server";
 import { toast } from "react-toastify";
+import ReactPaginate from 'react-paginate';
 
 const AllCoupons = () => {
   const [open, setOpen] = useState(false);
@@ -116,7 +117,18 @@ const AllCoupons = () => {
         sold: 10,
       });
     });
+  // State for pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage] = useState(12);
 
+  // Handle page click and update rows displayed
+  const handlePageClick = (event) => {
+    setPage(event.selected);
+  };
+
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentRows = row.slice(startIndex, endIndex);  // Get rows for the current page
   return (
     <>
       {isLoading ? (
@@ -132,12 +144,25 @@ const AllCoupons = () => {
             </div>
           </div>
           <DataGrid
-            rows={row}
+            rows={currentRows}  // Pass only rows for the current page
             columns={columns}
-            pageSize={10}
             disableSelectionOnClick
             autoHeight
           />
+
+          {/* Pagination */}
+          <div className="pagination-container flex justify-center py-4">
+            <ReactPaginate
+              pageCount={Math.ceil(row.length / rowsPerPage)}
+              onPageChange={handlePageClick}
+              containerClassName={'pagination flex items-center space-x-2'}
+              activeClassName={'active'}
+              pageClassName={'page px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+              previousClassName={'previous px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+              nextClassName={'next px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+              disabledClassName={'disabled cursor-not-allowed opacity-50'}
+            />
+          </div>
           {open && (
             <div className="fixed top-0 left-0 w-full h-screen bg-[#00000062] z-[20000] flex items-center justify-center">
               <div className="w-[90%] 800px:w-[40%] h-[80vh] bg-white rounded-md shadow p-4">

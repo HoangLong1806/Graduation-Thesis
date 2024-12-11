@@ -9,7 +9,7 @@ import { Link, useLocation } from "react-router-dom";
 import { BsBag } from "react-icons/bs";
 import { MdOutlineLocalOffer } from "react-icons/md";
 import { IoSettingsOutline } from "react-icons/io5";
-const AdminSideBar = ({  }) => {
+const AdminSideBar = ({ }) => {
   const location = useLocation();
 
   // Xác định giá trị active dựa trên đường dẫn hiện tại
@@ -50,7 +50,7 @@ const AdminSideBar = ({  }) => {
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 1 ? "text-[crimson]" : "text-[#555]"
               }`}
           >
-            Dashboard
+            Quản lý
           </h5>
         </Link>
       </div>
@@ -65,7 +65,7 @@ const AdminSideBar = ({  }) => {
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 2 ? "text-[crimson]" : "text-[#555]"
               }`}
           >
-            All Orders
+            Tất cả đặt hàng
           </h5>
         </Link>
       </div>
@@ -81,7 +81,7 @@ const AdminSideBar = ({  }) => {
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 3 ? "text-[crimson]" : "text-[#555]"
               }`}
           >
-            All Seller
+            Tất cả người bán
           </h5>
         </Link>
       </div>
@@ -96,7 +96,7 @@ const AdminSideBar = ({  }) => {
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 4 ? "text-[crimson]" : "text-[#555]"
               }`}
           >
-            All User
+            Tất cả người dùng
           </h5>
         </Link>
       </div>
@@ -111,7 +111,7 @@ const AdminSideBar = ({  }) => {
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 5 ? "text-[crimson]" : "text-[#555]"
               }`}
           >
-            All Product
+            Tất cả sản phẩm
           </h5>
         </Link>
       </div>
@@ -126,7 +126,7 @@ const AdminSideBar = ({  }) => {
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 6 ? "text-[crimson]" : "text-[#555]"
               }`}
           >
-            All Envent
+            Tất cả sự kiện
           </h5>
         </Link>
       </div>
@@ -144,7 +144,7 @@ const AdminSideBar = ({  }) => {
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 7 ? "text-[crimson]" : "text-[#555]"
               }`}
           >
-            Withdraw Money
+            Tất cả yêu cầu rút tiền
           </h5>
         </Link>
       </div>
@@ -162,7 +162,7 @@ const AdminSideBar = ({  }) => {
             className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 8 ? "text-[crimson]" : "text-[#555]"
               }`}
           >
-            Settings
+            Cài đặt
           </h5>
         </Link>
       </div>

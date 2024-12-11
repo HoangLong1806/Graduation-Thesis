@@ -6,6 +6,7 @@ import ProductCard from "../ProductCard/ProductCard";
 const BestDeals = () => {
   const [data, setData] = useState([]);
   const { allProducts } = useSelector((state) => state.products);
+
   useEffect(() => {
     const allProductsData = allProducts ? [...allProducts] : [];
     const sortedData = allProductsData?.sort((a, b) => b.sold_out - a.sold_out);
@@ -14,7 +15,7 @@ const BestDeals = () => {
   }, [allProducts]);
 
   return (
-    <div >
+    <div>
       <div className={`${styles.section}`}>
         <div className={`${styles.heading}`}>
           <h1>Sản phẩm bán chạy</h1>
@@ -29,6 +30,8 @@ const BestDeals = () => {
         </div>
       </div>
     </div>
+
+
   );
 };
 

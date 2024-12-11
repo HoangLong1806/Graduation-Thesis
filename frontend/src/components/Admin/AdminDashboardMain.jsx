@@ -128,7 +128,8 @@ const AdminDashboardMain = () => {
                   fill="#00000085"
                 />
                 <h3 className="productTitle text-[18px] leading-5 font-[400] text-[#00000085]">
-                  Total Earning
+
+                  Tổng thu nhập
                 </h3>
               </div>
               <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
@@ -147,14 +148,14 @@ const AdminDashboardMain = () => {
               <div className="flex items-center">
                 <MdBorderClear size={30} className="mr-2" fill="#00000085" />
                 <h3 className="productTitle text-[18px] leading-5 font-[400] text-[#00000085]">
-                  All Sellers
+                  Tất cả người bán
                 </h3>
               </div>
               <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
                 {sellers && sellers.length}
               </h5>
               <Link to="/admin-sellers">
-                <h5 className="pt-4 pl-2 text-[#077f9c]">View Sellers</h5>
+                <h5 className="pt-4 pl-2 text-[#077f9c]">Xem người bán</h5>
               </Link>
             </div>
 
@@ -166,14 +167,14 @@ const AdminDashboardMain = () => {
                   fill="#00000085"
                 />
                 <h3 className="productTitle text-[18px] leading-5 font-[400] text-[#00000085]">
-                  All Orders
+                  Tất cả đặt hàng
                 </h3>
               </div>
               <h5 className="pt-2 pl-[36px] text-[22px] font-[500]">
                 {adminOrders && adminOrders.length}
               </h5>
               <Link to="/admin-orders">
-                <h5 className="pt-4 pl-2 text-[#077f9c]">View Orders</h5>
+                <h5 className="pt-4 pl-2 text-[#077f9c]">Xem đặt hàng</h5>
               </Link>
             </div>
           </div>

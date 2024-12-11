@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
 import { DataGrid } from "@mui/x-data-grid";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import { deleteEvent, getAllEventsShop } from "../../redux/actions/event";
 import { getAllProductsShop } from "../../redux/actions/product";
 import { deleteProduct } from "../../redux/actions/product";
 import Loader from "../Layout/Loader";
+import ReactPaginate from 'react-paginate';
 
 const AllEvents = () => {
   const { events, isLoading } = useSelector((state) => state.events);
@@ -109,20 +110,45 @@ const AllEvents = () => {
         sold: item.sold_out,
       });
     });
+  // State for pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage] = useState(12);
 
+  // Handle page click and update rows displayed
+  const handlePageClick = (event) => {
+    setPage(event.selected);
+  };
+
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentRows = row.slice(startIndex, endIndex);  // Get rows for the current page
   return (
     <>
       {isLoading ? (
         <Loader />
       ) : (
         <div className="w-full mx-8 pt-1 mt-10 bg-white">
+          {/* Pass only the currentRows to DataGrid */}
           <DataGrid
-            rows={row}
+            rows={currentRows}  // Pass only rows for the current page
             columns={columns}
-            pageSize={10}
             disableSelectionOnClick
             autoHeight
           />
+
+          {/* Pagination */}
+          <div className="pagination-container flex justify-center py-4">
+            <ReactPaginate
+              pageCount={Math.ceil(row.length / rowsPerPage)}
+              onPageChange={handlePageClick}
+              containerClassName={'pagination flex items-center space-x-2'}
+              activeClassName={'active'}
+              pageClassName={'page px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+              previousClassName={'previous px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+              nextClassName={'next px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+              disabledClassName={'disabled cursor-not-allowed opacity-50'}
+            />
+          </div>
         </div>
       )}
     </>
