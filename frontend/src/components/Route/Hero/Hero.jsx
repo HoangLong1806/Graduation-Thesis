@@ -5,7 +5,7 @@ import styles from "../../../styles/styles";
 const Hero = () => {
   return (
     <div
-      className={`relative min-h-[70vh] 700px:min-h-[70vh] w-[full] ${styles.noramlFlex}`}
+      className={`relative min-h-[65vh] 700px:min-h-[65vh] w-[full] ${styles.noramlFlex}`}
       style={{
         backgroundImage:
           "url(https://res.cloudinary.com/dqfrzmavu/image/upload/v1733918534/irnb3ndiundd08lwxx1c.jpg)",

@@ -12,7 +12,7 @@ const HomePage = () => {
     <div>
       <Header activeHeading={1} />
       <Hero />
-      <div className="mt-10">
+      <div className="mt-7">
         <Categories />
       </div>
       <BestDeals />

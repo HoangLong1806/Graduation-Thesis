@@ -219,7 +219,7 @@ export const categoriesData = [
     title: 'Giày và dép',
     subTitle: '',
     image_Url:
-      'https://img.lazcdn.com/g/p/7e6ed0978008f94146b19023338c7098.jpg_720x720q80.jpg',
+      'https://media.tapchitaichinh.vn/w1480/images/upload/hoangthuviet/03042022/nike.jpeg',
   },
   {
     id: 6,

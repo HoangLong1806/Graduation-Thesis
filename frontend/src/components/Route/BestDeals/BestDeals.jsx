@@ -14,7 +14,7 @@ const BestDeals = () => {
   }, [allProducts]);
 
   return (
-    <div>
+    <div >
       <div className={`${styles.section}`}>
         <div className={`${styles.heading}`}>
           <h1>Sản phẩm bán chạy</h1>
