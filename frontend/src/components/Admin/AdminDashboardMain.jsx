@@ -9,7 +9,13 @@ import { getAllSellers } from "../../redux/actions/sellers";
 import { Line } from "react-chartjs-2";
 import { Bar } from "react-chartjs-2";
 import Chart from "chart.js/auto";
-import { format, differenceInDays, subDays, setHours, setMinutes } from "date-fns";
+import {
+  format,
+  differenceInDays,
+  subDays,
+  setHours,
+  setMinutes,
+} from "date-fns";
 import "../../styles/admin.css";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -37,8 +43,7 @@ const AdminDashboardMain = () => {
 
   const [startDate, setStartDate] = useState(defaultStartDate);
   const [endDate, setEndDate] = useState(defaultEndDate);
-  
-  
+
   const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
@@ -50,7 +55,9 @@ const AdminDashboardMain = () => {
     if (adminOrders) {
       const filteredOrders = adminOrders.filter((order) => {
         const orderDate = new Date(order.createdAt).getTime(); // Lấy timestamp của order
-        return orderDate >= startDate.getTime() && orderDate <= endDate.getTime(); // So sánh chính xác đến mili giây
+        return (
+          orderDate >= startDate.getTime() && orderDate <= endDate.getTime()
+        ); // So sánh chính xác đến mili giây
       });
 
       const data = filteredOrders.reduce((acc, item) => {
@@ -71,7 +78,7 @@ const AdminDashboardMain = () => {
           labels: sortedLabels,
           datasets: [
             {
-              label: "Earnings",
+              label: "Tổng thu nhập",
               data: earningsData,
               backgroundColor: "#ff6384", // Màu cho biểu đồ cột
               borderColor: "#ff6384",
@@ -84,12 +91,18 @@ const AdminDashboardMain = () => {
           labels: sortedLabels,
           datasets: [
             {
-              label: "Orders",
+              label: "Số lượng đơn hàng",
               data: ordersData,
               fill: false,
               borderColor: "#077f9c",
-              tension: 0.1,
+              tension: 0.4,
               type: "line", // Biểu đồ đường
+              dataLabels: {
+                align: "bottom",
+                anchor: "start",
+                color: "black",
+                formatter: (value) => value.toFixed(0),
+              },
             },
           ],
         },

@@ -109,7 +109,7 @@ const ShopLogin = () => {
               </div>
               <div className="text-sm">
                 <a
-                  href=".forgot-password"
+                  href="shop/forgot-password"
                   className="font-medium text-blue-600 hover:text-blue-500"
                 >
                   Quên mật khẩu ?

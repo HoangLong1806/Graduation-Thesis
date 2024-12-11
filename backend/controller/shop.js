@@ -446,4 +446,84 @@ router.delete(
   })
 );
 
+
+// forgot-password route
+router.post(
+  "/forgot-password",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { email } = req.body;
+      const seller = await Shop.findOne({ email });
+
+      if (!seller) {
+        return next(new ErrorHandler("Seller with this email does not exist", 404));
+      }
+
+      const resetToken = createPasswordResetToken(seller);
+      const isProduction = process.env.NODE_ENV === "production";
+      const resetUrl = isProduction
+        ? `https://frontend-one-kappa-74.vercel.app/shop/reset-password/${resetToken}`
+        : `http://localhost:3000/shop/reset-password/${resetToken}`;
+
+      try {
+        await sendMail({
+          email: seller.email,
+          subject: "Password Reset Request",
+          message: `Hello ${seller.name},\n\nPlease click on the link below to reset your password:\n\n${resetUrl}\n\nIf you did not request this change, please ignore this email.\n\nBest regards,\nYour Shop Team`,
+        });
+
+        res.status(200).json({
+          success: true,
+          message: "Password reset link sent successfully.",
+        });
+      } catch (err) {
+        return next(new ErrorHandler("Failed to send email. Please try again later.", 500));
+      }
+    } catch (error) {
+      return next(new ErrorHandler("Something went wrong. Please try again.", 500));
+    }
+  })
+);
+
+
+// Create reset token
+const createPasswordResetToken = (seller) => {
+  const resetToken = jwt.sign({ id: seller._id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: "1h", // Token will expire in 1 hour
+  });
+  return resetToken;
+};
+
+// reset-password route
+router.post(
+  "/reset-password/:token",
+  catchAsyncErrors(async (req, res, next) => {
+    try {
+      const { token } = req.params;
+      const { newPassword, confirmPassword } = req.body;
+
+      if (newPassword !== confirmPassword) {
+        return next(new ErrorHandler("Passwords do not match", 400));
+      }
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      const seller = await Shop.findById(decoded.id);
+
+      if (!seller) {
+        return next(new ErrorHandler("Invalid or expired token", 400));
+      }
+
+      seller.password = newPassword; // Update the password
+      await seller.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Password has been successfully reset",
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
 module.exports = router;

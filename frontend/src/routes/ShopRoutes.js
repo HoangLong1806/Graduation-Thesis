@@ -10,6 +10,8 @@ import ShopOrderDetails from "../pages/Shop/ShopOrderDetails";
 import ShopSettingsPage from "../pages/Shop/ShopSettingsPage";
 import ShopWithDrawMoneyPage from "../pages/Shop/ShopWithDrawMoneyPage";
 import ShopInboxPage from "../pages/Shop/ShopInboxPage";
+import ForgotPasswordShop from '../pages/Shop/FogotPasswordShop'
+import ResetPasswordShop from '../pages/Shop/ResetPasswordShop'
 export 
 {
   ShopDashboardPage,
@@ -24,6 +26,8 @@ export
   ShopSettingsPage,
   ShopWithDrawMoneyPage,
   ShopInboxPage,
+  ForgotPasswordShop,
+  ResetPasswordShop
 }
 
 

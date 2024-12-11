@@ -42,6 +42,8 @@ import {
   ShopSettingsPage,
   ShopWithDrawMoneyPage,
   ShopInboxPage,
+  ForgotPasswordShop,
+  ResetPasswordShop
 } from './routes/ShopRoutes.js';
 import {
   AdminDashboardPage,
@@ -191,6 +193,16 @@ const App = () => {
               </SellerProtectedRoute>
             }
           />
+          
+          <Route
+            path='/shop/forgot-password'
+            element={<ForgotPassword />}
+          />
+          <Route
+            path='/shop/reset-password/:token'
+            element={<ResetPassword />}
+          />
+
           <Route
             path='dashboard-create-product'
             element={
