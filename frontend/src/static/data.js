@@ -209,10 +209,10 @@ export const categoriesData = [
   },
   {
     id: 4,
-    title: 'Vải',
+    title: 'Học Tập',
     subTitle: '',
     image_Url:
-      'https://dongphucatlan.vn/wp-content/uploads/2020/03/Ch%E1%BB%A3-v%E1%BA%A3i.jpg',
+      'https://kynangso.edu.vn/wp-content/uploads/2022/06/ky-nang-hoc-tap-1.jpg',
   },
   {
     id: 5,
@@ -223,17 +223,17 @@ export const categoriesData = [
   },
   {
     id: 6,
-    title: 'Quần áo',
+    title: 'Thời Trang',
     subTitle: '',
     image_Url:
-      'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcR_hwWJYRnA9NigmpmpsKOLF9RZtvV6EjNRX1oC8SHZZHCvPay9Y3plTwgZLN2DSq1VOWrnYxtYqs_IlMYAxvClWh_DtZrjZxHrtkv0T_MuFAwzPmMHNAVjuA&usqp=CAE',
+    'https://leika.vn/wp-content/uploads/2024/11/chic-minimal-collection-2024-mb.jpg'
   },
   {
     id: 7,
-    title: 'Thực Phẩm',
+    title: 'Đồ Gia Dụng',
     subTitle: '',
     image_Url:
-      'https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcR6zIeNyc707z9jejUFWUIaNOjSubhq2krG3alAPoVfPT9ITP6WmkWWEsm3mQgiJiqPLx9VNcJ4cu2YBWK_HqcnTQgy_3Zixuo4-299OWzoUQv3wQg6EVy-&usqp=CAE',
+    'https://ssj.com.vn/wp-content/uploads/2021/07/1544360015-do-dien-tu-thai-lan-1.jpg'
   },
   {
     id: 8,
@@ -244,14 +244,14 @@ export const categoriesData = [
   },
   {
     id: 9,
-    title: 'Dụng cụ âm nhạc',
+    title: 'Tai Nghe và Loa',
     subTitle: '',
     image_Url:
       'https://static.vecteezy.com/system/resources/previews/011/996/555/original/3d-black-headphone-illustration-ecommerce-icon-png.png',
   },
   {
     id: 10,
-    title: 'Khác',
+    title: 'Sản phẩm khác',
     subTitle: '',
     image_Url:
       'https://searchspring.com/wp-content/uploads/2022/10/Hero-Image-Platform-Others-2.png',
