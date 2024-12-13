@@ -61,17 +61,18 @@ const UserOrderDetails = () => {
     }
   };
 
-
-
   const refundHandler = async () => {
-    await axios.put(`${server}/order/order-refund/${id}`, {
-      status: "Đang xử lí hoàn tiền"
-    }).then((res) => {
-      toast.success(res.data.message);
-      dispatch(getAllOrdersOfUser(user._id));
-    }).catch((error) => {
-      toast.error(error.response.data.message);
-    })
+    await axios
+      .put(`${server}/order/order-refund/${id}`, {
+        status: "Đang xử lí hoàn tiền",
+      })
+      .then((res) => {
+        toast.success(res.data.message);
+        dispatch(getAllOrdersOfUser(user._id));
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
   };
 
   return (
@@ -110,16 +111,16 @@ const UserOrderDetails = () => {
                   US${item.discountPrice} x {item.qty}
                 </h5>
               </div>
-              {!item.isReviewed && data?.status === "Đã giao hàng" ? <div
-                className={`${styles.button} text-[#fff]`}
-                onClick={() => setOpen(true) || setSelectedItem(item)}
-              >
-                Write a review
-              </div> : (
-                null
-              )}
+              {!item.isReviewed && data?.status === "Đã giao hàng" ? (
+                <div
+                  className={`${styles.button} text-[#fff]`}
+                  onClick={() => setOpen(true) || setSelectedItem(item)}
+                >
+                  Write a review
+                </div>
+              ) : null}
             </div>
-          )
+          );
         })}
 
       {/* review popup */}
@@ -134,7 +135,7 @@ const UserOrderDetails = () => {
               />
             </div>
             <h2 className="text-[30px] font-[500] font-Poppins text-center">
-              Give a Review
+              Đưa ra đánh giá
             </h2>
             <br />
             <div className="w-full flex">
@@ -157,7 +158,7 @@ const UserOrderDetails = () => {
 
             {/* ratings */}
             <h5 className="pl-3 text-[20px] font-[500]">
-              Give a Rating <span className="text-red-500">*</span>
+              Đưa ra đánh giá <span className="text-red-500">*</span>
             </h5>
             <div className="flex w-full ml-2 pt-1">
               {[1, 2, 3, 4, 5].map((i) =>
@@ -183,7 +184,7 @@ const UserOrderDetails = () => {
             <br />
             <div className="w-full ml-3">
               <label className="block text-[20px] font-[500]">
-                Write a comment
+                Viết bình luận
                 <span className="ml-1 font-[400] text-[16px] text-[#00000052]">
                   (optional)
                 </span>
@@ -203,7 +204,7 @@ const UserOrderDetails = () => {
               className={`${styles.button} text-white text-[20px] ml-3`}
               onClick={rating > 1 ? reviewHandler : null}
             >
-              Submit
+              Đánh giá
             </div>
           </div>
         </div>
@@ -211,7 +212,7 @@ const UserOrderDetails = () => {
 
       <div className="border-t w-full text-right">
         <h5 className="pt-3 text-[18px]">
-          Total Price: <strong>US${data?.totalPrice}</strong>
+          Tổng giá: <strong>US${data?.totalPrice}</strong>
         </h5>
       </div>
       <br />
@@ -232,16 +233,17 @@ const UserOrderDetails = () => {
           <h4 className="pt-3 text-[20px]">Payment Info:</h4>
           <h4>
             Status:{" "}
-            {data?.paymentInfo?.status ? data?.paymentInfo?.status : "Not Paid"}
+            {data?.paymentInfo?.status ? data?.paymentInfo?.status : "Đợi xử lí"}
           </h4>
           <br />
-          {
-            data?.status === "Đã giao hàng" && (
-              <div className={`${styles.button} text-white`}
-                onClick={refundHandler}
-              >Give a Refund</div>
-            )
-          }
+          {data?.status === "Đã giao hàng" && (
+            <div
+              className={`${styles.button} text-white`}
+              onClick={refundHandler}
+            >
+              Hoàn lại tiền
+            </div>
+          )}
         </div>
       </div>
       <br />
