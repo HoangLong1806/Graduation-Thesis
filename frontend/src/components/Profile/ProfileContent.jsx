@@ -343,7 +343,7 @@ const AllRefundOrders = () => {
   }, [dispatch, user._id]);
 
   const eligibleOrders =
-    orders && orders.filter((item) => item.status === "Processing refund");
+    orders && orders.filter((item) => item.status === "Đang xử lí hoàn tiền");
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },

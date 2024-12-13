@@ -17,7 +17,7 @@ const AllRefundOrders = () => {
     dispatch(getAllOrdersOfShop(seller._id));
   }, [dispatch]);
 
-  const refundOrders = orders && orders.filter((item) => item.status === "Processing refund" || item.status === "Refund Success");
+  const refundOrders = orders && orders.filter((item) => item.status === "Đang xử lí hoàn tiền" || item.status === "Đã hoàn tiền");
 
   const columns = [
     { field: "id", headerName: "Mã đơn hàng", minWidth: 150, flex: 0.7 },
