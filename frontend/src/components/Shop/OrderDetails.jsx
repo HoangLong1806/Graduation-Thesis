@@ -154,7 +154,7 @@ const OrderDetails = () => {
           <h4 className="pt-3 text-[20px]">Thông tin thanh toán:</h4>
           <h4>
             Trạng thái:{" "}
-            {data?.paymentInfo?.status === "Succeeded"
+            {data?.paymentInfo?.status === "Thánh Công"
               ? "Thành Công"
               : data?.paymentInfo?.status || "Chưa thanh toán"}
           </h4>
