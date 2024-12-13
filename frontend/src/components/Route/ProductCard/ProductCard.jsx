@@ -50,14 +50,14 @@ const ProductCard = ({ data, isEvent }) => {
   const addToCartHandler = (id) => {
     const isItemExists = cart && cart.find((i) => i._id === id);
     if (isItemExists) {
-      toast.error("Item already in cart!");
+      toast.error("Mặt hàng đã có trong giỏ hàng!");
     } else {
       if (data.stock < 1) {
-        toast.error("Product stock limited!");
+        toast.error("Số lượng sản phẩm có hạn!");
       } else {
         const cartData = { ...data, qty: 1 };
         dispatch(addTocart(cartData));
-        toast.success("Item added to cart successfully!");
+        toast.success("Sản phẩm đã được thêm vào giỏ hàng thành công!");
       }
     }
   };
@@ -104,7 +104,7 @@ const ProductCard = ({ data, isEvent }) => {
               </h4>
             </div>
             <span className="font-[400] text-[17px] text-[#68d284]">
-              {!data?.sold_out + 100} sold
+              {data.sold_out} lượt bán
             </span>
           </div>
         </Link>

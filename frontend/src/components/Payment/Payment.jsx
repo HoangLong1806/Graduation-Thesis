@@ -328,7 +328,7 @@ const PaymentInfo = ({
               </div>
               <input
                 type="submit"
-                value="Submit"
+                value="Thanh toán"
                 className={`${styles.button} !bg-[#f63b60] text-[#fff] h-[45px] rounded-[5px] cursor-pointer text-[18px] font-[600]`}
               />
             </form>
