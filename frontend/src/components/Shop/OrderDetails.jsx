@@ -37,7 +37,7 @@ const OrderDetails = () => {
         { withCredentials: true }
       )
       .then((res) => {
-        toast.success("Order updated!");
+        toast.success("Order đã cập nhật!");
         setStatus(res.data.updatedStatus || status); // Giữ nguyên trạng thái hoặc cập nhật từ phản hồi
         navigate("/dashboard-orders");
       })
@@ -47,8 +47,8 @@ const OrderDetails = () => {
   };
   //-------------------------------------------------///
   const options = useMemo(() => {
-    if (data?.status === "Processing refund" || data?.status === "Refund Success") {
-      return ["Processing refund", "Refund Success"];
+    if (data?.status === "Đang xử lí hoàn tiền" || data?.status === "Đã hoàn tiền") {
+      return ["Đang xử lí hoàn tiền", "Đã hoàn tiền"];
     }
     return [
       "Đang xử lý",

@@ -170,9 +170,9 @@ router.put(
       const order = await Order.findById(req.params.id);
 
       if (!order) {
-        return next(new ErrorHandler('Order not found with this id', 400));
+        return next(new ErrorHandler('Không tìm thấy đơn hàng có ID này', 400));
       }
-      if (req.body.status === 'Transferred to delivery partner') {
+      if (req.body.status === 'Đã chuyển cho đối tác giao hàng') {
         order.cart.forEach(async (o) => {
           await updateOrder(o._id, o.qty);
         });
@@ -224,7 +224,7 @@ router.put(
       const order = await Order.findById(req.params.id);
 
       if (!order) {
-        return next(new ErrorHandler('Order not found with this id', 400));
+        return next(new ErrorHandler('Không tìm thấy đơn hàng có ID này', 400));
       }
 
       order.status = req.body.status;
@@ -234,7 +234,7 @@ router.put(
       res.status(200).json({
         success: true,
         order,
-        message: 'Order Refund Request successfully!',
+        message: 'Yêu cầu hoàn tiền đơn hàng đã thành công!',
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -251,7 +251,7 @@ router.put(
       const order = await Order.findById(req.params.id);
 
       if (!order) {
-        return next(new ErrorHandler('Order not found with this id', 400));
+        return next(new ErrorHandler('Không tìm thấy đơn hàng có ID này', 400));
       }
 
       order.status = req.body.status;
@@ -260,10 +260,10 @@ router.put(
 
       res.status(200).json({
         success: true,
-        message: 'Order Refund successfull!',
+        message: 'Hoàn tiền đơn hàng thành công!',
       });
 
-      if (req.body.status === 'Refund Success') {
+      if (req.body.status === 'Đã hoàn tiền') {
         order.cart.forEach(async (o) => {
           await updateOrder(o._id, o.qty);
         });
