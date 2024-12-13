@@ -47,7 +47,10 @@ const OrderDetails = () => {
   };
   //-------------------------------------------------///
   const options = useMemo(() => {
-    if (data?.status === "Đang xử lí hoàn tiền" || data?.status === "Đã hoàn tiền") {
+    if (
+      data?.status === "Đang xử lí hoàn tiền" ||
+      data?.status === "Đã hoàn tiền"
+    ) {
       return ["Đang xử lí hoàn tiền", "Đã hoàn tiền"];
     }
     return [
@@ -77,18 +80,16 @@ const OrderDetails = () => {
       .catch((error) => {
         toast.error(error.response.data.message);
       });
-  }
+  };
 
   console.log(data?.status);
-
 
   return (
     <div className={`py-4 min-h-screen ${styles.section}`}>
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center">
           <BsFillBagFill size={30} color="crimson" />
-          <h1 className="pl-2 text-[25px]">
-            Chi tiết đặt hàng</h1>
+          <h1 className="pl-2 text-[25px]">Chi tiết đặt hàng</h1>
         </div>
         <Link to="/dashboard-orders">
           <div
@@ -101,11 +102,10 @@ const OrderDetails = () => {
 
       <div className="w-full flex items-center justify-between pt-6">
         <h5 className="text-[#00000084]">
-
           ID đơn hàng:: <span>#{data?._id?.slice(0, 8)}</span>
         </h5>
         <h5 className="text-[#00000084]">
-          Ngày đặt: {new Date(data?.createdAt).toLocaleDateString('vi-VN')}
+          Ngày đặt: {new Date(data?.createdAt).toLocaleDateString("vi-VN")}
         </h5>
       </div>
 
@@ -117,7 +117,6 @@ const OrderDetails = () => {
           <div className="w-full flex items-start mb-5">
             <img
               src={`${item.images[0]?.url}`}
-
               alt=""
               className="w-[80x] h-[80px]"
             />
@@ -153,54 +152,55 @@ const OrderDetails = () => {
           <h4 className="pt-3 text-[20px]">Thông tin thanh toán:</h4>
           <h4>
             Trạng thái:{" "}
-            {data?.paymentInfo?.status === "Succeeded" ? "Thành Công" : data?.paymentInfo?.status || "Chưa thanh toán"}
+            {data?.paymentInfo?.status === "Succeeded"
+              ? "Thành Công"
+              : data?.paymentInfo?.status || "Chưa thanh toán"}
           </h4>
         </div>
       </div>
       <br />
       <br />
       <h4 className="pt-3 text-[20px] font-[600]">Trang thái đơn hàng:</h4>
-      {data?.status !== "Processing refund" && data?.status !== "Refund Success" && (
+      {data?.status !== "Đang xử lí hoàn tiền" &&
+        data?.status !== "Đã hoàn tiền" && (
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-[200px] mt-2 border h-[35px] rounded-[5px]"
+          >
+            {options.map((option, index) => (
+              <option value={option} key={index}>
+                {option}
+              </option>
+            ))}
+          </select>
+        )}
+      {data?.status === "Đang xử lí hoàn tiền" ||
+      data?.status === "Đã hoàn tiền" ? (
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
           className="w-[200px] mt-2 border h-[35px] rounded-[5px]"
         >
-          {options.map((option, index) => (
-            <option value={option} key={index}>
-              {option}
-            </option>
-          ))}
+          {["Đang xử lí hoàn tiền", "Đã hoàn tiền"]
+            .slice(
+              ["Đang xử lí hoàn tiền", "Đã hoàn tiền"].indexOf(data?.status)
+            )
+            .map((option, index) => (
+              <option value={option} key={index}>
+                {option}
+              </option>
+            ))}
         </select>
-      )}
-      {
-        data?.status === "Processing refund" || data?.status === "Refund Success" ? (
-          <select value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="w-[200px] mt-2 border h-[35px] rounded-[5px]"
-          >
-            {[
-              "Processing refund",
-              "Refund Success",
-            ]
-              .slice(
-                [
-                  "Processing refund",
-                  "Refund Success",
-                ].indexOf(data?.status)
-              )
-              .map((option, index) => (
-                <option value={option} key={index}>
-                  {option}
-                </option>
-              ))}
-          </select>
-        ) : null
-      }
+      ) : null}
 
       <div
         className={`${styles.button} mt-5 !bg-[#FCE1E6] !rounded-[4px] text-[#E94560] font-[600] !h-[45px] text-[18px]`}
-        onClick={data?.status !== "Processing refund" ? orderUpdateHandler : refundOrderUpdateHandler}
+        onClick={
+          data?.status !== "Đang xử lí hoàn tiền"
+            ? orderUpdateHandler
+            : refundOrderUpdateHandler
+        }
       >
         Cập nhật
       </div>
