@@ -18,7 +18,7 @@ const SuggestedProducts = ({ data }) => {
   const handleProductClick = (product) => {
     console.log("Product clicked:", product);
 
-    
+
     window.location.reload();
   };
 

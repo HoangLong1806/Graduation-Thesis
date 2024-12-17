@@ -23,44 +23,56 @@ const UserOrderDetails = () => {
 
   useEffect(() => {
     dispatch(getAllOrdersOfUser(user._id));
-  }, [dispatch,user._id]);
+  }, [dispatch, user._id]);
 
   const data = orders && orders.find((item) => item._id === id);
 
   const reviewHandler = async (e) => {
-    await axios
-      .put(
+    if (!selectedItem || !selectedItem._id) {
+      toast.error("Chưa chọn sản phẩm để đánh giá");
+      return;
+    }
+
+    if (!user || !rating || !comment) {
+      toast.error("Vui lòng điền đầy đủ thông tin đánh giá.");
+      return;
+    }
+
+    try {
+      const res = await axios.put(
         `${server}/product/create-new-review`,
         {
           user,
           rating,
           comment,
-          productId: selectedItem?._id,
+          productId: selectedItem._id,
           orderId: id,
         },
         { withCredentials: true }
-      )
+      );
+      toast.success(res.data.message);
+      dispatch(getAllOrdersOfUser(user._id));
+      setComment("");
+      setRating(null);
+      setOpen(false);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response ? error.response.data : "Có lỗi xảy ra");
+    }
+  };
+
+  const refundHandler = async () => {
+    await axios
+      .put(`${server}/order/order-refund/${id}`, {
+        status: "Đang xử lí hoàn tiền",
+      })
       .then((res) => {
         toast.success(res.data.message);
         dispatch(getAllOrdersOfUser(user._id));
-        setComment("");
-        setRating(null);
-        setOpen(false);
       })
       .catch((error) => {
-        toast.error(error);
+        toast.error(error.response.data.message);
       });
-  };
-  
-  const refundHandler = async () => {
-    await axios.put(`${server}/order/order-refund/${id}`,{
-      status: "Processing refund"
-    }).then((res) => {
-       toast.success(res.data.message);
-    dispatch(getAllOrdersOfUser(user._id));
-    }).catch((error) => {
-      toast.error(error.response.data.message);
-    })
   };
 
   return (
@@ -86,30 +98,30 @@ const UserOrderDetails = () => {
       <br />
       {data &&
         data?.cart.map((item, index) => {
-          return(
-          <div className="w-full flex items-start mb-5">
-            <img
-              src={`${backend_url}${item.images[0]}`}
-              alt=""
-              className="w-[80x] h-[80px]"
-            />
-            <div className="w-full">
-              <h5 className="pl-3 text-[20px]">{item.name}</h5>
-              <h5 className="pl-3 text-[20px] text-[#00000091]">
-                US${item.discountPrice} x {item.qty}
-              </h5>
+          return (
+            <div className="w-full flex items-start mb-5">
+              <img
+                src={`${item.images[0]?.url}`}
+                alt=""
+                className="w-[80x] h-[80px]"
+              />
+              <div className="w-full">
+                <h5 className="pl-3 text-[20px]">{item.name}</h5>
+                <h5 className="pl-3 text-[20px] text-[#00000091]">
+                  US${item.discountPrice} x {item.qty}
+                </h5>
+              </div>
+              {!item.isReviewed && data?.status === "Đã giao hàng" ? (
+                <div
+                  className={`${styles.button} text-[#fff]`}
+                  onClick={() => setOpen(true) || setSelectedItem(item)}
+                >
+                  Write a review
+                </div>
+              ) : null}
             </div>
-            {!item.isReviewed && data?.status === "Delivered" ?  <div
-                className={`${styles.button} text-[#fff]`}
-                onClick={() => setOpen(true) || setSelectedItem(item)}
-              >
-                Write a review
-              </div> : (
-             null
-            )}
-          </div>
-          )
-         })}
+          );
+        })}
 
       {/* review popup */}
       {open && (
@@ -123,12 +135,13 @@ const UserOrderDetails = () => {
               />
             </div>
             <h2 className="text-[30px] font-[500] font-Poppins text-center">
-              Give a Review
+              Đưa ra đánh giá
             </h2>
             <br />
             <div className="w-full flex">
               <img
-                src={`${backend_url}${selectedItem?.images[0]}`}
+                // src={`${backend_url}${selectedItem?.images[0]}`}
+                src={`${selectedItem?.images[0]?.url}`}
                 alt=""
                 className="w-[80px] h-[80px]"
               />
@@ -145,7 +158,7 @@ const UserOrderDetails = () => {
 
             {/* ratings */}
             <h5 className="pl-3 text-[20px] font-[500]">
-              Give a Rating <span className="text-red-500">*</span>
+              Đưa ra đánh giá <span className="text-red-500">*</span>
             </h5>
             <div className="flex w-full ml-2 pt-1">
               {[1, 2, 3, 4, 5].map((i) =>
@@ -171,7 +184,7 @@ const UserOrderDetails = () => {
             <br />
             <div className="w-full ml-3">
               <label className="block text-[20px] font-[500]">
-                Write a comment
+                Viết bình luận
                 <span className="ml-1 font-[400] text-[16px] text-[#00000052]">
                   (optional)
                 </span>
@@ -191,7 +204,7 @@ const UserOrderDetails = () => {
               className={`${styles.button} text-white text-[20px] ml-3`}
               onClick={rating > 1 ? reviewHandler : null}
             >
-              Submit
+              Đánh giá
             </div>
           </div>
         </div>
@@ -199,7 +212,7 @@ const UserOrderDetails = () => {
 
       <div className="border-t w-full text-right">
         <h5 className="pt-3 text-[18px]">
-          Total Price: <strong>US${data?.totalPrice}</strong>
+          Tổng giá: <strong>US${data?.totalPrice}</strong>
         </h5>
       </div>
       <br />
@@ -220,16 +233,17 @@ const UserOrderDetails = () => {
           <h4 className="pt-3 text-[20px]">Payment Info:</h4>
           <h4>
             Status:{" "}
-            {data?.paymentInfo?.status ? data?.paymentInfo?.status : "Not Paid"}
+            {data?.paymentInfo?.status ? data?.paymentInfo?.status : "Đợi xử lí"}
           </h4>
           <br />
-           {
-            data?.status === "Delivered" && (
-              <div className={`${styles.button} text-white`}
+          {data?.status === "Đã giao hàng" && (
+            <div
+              className={`${styles.button} text-white`}
               onClick={refundHandler}
-              >Give a Refund</div>
-            )
-           }
+            >
+              Hoàn lại tiền
+            </div>
+          )}
         </div>
       </div>
       <br />

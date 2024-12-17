@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 import Ratings from "../../Products/Ratings";
 import { backend_url } from "../../../server";
 
-const ProductCard = ({ data,isEvent }) => {
+const ProductCard = ({ data, isEvent }) => {
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const [click, setClick] = useState(false);
@@ -50,19 +50,19 @@ const ProductCard = ({ data,isEvent }) => {
   const addToCartHandler = (id) => {
     const isItemExists = cart && cart.find((i) => i._id === id);
     if (isItemExists) {
-      toast.error("Item already in cart!");
+      toast.error("Mặt hàng đã có trong giỏ hàng!");
     } else {
       if (data.stock < 1) {
-        toast.error("Product stock limited!");
+        toast.error("Số lượng sản phẩm có hạn!");
       } else {
         const cartData = { ...data, qty: 1 };
         dispatch(addTocart(cartData));
-        toast.success("Item added to cart successfully!");
+        toast.success("Sản phẩm đã được thêm vào giỏ hàng thành công!");
       }
     }
   };
 
-   // Kiểm tra dữ liệu hình ảnh
+  // Kiểm tra dữ liệu hình ảnh
 
   const imageUrl = `${backend_url}${data.images && data.images[0]}`;
 
@@ -72,12 +72,12 @@ const ProductCard = ({ data,isEvent }) => {
         <div className="flex justify-end"></div>
         <Link to={`${isEvent === true ? `/product/${data._id}?isEvent=true` : `/product/${data._id}`}`}>
           <img
-            src={imageUrl}
+            src={`${data.images && data.images[0]?.url}`}
             alt=""
             className="w-full h-[170px] object-contain"
-            
+
           />
-          
+
         </Link>
         <Link to={`/shop/preview/${data?.shop._id}`}>
           <h5 className={`${styles.shop_name}`}>{data.shop.name}</h5>
@@ -88,7 +88,7 @@ const ProductCard = ({ data,isEvent }) => {
           </h4>
 
           <div className="flex">
-          <Ratings rating={data?.ratings} />
+            <Ratings rating={data?.ratings} />
           </div>
 
           <div className="py-2 flex items-center justify-between">
@@ -104,7 +104,7 @@ const ProductCard = ({ data,isEvent }) => {
               </h4>
             </div>
             <span className="font-[400] text-[17px] text-[#68d284]">
-              {!data?.sold_out + 100} sold
+              {data.sold_out} lượt bán
             </span>
           </div>
         </Link>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { backend_url, server } from "../../server";
 import { useDispatch, useSelector } from "react-redux";
+import ReactPaginate from 'react-paginate';
 import {
   AiOutlineArrowRight,
   AiOutlineCamera,
@@ -30,6 +31,7 @@ import {
 } from "../../redux/actions/user";
 import axios from "axios";
 import { getAllOrdersOfUser } from "../../redux/actions/order";
+import UserInbox from "../../pages/UserInbox";
 
 const ProfileContent = ({ active }) => {
   const { user, error, successMessage } = useSelector((state) => state.user);
@@ -66,25 +68,30 @@ const ProfileContent = ({ active }) => {
   };
 
   const handleImage = async (e) => {
-    const file = e.target.files[0];
-    setAvatar(file);
+    const reader = new FileReader();
 
-    const formData = new FormData();
-    formData.append("image", e.target.files[0]);
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setAvatar(reader.result);
+        axios
+          .put(
+            `${server}/user/update-avatar`,
+            { avatar: reader.result },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+            dispatch(loadUser());
+            toast.success("avatar updated successfully!");
+          })
+          .catch((error) => {
+            toast.error(error);
+          });
+      }
+    };
 
-    await axios
-      .put(`${server}/user/update-avatar`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
-      })
-      .then((response) => {
-        window.location.reload();
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   return (
@@ -95,7 +102,7 @@ const ProfileContent = ({ active }) => {
           <div className="flex justify-center w-full">
             <div className="relative">
               <img
-                src={`${backend_url}${user?.avatar?.public_id}`} 
+                src={`${user?.avatar?.url}`}
                 className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
                 alt="User Avatar"
               />
@@ -119,7 +126,7 @@ const ProfileContent = ({ active }) => {
             <form onSubmit={handleSubmit} aria-required={true}>
               <div className="w-full 800px:flex block pb-3">
                 <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Full Name</label>
+                  <label className="block pb-2">Tên</label>
                   <input
                     type="text"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -130,7 +137,7 @@ const ProfileContent = ({ active }) => {
                   />
                 </div>
                 <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Email Address</label>
+                  <label className="block pb-2">Địa chỉ email</label>
                   <input
                     type="text"
                     className={`${styles.input} !w-[95%] mb-1 800px:mb-0`}
@@ -144,7 +151,7 @@ const ProfileContent = ({ active }) => {
               </div>
               <div className="w-full 800px:flex block pb-3">
                 <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Phone Number</label>
+                  <label className="block pb-2">Số điện thoại</label>
                   <input
                     type="text"
                     inputMode="numeric"
@@ -157,7 +164,7 @@ const ProfileContent = ({ active }) => {
                 </div>
 
                 <div className=" w-[100%] 800px:w-[50%]">
-                  <label className="block pb-2">Enter your password</label>
+                  <label className="block pb-2">Nhập mật khẩu</label>
                   <input
                     type="password"
                     className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
@@ -189,25 +196,33 @@ const ProfileContent = ({ active }) => {
           <AllRefundOrders />
         </div>
       )}
-      {/* TrackOrder */}
+      {/* inbox */}
+      {active === 4 && (
+        <div>
+          <UserInbox />
+        </div>
+      )}
       {active === 5 && (
         <div>
           <TrackOrder />
         </div>
       )}
-      {/* ChangePassword */}
+
+      {/* TrackOrder */}
       {active === 6 && (
         <div>
           <ChangePassword />
         </div>
       )}
-      {/* Address */}
+      {/* ChangePassword */}
       {active === 7 && (
         <div>
           <Address />
         </div>
       )}
+
     </div>
+
   );
 };
 
@@ -278,16 +293,41 @@ const AllOrders = () => {
       status: item.status,
     });
   });
+  // State for pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage] = useState(8);
 
+  // Handle page click and update rows displayed
+  const handlePageClick = (event) => {
+    setPage(event.selected);
+  };
+
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentRows = row.slice(startIndex, endIndex);  // Get rows for the current page
   return (
     <div className="pl-8 pt-1">
+      {/* Pass only the currentRows to DataGrid */}
       <DataGrid
-        rows={row}
+        rows={currentRows}  // Pass only rows for the current page
         columns={columns}
-        pageSize={10}
         disableSelectionOnClick
         autoHeight
       />
+
+      {/* Pagination */}
+      <div className="pagination-container flex justify-center py-4">
+        <ReactPaginate
+          pageCount={Math.ceil(row.length / rowsPerPage)}
+          onPageChange={handlePageClick}
+          containerClassName={'pagination flex items-center space-x-2'}
+          activeClassName={'active'}
+          pageClassName={'page px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          previousClassName={'previous px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          nextClassName={'next px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          disabledClassName={'disabled cursor-not-allowed opacity-50'}
+        />
+      </div>
     </div>
   );
 };
@@ -303,7 +343,7 @@ const AllRefundOrders = () => {
   }, [dispatch, user._id]);
 
   const eligibleOrders =
-    orders && orders.filter((item) => item.status === "Processing refund");
+    orders && orders.filter((item) => item.status === "Đang xử lí hoàn tiền");
 
   const columns = [
     { field: "id", headerName: "Order ID", minWidth: 150, flex: 0.7 },
@@ -363,16 +403,41 @@ const AllRefundOrders = () => {
       status: item.status,
     });
   });
+  // State for pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage] = useState(12);
 
+  // Handle page click and update rows displayed
+  const handlePageClick = (event) => {
+    setPage(event.selected);
+  };
+
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentRows = row.slice(startIndex, endIndex);  // Get rows for the current page
   return (
     <div className="pl-8 pt-1">
+      {/* Pass only the currentRows to DataGrid */}
       <DataGrid
-        rows={row}
+        rows={currentRows}  // Pass only rows for the current page
         columns={columns}
-        pageSize={10}
         disableSelectionOnClick
         autoHeight
       />
+
+      {/* Pagination */}
+      <div className="pagination-container flex justify-center py-4">
+        <ReactPaginate
+          pageCount={Math.ceil(row.length / rowsPerPage)}
+          onPageChange={handlePageClick}
+          containerClassName={'pagination flex items-center space-x-2'}
+          activeClassName={'active'}
+          pageClassName={'page px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          previousClassName={'previous px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          nextClassName={'next px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          disabledClassName={'disabled cursor-not-allowed opacity-50'}
+        />
+      </div>
     </div>
   );
 };
@@ -449,16 +514,41 @@ const TrackOrder = () => {
           status: item.status,
         });
       });
+  // State for pagination
+  const [page, setPage] = useState(0);
+  const [rowsPerPage] = useState(8);
 
+  // Handle page click and update rows displayed
+  const handlePageClick = (event) => {
+    setPage(event.selected);
+  };
+
+  const startIndex = page * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const currentRows = row.slice(startIndex, endIndex);  // Get rows for the current page
   return (
     <div className="pl-8 pt-1">
+      {/* Pass only the currentRows to DataGrid */}
       <DataGrid
-        rows={row}
+        rows={currentRows}  // Pass only rows for the current page
         columns={columns}
-        pageSize={10}
         disableSelectionOnClick
         autoHeight
       />
+
+      {/* Pagination */}
+      <div className="pagination-container flex justify-center py-4">
+        <ReactPaginate
+          pageCount={Math.ceil(row.length / rowsPerPage)}
+          onPageChange={handlePageClick}
+          containerClassName={'pagination flex items-center space-x-2'}
+          activeClassName={'active'}
+          pageClassName={'page px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          previousClassName={'previous px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          nextClassName={'next px-3 py-2 bg-gray-200 rounded-full hover:bg-gray-300'}
+          disabledClassName={'disabled cursor-not-allowed opacity-50'}
+        />
+      </div>
     </div>
   );
 };

@@ -1,0 +1,40 @@
+/* CSS cho phân trang */
+.pagination {
+  display: flex;
+  justify-content: center; /* Căn giữa các nút */
+  align-items: center; /* Căn giữa các nút theo chiều dọc */
+}
+
+.page {
+  margin: 0 5px; /* Khoảng cách giữa các nút trang */
+  transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà khi hover hoặc chọn */
+}
+
+.previous,
+.next {
+  margin: 0 10px; /* Khoảng cách cho nút trước và sau */
+}
+
+.page:hover {
+  background-color: #077f9c; /* Màu hover cho các trang */
+  color: white; /* Màu chữ khi hover */
+}
+
+.previous:hover,
+.next:hover {
+  background-color: #077f9c; /* Màu hover cho nút Previous và Next */
+  color: white; /* Màu chữ khi hover */
+}
+
+/* Hiệu ứng màu nền cho trang đang được chọn */
+.active {
+  background-color: #077f9c; /* Màu nền cho trang đang được chọn */
+  color: white; /* Màu chữ cho trang đang được chọn */
+  font-weight: bold; /* Tăng độ đậm cho chữ */
+  transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
+}
+
+.disabled {
+  opacity: 0.5; /* Giảm độ mờ cho các nút bị vô hiệu hóa */
+  cursor: not-allowed; /* Thay đổi con trỏ khi vô hiệu hóa nút */
+}

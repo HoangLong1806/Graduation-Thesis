@@ -11,7 +11,7 @@ import { HiOutlineReceiptRefund } from "react-icons/hi";
 
 const DashboardSideBar = ({ active }) => {
   return (
-    <div className="w-full h-[90vh] bg-white shadow-sm overflow-y-scroll sticky top-0 left-0 z-10">
+    <div className="dashboard-sidebar w-[100%] h-[90vh] bg-white shadow-sm overflow-y-auto z-10">
       {/* single item */}
       <div className="w-full flex items-center p-4">
         <Link to="/dashboard" className="w-full flex items-center">
@@ -20,11 +20,9 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 1 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 1 ? "text-[crimson]" : "text-[#555]"
-            }`}
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 1 ? "text-[crimson]" : "text-[#555]"}`}
           >
-            Dashboard
+            Quản Lí
           </h5>
         </Link>
       </div>
@@ -36,11 +34,9 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 2 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 2 ? "text-[crimson]" : "text-[#555]"
-            }`}
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 2 ? "text-[crimson]" : "text-[#555]"}`}
           >
-            All Orders
+            Tất cả đơn hàng
           </h5>
         </Link>
       </div>
@@ -49,30 +45,23 @@ const DashboardSideBar = ({ active }) => {
         <Link to="/dashboard-products" className="w-full flex items-center">
           <FiPackage size={30} color={`${active === 3 ? "crimson" : "#555"}`} />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 3 ? "text-[crimson]" : "text-[#555]"
-            }`}
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 3 ? "text-[crimson]" : "text-[#555]"}`}
           >
-            All Products
+            Tất cả sản phẩm
           </h5>
         </Link>
       </div>
 
       <div className="w-full flex items-center p-4">
-        <Link
-          to="/dashboard-create-product"
-          className="w-full flex items-center"
-        >
+        <Link to="/dashboard-create-product" className="w-full flex items-center">
           <AiOutlineFolderAdd
             size={30}
             color={`${active === 4 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 4 ? "text-[crimson]" : "text-[#555]"
-            }`}
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 4 ? "text-[crimson]" : "text-[#555]"}`}
           >
-            Create Product
+            Tạo sản phẩm
           </h5>
         </Link>
       </div>
@@ -84,11 +73,9 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 5 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 5 ? "text-[crimson]" : "text-[#555]"
-            }`}
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 5 ? "text-[crimson]" : "text-[#555]"}`}
           >
-            All Events
+            Tất cả sự kiện
           </h5>
         </Link>
       </div>
@@ -100,30 +87,23 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 6 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 6 ? "text-[crimson]" : "text-[#555]"
-            }`}
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 6 ? "text-[crimson]" : "text-[#555]"}`}
           >
-            Create Event
+            Tạo sự kiện
           </h5>
         </Link>
       </div>
 
       <div className="w-full flex items-center p-4">
-        <Link
-          to="/dashboard-withdraw-money"
-          className="w-full flex items-center"
-        >
+        <Link to="/dashboard-withdraw-money" className="w-full flex items-center">
           <CiMoneyBill
             size={30}
             color={`${active === 7 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 7 ? "text-[crimson]" : "text-[#555]"
-            }`}
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 7 ? "text-[crimson]" : "text-[#555]"}`}
           >
-            Withdraw Money
+            Rút tiền
           </h5>
         </Link>
       </div>
@@ -135,11 +115,9 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 8 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 8 ? "text-[crimson]" : "text-[#555]"
-            }`}
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 8 ? "text-[crimson]" : "text-[#555]"}`}
           >
-            Shop Inbox
+            Hộp thư
           </h5>
         </Link>
       </div>
@@ -151,11 +129,9 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 9 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 9 ? "text-[crimson]" : "text-[#555]"
-            }`}
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 9 ? "text-[crimson]" : "text-[#555]"}`}
           >
-            Discount Codes
+            Mã giảm giá
           </h5>
         </Link>
       </div>
@@ -167,11 +143,9 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 10 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 10 ? "text-[crimson]" : "text-[#555]"
-            }`}
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 10 ? "text-[crimson]" : "text-[#555]"}`}
           >
-            Refunds
+            Hoàn tiền
           </h5>
         </Link>
       </div>
@@ -183,11 +157,9 @@ const DashboardSideBar = ({ active }) => {
             color={`${active === 11 ? "crimson" : "#555"}`}
           />
           <h5
-            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${
-              active === 11 ? "text-[crimson]" : "text-[#555]"
-            }`}
+            className={`hidden 800px:block pl-2 text-[18px] font-[400] ${active === 11 ? "text-[crimson]" : "text-[#555]"}`}
           >
-            Settings
+            Cài đặt
           </h5>
         </Link>
       </div>

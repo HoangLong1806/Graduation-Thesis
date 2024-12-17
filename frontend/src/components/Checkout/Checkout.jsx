@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "../../styles/styles";
 import { Country, State } from "country-state-city";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import axios from "axios";
 import { server } from "../../server";
@@ -20,6 +20,7 @@ const Checkout = () => {
   const [couponCode, setCouponCode] = useState("");
   const [couponCodeData, setCouponCodeData] = useState(null);
   const [discountPrice, setDiscountPrice] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,12 +30,12 @@ const Checkout = () => {
   const paymentSubmit = () => {
     if (
       address1 === "" ||
-      address2 === "" ||
-      zipCode === null ||
+      // address2 === "" ||
+      // zipCode === null ||
       country === "" ||
       city === ""
     ) {
-      toast.error("Please choose your delivery address!");
+      toast.error("Vui lòng chọn địa chỉ giao hàng của bạn!");
     } else {
       const shippingAddress = {
         address1,
@@ -80,14 +81,14 @@ const Checkout = () => {
           cart && cart.filter((item) => item.shopId === shopId);
 
         if (isCouponValid.length === 0) {
-          toast.error("Coupon code is not valid for this shop");
+          toast.error("Mã phiếu giảm giá không hợp lệ cho cửa hàng này");
           setCouponCode("");
         } else {
           const eligiblePrice = isCouponValid.reduce(
             (acc, item) => acc + item.qty * item.discountPrice,
             0
           );
-          toast.success("Coupon code applied successfully!");
+          toast.success("Mã giảm giá được áp dụng thành công!");
           const discountPrice = (eligiblePrice * couponCodeValue) / 100;
           setDiscountPrice(discountPrice);
           setCouponCodeData(res.data.couponCode);
@@ -95,7 +96,7 @@ const Checkout = () => {
         }
       }
       if (res.data.couponCode === null) {
-        toast.error("Coupon code doesn't exists!");
+        toast.error("Mã phiếu giảm giá không tồn tại!");
         setCouponCode("");
       }
     });
@@ -106,8 +107,6 @@ const Checkout = () => {
   const totalPrice = couponCodeData
     ? (subTotalPrice + shipping - discountPercentenge).toFixed(2)
     : (subTotalPrice + shipping).toFixed(2);
-
-  console.log(discountPercentenge);
 
   return (
     <div className="w-full flex flex-col items-center py-8">
@@ -145,7 +144,7 @@ const Checkout = () => {
         className={`${styles.button} w-[150px] 800px:w-[280px] mt-10`}
         onClick={paymentSubmit}
       >
-        <h5 className="text-white">Go to Payment</h5>
+        <h5 className="text-white">Thanh toán</h5>
       </div>
     </div>
   );
@@ -161,19 +160,19 @@ const ShippingInfo = ({
   setUserInfo,
   address1,
   setAddress1,
-  address2,
+  // address2,
   setAddress2,
-  zipCode,
+  // zipCode,
   setZipCode,
 }) => {
   return (
     <div className="w-full 800px:w-[95%] bg-white rounded-md p-5 pb-8">
-      <h5 className="text-[18px] font-[500]">Shipping Address</h5>
+      <h5 className="text-[18px] font-[500]">Địa chỉ giao hàng</h5>
       <br />
       <form>
         <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Full Name</label>
+            <label className="block pb-2">Tên người nhận</label>
             <input
               type="text"
               value={user && user.name}
@@ -182,7 +181,7 @@ const ShippingInfo = ({
             />
           </div>
           <div className="w-[50%]">
-            <label className="block pb-2">Email Address</label>
+            <label className="block pb-2">Địa chỉ email</label>
             <input
               type="email"
               value={user && user.email}
@@ -194,7 +193,7 @@ const ShippingInfo = ({
 
         <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Phone Number</label>
+            <label className="block pb-2">Số điện thoại</label>
             <input
               type="number"
               required
@@ -202,8 +201,8 @@ const ShippingInfo = ({
               className={`${styles.input} !w-[95%]`}
             />
           </div>
-          <div className="w-[50%]">
-            <label className="block pb-2">Zip Code</label>
+          {/* <div className="w-[50%]">
+            <label className="block pb-2">Mã bưu chính</label>
             <input
               type="number"
               value={zipCode}
@@ -211,37 +210,33 @@ const ShippingInfo = ({
               required
               className={`${styles.input}`}
             />
-          </div>
-        </div>
-
-        <div className="w-full flex pb-3">
+          </div> */}
           <div className="w-[50%]">
-            <label className="block pb-2">Country</label>
+            <label className="block pb-2">Quốc gia</label>
             <select
               className="w-[95%] border h-[40px] rounded-[5px]"
               value={country}
               onChange={(e) => setCountry(e.target.value)}
             >
               <option className="block pb-2" value="">
-                Choose your country
+                Chọn quốc gia của bạn
               </option>
-              {Country &&
-                Country.getAllCountries().map((item) => (
-                  <option key={item.isoCode} value={item.isoCode}>
-                    {item.name}
-                  </option>
-                ))}
+              {/* Lọc quốc gia chỉ hiển thị Vietnam và mặc định là 'VN' */}
+              <option value="VN">Vietnam</option>
             </select>
           </div>
+        </div>
+
+        <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">City</label>
+            <label className="block pb-2">Thành Phố</label>
             <select
               className="w-[95%] border h-[40px] rounded-[5px]"
               value={city}
               onChange={(e) => setCity(e.target.value)}
             >
               <option className="block pb-2" value="">
-                Choose your City
+                Chọn thành phố của bạn
               </option>
               {State &&
                 State.getStatesOfCountry(country).map((item) => (
@@ -251,11 +246,8 @@ const ShippingInfo = ({
                 ))}
             </select>
           </div>
-        </div>
-
-        <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Address1</label>
+            <label className="block pb-2">Địa chỉ cụ thể</label>
             <input
               type="address"
               required
@@ -264,8 +256,11 @@ const ShippingInfo = ({
               className={`${styles.input} !w-[95%]`}
             />
           </div>
-          <div className="w-[50%]">
-            <label className="block pb-2">Address2</label>
+        </div>
+
+        <div className="w-full flex pb-3">
+          {/* <div className="w-[50%]">
+            <label className="block pb-2">Số nhà,Ấp, Xã</label>
             <input
               type="address"
               value={address2}
@@ -273,7 +268,7 @@ const ShippingInfo = ({
               required
               className={`${styles.input}`}
             />
-          </div>
+          </div> */}
         </div>
 
         <div></div>
@@ -282,7 +277,7 @@ const ShippingInfo = ({
         className="text-[18px] cursor-pointer inline-block text-[#f63b60] mt-3"
         onClick={() => setUserInfo(!userInfo)}
       >
-        Choose From saved address
+        Chọn Từ địa chỉ đã lưu
       </h5>
       {userInfo && (
         <div>
@@ -296,7 +291,7 @@ const ShippingInfo = ({
                   onClick={() =>
                     setAddress1(item.address1) ||
                     setAddress2(item.address2) ||
-                    setZipCode(item.zipCode) ||
+                    // setZipCode(item.zipCode) ||
                     setCountry(item.country) ||
                     setCity(item.city)
                   }
@@ -319,20 +314,63 @@ const CartData = ({
   setCouponCode,
   discountPercentenge,
 }) => {
+  // Define state for showing coupon details
+  const [showCouponDetails, setShowCouponDetails] = useState(false); // Add this line
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [coupons, setCoupons] = useState([]);
+  const [minAmount, setMinAmount] = useState(null);
+  const [maxAmount, setMaxAmount] = useState(null);
+  const [selectedProducts, setSelectedProducts] = useState(null);
+  const [value, setValue] = useState(null);
+  const { seller } = useSelector((state) => state.seller);
+  const { products } = useSelector((state) => state.products);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    setIsLoading(true);
+    axios
+      .get(`${server}/coupon/get-coupon/${seller}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setIsLoading(false);
+        setCoupons(res.data.couponCodes);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+      });
+  }, [dispatch]);
+  const row = [];
+  coupons &&
+    coupons.forEach((item) => {
+      row.push({
+        name: item.name,
+        price: item.value + " %",
+        sold: 10,
+      });
+    });
+  const handleCouponClick = (couponName) => {
+    setCouponCode(couponName); // Set the coupon code when a coupon is clicked
+  };
+
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
       <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">subtotal:</h3>
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">
+          Tiền sản phẩm:
+        </h3>
         <h5 className="text-[18px] font-[600]">${subTotalPrice}</h5>
       </div>
       <br />
       <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">shipping:</h3>
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">Vận chuyển:</h3>
         <h5 className="text-[18px] font-[600]">${shipping.toFixed(2)}</h5>
       </div>
       <br />
       <div className="flex justify-between border-b pb-3">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">Discount:</h3>
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">Giảm giá:</h3>
         <h5 className="text-[18px] font-[600]">
           - {discountPercentenge ? "$" + discountPercentenge.toString() : null}
         </h5>
@@ -343,7 +381,7 @@ const CartData = ({
         <input
           type="text"
           className={`${styles.input} h-[40px] pl-2`}
-          placeholder="Coupoun code"
+          placeholder="mã giảm giá"
           value={couponCode}
           onChange={(e) => setCouponCode(e.target.value)}
           required
@@ -351,10 +389,34 @@ const CartData = ({
         <input
           className={`w-full h-[40px] border border-[#f63b60] text-center text-[#f63b60] rounded-[3px] mt-8 cursor-pointer`}
           required
-          value="Apply code"
+          value="Sử dụng code"
           type="submit"
         />
       </form>
+      <br />
+      <div className="flex justify-between">
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">Mã giảm giá</h3>
+        <button
+          onClick={() => setShowCouponDetails(!showCouponDetails)}
+          className="text-[#f63b60] text-[20px]"
+        >
+          {showCouponDetails ? "▲" : "▼"}
+        </button>
+      </div>
+
+      {showCouponDetails && coupons && coupons.length > 0 && (
+        <div className="mt-2">
+          {coupons.map((coupon) => (
+            <button
+              key={coupon._id}
+              onClick={() => handleCouponClick(coupon.name)}
+              className="w-full p-2 mb-2 text-white bg-[#f63b60] rounded-md cursor-pointer"
+            >
+              {coupon.name} - {coupon.value}%
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
