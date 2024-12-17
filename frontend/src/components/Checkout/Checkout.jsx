@@ -23,7 +23,6 @@ const Checkout = () => {
 
   const navigate = useNavigate();
 
-
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -31,12 +30,12 @@ const Checkout = () => {
   const paymentSubmit = () => {
     if (
       address1 === "" ||
-      address2 === "" ||
-      zipCode === null ||
+      // address2 === "" ||
+      // zipCode === null ||
       country === "" ||
       city === ""
     ) {
-      toast.error("Please choose your delivery address!");
+      toast.error("Vui lòng chọn địa chỉ giao hàng của bạn!");
     } else {
       const shippingAddress = {
         address1,
@@ -82,14 +81,14 @@ const Checkout = () => {
           cart && cart.filter((item) => item.shopId === shopId);
 
         if (isCouponValid.length === 0) {
-          toast.error("Coupon code is not valid for this shop");
+          toast.error("Mã phiếu giảm giá không hợp lệ cho cửa hàng này");
           setCouponCode("");
         } else {
           const eligiblePrice = isCouponValid.reduce(
             (acc, item) => acc + item.qty * item.discountPrice,
             0
           );
-          toast.success("Coupon code applied successfully!");
+          toast.success("Mã giảm giá được áp dụng thành công!");
           const discountPrice = (eligiblePrice * couponCodeValue) / 100;
           setDiscountPrice(discountPrice);
           setCouponCodeData(res.data.couponCode);
@@ -97,7 +96,7 @@ const Checkout = () => {
         }
       }
       if (res.data.couponCode === null) {
-        toast.error("Coupon code doesn't exists!");
+        toast.error("Mã phiếu giảm giá không tồn tại!");
         setCouponCode("");
       }
     });
@@ -108,8 +107,6 @@ const Checkout = () => {
   const totalPrice = couponCodeData
     ? (subTotalPrice + shipping - discountPercentenge).toFixed(2)
     : (subTotalPrice + shipping).toFixed(2);
-
-
 
   return (
     <div className="w-full flex flex-col items-center py-8">
@@ -163,15 +160,14 @@ const ShippingInfo = ({
   setUserInfo,
   address1,
   setAddress1,
-  address2,
+  // address2,
   setAddress2,
-  zipCode,
+  // zipCode,
   setZipCode,
 }) => {
   return (
     <div className="w-full 800px:w-[95%] bg-white rounded-md p-5 pb-8">
-      <h5 className="text-[18px] font-[500]">
-        Địa chỉ giao hàng</h5>
+      <h5 className="text-[18px] font-[500]">Địa chỉ giao hàng</h5>
       <br />
       <form>
         <div className="w-full flex pb-3">
@@ -205,7 +201,7 @@ const ShippingInfo = ({
               className={`${styles.input} !w-[95%]`}
             />
           </div>
-          <div className="w-[50%]">
+          {/* <div className="w-[50%]">
             <label className="block pb-2">Mã bưu chính</label>
             <input
               type="number"
@@ -214,10 +210,7 @@ const ShippingInfo = ({
               required
               className={`${styles.input}`}
             />
-          </div>
-        </div>
-
-        <div className="w-full flex pb-3">
+          </div> */}
           <div className="w-[50%]">
             <label className="block pb-2">Quốc gia</label>
             <select
@@ -232,6 +225,9 @@ const ShippingInfo = ({
               <option value="VN">Vietnam</option>
             </select>
           </div>
+        </div>
+
+        <div className="w-full flex pb-3">
           <div className="w-[50%]">
             <label className="block pb-2">Thành Phố</label>
             <select
@@ -240,7 +236,6 @@ const ShippingInfo = ({
               onChange={(e) => setCity(e.target.value)}
             >
               <option className="block pb-2" value="">
-
                 Chọn thành phố của bạn
               </option>
               {State &&
@@ -251,11 +246,8 @@ const ShippingInfo = ({
                 ))}
             </select>
           </div>
-        </div>
-
-        <div className="w-full flex pb-3">
           <div className="w-[50%]">
-            <label className="block pb-2">Huyện</label>
+            <label className="block pb-2">Địa chỉ cụ thể</label>
             <input
               type="address"
               required
@@ -264,7 +256,10 @@ const ShippingInfo = ({
               className={`${styles.input} !w-[95%]`}
             />
           </div>
-          <div className="w-[50%]">
+        </div>
+
+        <div className="w-full flex pb-3">
+          {/* <div className="w-[50%]">
             <label className="block pb-2">Số nhà,Ấp, Xã</label>
             <input
               type="address"
@@ -273,7 +268,7 @@ const ShippingInfo = ({
               required
               className={`${styles.input}`}
             />
-          </div>
+          </div> */}
         </div>
 
         <div></div>
@@ -282,7 +277,6 @@ const ShippingInfo = ({
         className="text-[18px] cursor-pointer inline-block text-[#f63b60] mt-3"
         onClick={() => setUserInfo(!userInfo)}
       >
-
         Chọn Từ địa chỉ đã lưu
       </h5>
       {userInfo && (
@@ -297,7 +291,7 @@ const ShippingInfo = ({
                   onClick={() =>
                     setAddress1(item.address1) ||
                     setAddress2(item.address2) ||
-                    setZipCode(item.zipCode) ||
+                    // setZipCode(item.zipCode) ||
                     setCountry(item.country) ||
                     setCity(item.city)
                   }
@@ -319,7 +313,6 @@ const CartData = ({
   couponCode,
   setCouponCode,
   discountPercentenge,
-
 }) => {
   // Define state for showing coupon details
   const [showCouponDetails, setShowCouponDetails] = useState(false); // Add this line
@@ -353,20 +346,21 @@ const CartData = ({
   coupons &&
     coupons.forEach((item) => {
       row.push({
-
         name: item.name,
         price: item.value + " %",
         sold: 10,
       });
     });
   const handleCouponClick = (couponName) => {
-    setCouponCode(couponName);  // Set the coupon code when a coupon is clicked
+    setCouponCode(couponName); // Set the coupon code when a coupon is clicked
   };
 
   return (
     <div className="w-full bg-[#fff] rounded-md p-5 pb-8">
       <div className="flex justify-between">
-        <h3 className="text-[16px] font-[400] text-[#000000a4]">Tiền sản phẩm:</h3>
+        <h3 className="text-[16px] font-[400] text-[#000000a4]">
+          Tiền sản phẩm:
+        </h3>
         <h5 className="text-[18px] font-[600]">${subTotalPrice}</h5>
       </div>
       <br />
@@ -406,7 +400,7 @@ const CartData = ({
           onClick={() => setShowCouponDetails(!showCouponDetails)}
           className="text-[#f63b60] text-[20px]"
         >
-          {showCouponDetails ? '▲' : '▼'}
+          {showCouponDetails ? "▲" : "▼"}
         </button>
       </div>
 

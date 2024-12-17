@@ -38,7 +38,7 @@ const Cart = ({ setOpenCart }) => {
                 onClick={() => setOpenCart(false)}
               />
             </div>
-            <h5>Cart Items is empty!</h5>
+            <h5>Giỏ Hàng trống!</h5>
           </div>
         ) : (
           <>
@@ -80,7 +80,7 @@ const Cart = ({ setOpenCart }) => {
                   className={`h-[45px] flex items-center justify-center w-[100%] bg-[#e44343] rounded-[5px]`}
                 >
                   <h1 className="text-[#fff] text-[18px] font-[600]">
-                    Thanh toán   (USD${totalPrice})
+                    Đặt Hàng   (USD${totalPrice})
                   </h1>
                 </div>
               </Link>
