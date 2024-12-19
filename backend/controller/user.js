@@ -24,7 +24,7 @@ router.post("/create-user", async (req, res, next) => {
       //     return res.status(500).json({ message: "Error deleting file" });
       //   }
       // });
-      return next(new ErrorHandler("User already exists", 400));
+      return next(new ErrorHandler("Người dùng đã tồn tại!", 400));
     }
     const myCloud = await cloudinary.v2.uploader.upload(avatar, {
       folder: "avatars",
@@ -52,11 +52,11 @@ router.post("/create-user", async (req, res, next) => {
       await sendMail({
         email: user.email,
         subject: "Activate your account",
-        message: `Hello ${user.name}, please click on the link to activate your user account: ${activationUrl}`,
+        message: `Xin chào ${user.name}, vui lòng nhấp vào liên kết để kích hoạt tài khoản người dùng của bạn: ${activationUrl}`,
       });
       res.status(201).json({
         success: true,
-        message: `please check your email:- ${user.email} to activate your account!`,
+        message: `vui lòng kiểm tra email của bạn:- ${user.email} để kích hoạt tài khoản của bạn!`,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -83,12 +83,12 @@ router.post(
         process.env.ACTIVATION_SECRET
       );
       if (!newUser) {
-        return next(new ErrorHandler("Invalid token", 400));
+        return next(new ErrorHandler("Mã thông báo không hợp lệ", 400));
       }
       const { name, email, password, avatar } = newUser;
       let user = await User.findOne({ email });
       if (user) {
-        return next(new ErrorHandler("User already exists", 400));
+        return next(new ErrorHandler("Người dùng đã tồn tại", 400));
       }
       user = await User.create({
         name,
@@ -112,20 +112,20 @@ router.post(
       const { email, password } = req.body;
 
       if (!email || !password) {
-        return next(new ErrorHandler("Please provide the all fields!", 400));
+        return next(new ErrorHandler("Vui lòng cung cấp tất cả các trường!", 400));
       }
 
       const user = await User.findOne({ email }).select("+password");
 
       if (!user) {
-        return next(new ErrorHandler("User doesn't exists!", 400));
+        return next(new ErrorHandler("Người dùng không tồn tại!", 400));
       }
 
       const isPasswordValid = await user.comparePassword(password);
 
       if (!isPasswordValid) {
         return next(
-          new ErrorHandler("Please provide the correct information", 400)
+          new ErrorHandler("Vui lòng cung cấp thông tin chính xác", 400)
         );
       }
 
@@ -145,7 +145,7 @@ router.get(
       const user = await User.findById(req.user.id);
 
       if (!user) {
-        return next(new ErrorHandler("User doesn't exists", 400));
+        return next(new ErrorHandler("Người dùng không tồn tại", 400));
       }
 
       res.status(200).json({
@@ -171,7 +171,7 @@ router.get(
       });
       res.status(201).json({
         success: true,
-        message: "Log out successful!",
+        message: "Đăng xuất thành công",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -190,14 +190,14 @@ router.put(
       const user = await User.findOne({ email }).select("+password");
 
       if (!user) {
-        return next(new ErrorHandler("User not found", 400));
+        return next(new ErrorHandler("Không tìm thấy người dùng", 400));
       }
 
       const isPasswordValid = await user.comparePassword(password);
 
       if (!isPasswordValid) {
         return next(
-          new ErrorHandler("Please provide the correct information", 400)
+          new ErrorHandler("Vui lòng cung cấp thông tin chính xác", 400)
         );
       }
 
@@ -265,7 +265,7 @@ router.put(
       );
       if (sameTypeAddress) {
         return next(
-          new ErrorHandler(`${req.body.addressType} address already exists`)
+          new ErrorHandler(`${req.body.addressType} địa chỉ đã tồn tại`)
         );
       }
 
@@ -330,12 +330,12 @@ router.put(
       );
 
       if (!isPasswordMatched) {
-        return next(new ErrorHandler("Old password is incorrect!", 400));
+        return next(new ErrorHandler("Mật khẩu cũ không đúng!", 400));
       }
 
       if (req.body.newPassword !== req.body.confirmPassword) {
         return next(
-          new ErrorHandler("Password doesn't matched with each other!", 400)
+          new ErrorHandler("Mật khẩu không khớp với nhau!", 400)
         );
       }
       user.password = req.body.newPassword;
@@ -344,7 +344,7 @@ router.put(
 
       res.status(200).json({
         success: true,
-        message: "Password updated successfully!",
+        message: "Đã cập nhật mật khẩu thành công!",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -382,13 +382,13 @@ router.delete(
       const user = await User.findById(req.params.id);
       if (!user) {
         return next(
-          new ErrorHandler("User is not available with this id", 404)
+          new ErrorHandler("Người dùng không có sẵn với id này", 404)
         );
       }
       await User.findByIdAndDelete(req.params.id);
       res.status(201).json({
         success: true,
-        message: "User deleted successfully",
+        message: "Người dùng đã xóa thành công",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -422,7 +422,7 @@ router.post(
       const user = await User.findOne({ email });
 
       if (!user) {
-        return next(new ErrorHandler("User with this email does not exist", 404));
+        return next(new ErrorHandler("Người dùng có email này không tồn tại", 404));
       }
 
       const resetToken = createPasswordResetToken(user);
@@ -434,13 +434,13 @@ router.post(
       try {
         await sendMail({
           email: user.email,
-          subject: "Password Reset Request",
-          message: `Hello ${user.name},\n\nPlease click on the link below to reset your password:\n\n${resetUrl}`,
+          subject: "Yêu cầu đặt lại mật khẩu",
+          message: `Hello ${user.name},\n\nVui lòng nhấp vào liên kết bên dưới để đặt lại mật khẩu của bạn:\n\n${resetUrl}`,
         });
 
         res.status(200).json({
           success: true,
-          message: `Password reset link has been sent to ${user.email}`,
+          message: `Liên kết đặt lại mật khẩu đã được gửi tới ${user.email}`,
         });
       } catch (error) {
         return next(new ErrorHandler(error.message, 500));
@@ -468,14 +468,14 @@ router.post(
       const { newPassword, confirmPassword } = req.body;
 
       if (newPassword !== confirmPassword) {
-        return next(new ErrorHandler("Passwords do not match", 400));
+        return next(new ErrorHandler("Mật khẩu không khớp", 400));
       }
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
       const user = await User.findById(decoded.id);
 
       if (!user) {
-        return next(new ErrorHandler("Invalid or expired token", 400));
+        return next(new ErrorHandler("Mã thông báo không hợp lệ hoặc đã hết hạn", 400));
       }
 
       user.password = newPassword; // Update the password
@@ -483,7 +483,7 @@ router.post(
 
       res.status(200).json({
         success: true,
-        message: "Password has been successfully reset",
+        message: "Mật khẩu đã được đặt lại thành công",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));

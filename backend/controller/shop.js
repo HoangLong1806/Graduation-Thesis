@@ -254,7 +254,7 @@ router.get(
       });
       res.status(201).json({
         success: true,
-        message: 'Log out successful!',
+        message: 'Đăng xuất thành công',
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -307,13 +307,13 @@ router.delete(
       const seller = await Shop.findById(req.params.id);
       if (!seller) {
         return next(
-          new ErrorHandler('Seller is not available with this id', 404)
+          new ErrorHandler('Người bán không có sẵn với id này', 404)
         );
       }
       await Shop.findByIdAndDelete(req.params.id);
       res.status(201).json({
         success: true,
-        message: 'User deleted successfully',
+        message: 'Người dùng đã xóa thành công',
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
@@ -378,7 +378,7 @@ router.put(
       const shop = await Shop.findOne(req.seller._id);
 
       if (!shop) {
-        return next(new ErrorHandler('User not found', 400));
+        return next(new ErrorHandler('Không tìm thấy người dùng', 400));
       }
 
       shop.name = name;
@@ -429,7 +429,7 @@ router.delete(
       const seller = await Shop.findById(req.seller._id);
 
       if (!seller) {
-        return next(new ErrorHandler('Seller not found with this id', 400));
+        return next(new ErrorHandler('Không tìm thấy người bán với id này', 400));
       }
 
       seller.withdrawMethod = null;
@@ -456,7 +456,7 @@ router.post(
       const seller = await Shop.findOne({ email });
 
       if (!seller) {
-        return next(new ErrorHandler("Seller with this email does not exist", 404));
+        return next(new ErrorHandler("Người bán với email này không tồn tại", 404));
       }
 
       const resetToken = createPasswordResetToken(seller);
