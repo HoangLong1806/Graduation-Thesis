@@ -16,23 +16,11 @@ router.post("/create-user", async (req, res, next) => {
     const { name, email, password, avatar } = req.body;
     const userEmail = await User.findOne({ email });
     if (userEmail) {
-      // const filename = req.file.filename;
-      // const filePath = `uploads/${filename}`;
-      // fs.unlink(filePath, (err) => {
-      //   if (err) {
-      //     console.log(err);
-      //     return res.status(500).json({ message: "Error deleting file" });
-      //   }
-      // });
       return next(new ErrorHandler("Người dùng đã tồn tại!", 400));
     }
     const myCloud = await cloudinary.v2.uploader.upload(avatar, {
       folder: "avatars",
     });
-    // If email doesn't exist, create a new user
-    // const filename = req.file.filename;
-    // const fileUrl = path.join("/uploads", filename);
-    // const public_id = filename;
     const user = {
       name: name,
       email: email,
